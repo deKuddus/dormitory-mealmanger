@@ -2,14 +2,22 @@
 
 namespace App\Models;
 
-use App\Trait\ModelTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Account extends Model
 {
     use HasFactory;
-    use ModelTrait;
+
+    protected $perPage = 10;
+
+    public function resolveRouteBinding($value, $field = null)
+    {
+        return in_array(SoftDeletes::class, class_uses($this))
+            ? $this->where($this->getRouteKeyName(), $value)->withTrashed()->first()
+            : parent::resolveRouteBinding($value);
+    }
+
     public function users()
     {
         return $this->hasMany(User::class);

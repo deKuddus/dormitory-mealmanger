@@ -18,7 +18,8 @@
 		"laravel/tinker": "^2.7",
 		"laravel/ui": "^4.2",
 		"league/glide": "^2.2",
-		"reinink/remember-query-strings": "^0.1.2"
+		"reinink/remember-query-strings": "^0.1.2",
+		"tightenco/ziggy": "^1.5"
 	},
 	"require-dev": {
 		"fakerphp/faker": "^1.9.1",

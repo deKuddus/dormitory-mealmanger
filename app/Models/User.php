@@ -3,7 +3,6 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Trait\ModelTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -13,23 +12,27 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Foundation\Auth\Access\Authorizable;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Http\UploadedFile;
 
-class User extends Authenticatable implements AuthenticatableContract, AuthorizableContract
+class User extends Authenticatable
 {
-    use HasApiTokens;
     use HasFactory;
     use Notifiable;
-    use ModelTrait;
-    use Authorizable;
+    // use HasApiTokens;
     use SoftDeletes;
 
     protected $casts = [
         'owner' => 'boolean',
     ];
+
+    protected $perPage = 10;
+
+    public function resolveRouteBinding($value, $field = null)
+    {
+        return in_array(SoftDeletes::class, class_uses($this))
+            ? $this->where($this->getRouteKeyName(), $value)->withTrashed()->first()
+            : parent::resolveRouteBinding($value);
+    }
 
     public function account()
     {

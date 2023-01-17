@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Traits\LockedDemoUser;
+use App\Trait\LockedDemoUser;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Foundation\Http\FormRequest;
@@ -29,5 +29,4 @@ class UserUpdateRequest extends FormRequest
             'photo' => ['nullable', 'image'],
         ];
     }
-
 }

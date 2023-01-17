@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Traits\LockedDemoUser;
+use App\Trait\LockedDemoUser;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UserDeleteRequest extends FormRequest
@@ -14,7 +14,8 @@ class UserDeleteRequest extends FormRequest
      *
      * @return array
      */
-    public function rules() {
+    public function rules()
+    {
         return [
             //
         ];

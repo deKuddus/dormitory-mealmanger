@@ -21,7 +21,7 @@ export default () => {
             <Head title="Login" />
             <div className="w-full max-w-md">
                 <Logo
-                    className="block w-full max-w-xs mx-auto text-white fill-current"
+                    className="block w-full max-w-xs mx-auto text-white fill-current text-center"
                     height={50}
                 />
                 <form

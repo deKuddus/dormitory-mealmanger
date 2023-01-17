@@ -27,7 +27,9 @@ Route::post('login', [LoginController::class, 'login'])->name('login.attempt')->
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
 // Dashboard
-Route::get('/', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
+Route::get('/', DashboardController::class)->name('dashboard')->middleware('auth');
+Route::get('/home', DashboardController::class)->name('dashboard')->middleware('auth');
+Route::get('/dashboard', DashboardController::class)->name('dashboard')->middleware('auth');
 
 // Users
 Route::get('users', [UsersController::class, 'index'])->name('users')->middleware(['remember', 'auth']);
@@ -60,9 +62,6 @@ Route::delete('contacts/{contact}', [ContactsController::class, 'destroy'])->nam
 Route::put('contacts/{contact}/restore', [ContactsController::class, 'restore'])->name('contacts.restore')->middleware('auth');
 
 // Reports
-Route::get('reports', [ReportsController::class, 'index'])->name('reports')->middleware('auth');
+Route::get('reports', ReportsController::class)->name('reports')->middleware('auth');
 
 // 500 error
-Route::get('500', function () {
-    echo $fail;
-});
