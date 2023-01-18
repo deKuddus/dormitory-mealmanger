@@ -11,6 +11,7 @@ class Account extends Model
 
     protected $perPage = 10;
 
+
     public function resolveRouteBinding($value, $field = null)
     {
         return in_array(SoftDeletes::class, class_uses($this))

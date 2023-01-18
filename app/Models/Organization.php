@@ -12,6 +12,16 @@ class Organization extends Model
     use HasFactory;
     use SoftDeletes;
 
+    protected $fillable = [
+        'name',
+        'email',
+        'address',
+        'phone',
+        'city',
+        'region',
+        'country',
+        'postal_code',
+    ];
     protected $perPage = 10;
 
     public function resolveRouteBinding($value, $field = null)

@@ -14,6 +14,19 @@ class Contact extends Model
 
     protected $perPage = 10;
 
+    protected $fillable=[
+        "first_name",
+        "last_name",
+        "organization_id",
+        "email",
+        "phone",
+        "address",
+        "city",
+        "region",
+        "country",
+        "postal_code",
+    ];
+
     public function resolveRouteBinding($value, $field = null)
     {
         return in_array(SoftDeletes::class, class_uses($this))
