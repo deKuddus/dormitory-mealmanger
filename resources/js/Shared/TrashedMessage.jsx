@@ -6,7 +6,7 @@ export default ({ onRestore, children }) => {
         <div className="max-w-3xl mb-6 p-4 bg-yellow-400 rounded border border-yellow-500 flex items-center justify-between">
             <div className="flex items-center">
                 <Icon
-                    name="trash"
+                    name="FaTrashAlt"
                     className="flex-shrink-0 w-4 h-4 fill-current text-yellow-800 mr-2"
                 />
                 <div className="text-yellow-800">{children}</div>

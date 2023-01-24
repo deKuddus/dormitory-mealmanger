@@ -1,5 +1,7 @@
 import React from "react";
 import Layout from "@/Shared/Layout";
+import { Fa500Px } from "react-icons/fa";
+
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -64,6 +66,7 @@ const Dashboard = () => {
                         <div className="space-y-2">
                             <div className="flex items-center space-x-2 rtl:space-x-reverse text-sm font-medium text-gray-800 ">
                                 <span>Revenue</span>
+                                <Fa500Px />
                             </div>
 
                             <div className="text-3xl">$192.1k</div>

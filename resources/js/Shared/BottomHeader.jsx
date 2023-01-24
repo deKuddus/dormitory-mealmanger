@@ -21,7 +21,7 @@ export default () => {
                     </div>
                     <Icon
                         className="w-5 h-5 text-gray-800 fill-current group-hover:text-indigo-600 focus:text-indigo-600"
-                        name="cheveron-down"
+                        name="FaAngleDown"
                     />
                 </div>
                 <div className={menuOpened ? "" : "hidden"}>

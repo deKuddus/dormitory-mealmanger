@@ -12,10 +12,13 @@ return new class () extends Migration {
      */
     public function up()
     {
-        Schema::create('accounts', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name', 50);
+        Schema::create('additional_costs', function (Blueprint $table) {
+            $table->id();
+            $table->text('description')->nullable();
+            $table->float('amount')->default(0);
+            $table->foreignId('mess_id')->constrained();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -26,6 +29,6 @@ return new class () extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('accounts');
+        Schema::dropIfExists('additional_costs');
     }
 };

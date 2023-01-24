@@ -1,9 +1,9 @@
 import React from "react";
 import { Link } from "@inertiajs/react";
 import classNames from "classnames";
-import Icon from "@/Shared/Icon";
+import Icon from "./Icon";
 
-export default ({ icon, link, text }) => {
+export default ({ icon, link, name }) => {
     const isActive = route().current(link + "*");
 
     const iconClasses = classNames("w-4 h-4 mr-2", {
@@ -20,7 +20,7 @@ export default ({ icon, link, text }) => {
         <div className="mb-4">
             <Link href={route(link)} className="flex items-center group py-3">
                 <Icon name={icon} className={iconClasses} />
-                <div className={textClasses}>{text}</div>
+                <div className={textClasses}>{name}</div>
             </Link>
         </div>
     );

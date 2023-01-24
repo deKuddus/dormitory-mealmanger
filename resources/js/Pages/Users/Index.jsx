@@ -57,7 +57,7 @@ const Index = () => {
                                                 {name}
                                                 {deleted_at && (
                                                     <Icon
-                                                        name="trash"
+                                                        name="FaTrashAlt"
                                                         className="flex-shrink-0 w-3 h-3 ml-2 text-gray-400 fill-current"
                                                     />
                                                 )}
@@ -88,7 +88,7 @@ const Index = () => {
                                                 className="flex items-center px-4 focus:outline-none"
                                             >
                                                 <Icon
-                                                    name="cheveron-right"
+                                                    name="FaAngleRight"
                                                     className="block w-6 h-6 text-gray-400 fill-current"
                                                 />
                                             </Link>
