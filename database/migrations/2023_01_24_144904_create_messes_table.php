@@ -12,23 +12,17 @@ return new class () extends Migration {
      */
     public function up()
     {
-        Schema::disableForeignKeyConstraints();
-
         Schema::create('messes', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->bigInteger('owner_id');
-            $table->foreign('owner_id')->references('id')->on('users');
+            $table->float('deposit')->default(0);
             $table->text('address')->nullable();
-            $table->dateTime('created_at');
-            $table->dateTime('updated_at')->nullable();
-            $table->boolean('status');
-            $table->boolean('is_fixed_meal_rate');
+            $table->integer('status')->default(1);
+            $table->boolean('is_fixed_meal_rate')->default(0);
             $table->timestamps();
             $table->softDeletes();
+            $table->foreignId('user_id')->constrained();
         });
-
-        Schema::enableForeignKeyConstraints();
     }
 
     /**

@@ -13,7 +13,7 @@ return new class () extends Migration {
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id('id');
             $table->string('first_name', 25);
             $table->string('last_name', 25);
             $table->string('email', 50)->unique();
@@ -23,9 +23,6 @@ return new class () extends Migration {
             $table->text('permanent_address')->nullable();
             $table->string('nid')->nullable();
             $table->string('nid_type')->nullable();
-            $table->dateTime('created_at')->nullable();
-            $table->dateTime('updated_at')->nullable();
-            $table->date('deleted_at')->nullable();
             $table->string('institution')->nullable();
             $table->string('company')->nullable();
             $table->boolean('status')->default(0);

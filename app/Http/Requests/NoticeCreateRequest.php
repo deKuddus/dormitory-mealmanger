@@ -2,12 +2,10 @@
 
 namespace App\Http\Requests;
 
-use App\Trait\LockedDemoUser;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserDeleteRequest extends FormRequest
+class NoticeCreateRequest extends FormRequest
 {
-
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -21,12 +19,16 @@ class UserDeleteRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function rules()
     {
         return [
-            //
+            'title'          => ['required', 'string', 'max:255'],
+            'description'    => ['required', 'string'],
+            'mess_id'        => ['required', 'integer'],
+            'status'         => ['required', 'integer'],
+            'published_date' => ['required', 'date'],
         ];
     }
 }
