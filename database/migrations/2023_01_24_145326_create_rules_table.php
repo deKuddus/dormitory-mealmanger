@@ -14,7 +14,6 @@ return new class () extends Migration {
     {
         Schema::create('rules', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('mess_id');
             $table->foreignId('mess_id')->constrained();
             $table->string('title');
             $table->boolean('status')->default(0);

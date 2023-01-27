@@ -25,12 +25,19 @@ class UserStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'first_name' => ['required', 'max:50'],
-            'last_name' => ['required', 'max:50'],
-            'email' => ['required', 'max:50', 'email', Rule::unique('users')],
-            'password' => ['nullable'],
-            'owner' => ['required', 'boolean'],
-            'photo' => ['nullable', 'image'],
+            'first_name'        => ['required', 'max:50'],
+            'last_name'         => ['required', 'max:50'],
+            'email'             => ['required', 'max:50', 'unique:users,email'],
+            'password'          => ['nullable'],
+            'phone'             => ['required', 'max:11'],
+            'present_address'   => ['required', 'max:255'],
+            'permanent_address' => ['required', 'max:255'],
+            'nid'               => ['required', 'max:50'],
+            'nid_type'          => ['required', 'max:50'],
+            'institution'       => ['nullable', 'max:50'],
+            'company'           => ['nullable', 'max:50'],
+            'status'            => ['required', 'boolean'],
+            'photo'             => ['nullable', 'image'],
         ];
     }
 

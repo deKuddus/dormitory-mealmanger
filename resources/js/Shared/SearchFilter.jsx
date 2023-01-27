@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { router, usePage } from "@inertiajs/react";
 import { usePrevious } from "react-use";
 import SelectInput from "@/Shared/SelectInput";
@@ -9,7 +9,6 @@ export default () => {
     const [opened, setOpened] = useState(false);
 
     const [values, setValues] = useState({
-        role: filters.role || "", // role is used only on users page
         search: filters.search || "",
         trashed: filters.trashed || "",
     });
@@ -18,19 +17,17 @@ export default () => {
 
     function reset() {
         setValues({
-            role: "",
             search: "",
             trashed: "",
         });
     }
 
     useEffect(() => {
-        // https://reactjs.org/docs/hooks-faq.html#how-to-get-the-previous-props-or-state
         if (prevValues) {
             const query = Object.keys(pickBy(values)).length
                 ? pickBy(values)
                 : { remember: "forget" };
-            router.get(route().current(), query, {
+            router.get(route(route().current()), query, {
                 replace: true,
                 preserveState: true,
             });
@@ -61,19 +58,6 @@ export default () => {
                         className="fixed inset-0 z-20 bg-black opacity-25"
                     ></div>
                     <div className="relative z-30 w-64 px-4 py-6 mt-2 bg-white rounded shadow-lg">
-                        {filters.hasOwnProperty("role") && (
-                            <SelectInput
-                                className="mb-4"
-                                label="Role"
-                                name="role"
-                                value={values.role}
-                                onChange={handleChange}
-                            >
-                                <option value=""></option>
-                                <option value="user">User</option>
-                                <option value="owner">Owner</option>
-                            </SelectInput>
-                        )}
                         <SelectInput
                             label="Trashed"
                             name="trashed"

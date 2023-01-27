@@ -10,8 +10,18 @@ export default ({ className }) => {
         },
         {
             name: "Users",
-            link: "users",
+            link: "users.index",
             icon: "FaUsers",
+        },
+        {
+            name: "Messes",
+            link: "mess.index",
+            icon: "FaTiktok",
+        },
+        {
+            name: "Notices",
+            link: "notice.index",
+            icon: "FaAlignJustify",
         },
     ];
     return (

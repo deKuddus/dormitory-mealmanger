@@ -6,38 +6,39 @@ import SearchFilter from "@/Shared/SearchFilter";
 import Pagination from "@/Shared/Pagination";
 
 const Index = () => {
-    const {users} = usePage().props;
+    const {messes} = usePage().props;
     const {
         data,
         meta: {links},
-    } = users;
+    } = messes;
 
-    const deleteUser = (id) =>{
-        if (confirm("Are you sure you want to delete this user?")) {
-            router.delete(route("users.destroy", id));
+    const  deleteMess = (id) => {
+        if (confirm("Are you sure you want to delete this mess?")) {
+            router.delete(route("mess.destroy", id));
         }
         return true;
     }
 
     return (
         <div>
-            <h1 className="mb-8 text-3xl font-bold">Users</h1>
+            <h1 className="mb-8 text-3xl font-bold">Mess</h1>
             <div className="flex items-center justify-between mb-6">
                 <SearchFilter/>
                 <Link
                     className="btn-indigo focus:outline-none"
-                    href={route("users.create")}
+                    href={route("mess.create")}
                 >
                     <span>Create</span>
-                    <span className="hidden md:inline"> User</span>
+                    <span className="hidden md:inline"> Mess</span>
                 </Link>
             </div>
             <div className="overflow-x-auto bg-white rounded shadow">
                 <table className="w-full whitespace-nowrap">
                     <thead>
-                    <tr className="font-bold text-left">
+                    <tr className="font-bold text-gray-500 text-left">
                         <th className="px-6 pt-5 pb-4">Name</th>
-                        <th className="px-6 pt-5 pb-4">Email</th>
+                        <th className="px-6 pt-5 pb-4">Address</th>
+                        <th className="px-6 pt-5 pb-4">Status</th>
                         <th className="px-6 pt-5 pb-4">
                             Action
                         </th>
@@ -45,7 +46,7 @@ const Index = () => {
                     </thead>
                     <tbody>
                     {data.map(
-                        ({id, name, email}) => {
+                        ({id, name, address,status}) => {
                             return (
                                 <tr
                                     key={id}
@@ -53,36 +54,43 @@ const Index = () => {
                                 >
                                     <td className="border-t">
                                         <p
-                                            className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
+                                            className="flex items-center px-6 py-4 text-gray-500"
                                         >
                                             {name}
                                         </p>
                                     </td>
                                     <td className="border-t">
                                         <p
-                                            className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
+                                            className="flex items-center px-6 py-4 text-gray-500"
                                         >
-                                            {email}
+                                            {address}
+                                        </p>
+                                    </td>
+                                    <td className="border-t">
+                                        <p
+                                            className="flex items-center px-6 py-4 text-gray-500 "
+                                        >
+                                            {status}
                                         </p>
                                     </td>
                                     <td className="w-px border-t px-4 py-3 whitespace-nowrap">
                                         <div className="flex items-center gap-4 justify-end">
                                             <Link
-                                                href={route("users.edit", id)}
+                                                href={route("mess.edit", id)}
                                                 className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
                                             >
                                                 <Icon
                                                     name="FaEdit"
-                                                    className="w-6 h-4 text-gray-400 fill-current"
+                                                    className="w-6 h-4 text-gray-500 fill-current"
                                                 />
                                             </Link>
                                             <button
-                                                onClick={() => deleteUser(id)}
+                                                onClick={() => deleteMess(id)}
                                                 className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
                                             >
                                                 <Icon
                                                     name="FaTrashAlt"
-                                                    className="w-6 h-4 text-gray-400 fill-current"
+                                                    className="w-6 h-4 text-gray-500 fill-current"
                                                 />
                                             </button>
                                         </div>
@@ -94,7 +102,7 @@ const Index = () => {
                     {data.length === 0 && (
                         <tr>
                             <td className="px-6 py-4 border-t" colSpan="4">
-                                No users found.
+                                No Mess found.
                             </td>
                         </tr>
                     )}
@@ -106,6 +114,6 @@ const Index = () => {
     );
 };
 
-Index.layout = (page) => <Layout title="Users" children={page}/>;
+Index.layout = (page) => <Layout title="Notices" children={page}/>;
 
 export default Index;

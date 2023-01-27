@@ -18,26 +18,19 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login')->middleware('guest');
 Route::post('login', [LoginController::class, 'login'])->name('login.attempt')->middleware('guest');
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
-
-// Dashboard
-Route::get('/', DashboardController::class)->name('dashboard')->middleware('auth');
-Route::get('/home', DashboardController::class)->name('dashboard')->middleware('auth');
-Route::get('/dashboard', DashboardController::class)->name('dashboard')->middleware('auth');
-
-// Users
-Route::get('users', [UsersController::class, 'index'])->name('users')->middleware(['remember', 'auth']);
-Route::get('users/create', [UsersController::class, 'create'])->name('users.create')->middleware('auth');
-Route::post('users', [UsersController::class, 'store'])->name('users.store')->middleware('auth');
-Route::get('users/{user}/edit', [UsersController::class, 'edit'])->name('users.edit')->middleware('auth');
-Route::put('users/{user}', [UsersController::class, 'update'])->name('users.update')->middleware('auth');
-Route::delete('users/{user}', [UsersController::class, 'destroy'])->name('users.destroy')->middleware('auth');
-Route::put('users/{user}/restore', [UsersController::class, 'restore'])->name('users.restore')->middleware('auth');
-
 // Images
 Route::get('/img/{path}', [ImagesController::class, 'show'])->where('path', '.*');
 
 // 500 error
+Route::group(['middleware' => ['auth', 'remember']], function () {
+    Route::get('/', DashboardController::class)->name('dashboard');
+    Route::get('/home', DashboardController::class)->name('dashboard');
+    Route::get('/dashboard', DashboardController::class)->name('dashboard');
+
+    Route::resource('notice', \App\Http\Controllers\NoticeController::class);
+    Route::resource('users', \App\Http\Controllers\UsersController::class);
+    Route::resource('mess', \App\Http\Controllers\MessController::class);
+});
