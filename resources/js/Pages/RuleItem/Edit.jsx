@@ -4,22 +4,20 @@ import Layout from "@/Shared/Layout";
 import LoadingButton from "@/Shared/LoadingButton";
 import TextInput from "@/Shared/TextInput";
 import SelectInput from "@/Shared/SelectInput";
-import Datepicker from "@/Shared/Datepicker";
-// import FileInput from "@/Shared/FileInput";
 
-const Create = () => {
-    const {messes} =   usePage().props;
+
+const Edit = () => {
+    const {rules,ruleItem} = usePage().props;
     const { data, setData, errors, post, processing } = useForm({
-        title: "",
-        description: "",
-        status: "",
-        mess_id: "",
-        published_date: "",
+        description: ruleItem.description || "",
+        status: ruleItem.status || "",
+        rule_id: ruleItem.rule_id || "",
+        _method: "PUT",
     });
 
     const handleSubmit = (e) =>{
         e.preventDefault();
-        post(route("notice.store"));
+        post(route("ruleItem.update",ruleItem.id));
     }
 
     return (
@@ -27,29 +25,29 @@ const Create = () => {
             <div>
                 <h1 className="mb-8 text-3xl font-bold">
                     <Link
-                        href={route("notice.index")}
+                        href={route("ruleItem.index")}
                         className="text-indigo-600 hover:text-indigo-700"
                     >
-                        Notice
+                        Rule
                     </Link>
                     <span className="font-medium text-indigo-600"> /</span>{" "}
-                    Create
+                    Edit
                 </h1>
             </div>
             <div className="w-full overflow-hidden bg-white rounded shadow">
                 <form name="createForm" onSubmit={handleSubmit}>
                     <div className="flex flex-wrap p-8 -mb-8 -mr-6">
-                        <TextInput
+                        <SelectInput
                             className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
-                            label="Title"
-                            name="title"
-                            type="text"
-                            errors={errors.title}
-                            value={data.title}
-                            onChange={(e) =>
-                                setData("title", e.target.value)
-                            }
-                        />
+                            label="Rule"
+                            name="rule_id"
+                            errors={errors.rule_id}
+                            value={data.rule_id}
+                            onChange={(e) => setData("rule_id", e.target.value)}
+                        >
+                            {rules && rules.map(({id,title})=>( <option key={id} defaultValue={ruleItem.id} value={id}>{title}</option>))}
+                        </SelectInput>
+
                         <TextInput
                             className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
                             label="Description"
@@ -62,14 +60,6 @@ const Create = () => {
                             }
                         />
 
-                        <Datepicker
-                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
-                            label="Published Date"
-                            errors={errors.published_date}
-                            value={data.published_date}
-                            handleDateChange={setPublishedDate}
-                            startDate={data.published_date ? new Date(data.published_date) :  new Date()}
-                        />
 
                         <SelectInput
                             className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
@@ -83,16 +73,7 @@ const Create = () => {
                             <option value="0">InActive</option>
                         </SelectInput>
 
-                        <SelectInput
-                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
-                            label="Mess"
-                            name="mess_id"
-                            errors={errors.mess_id}
-                            value={data.mess_id}
-                            onChange={(e) => setData("mess_id", e.target.value)}
-                        >
-                            {messes.map((mess) => (<option key={mess.id} value={mess.id}>{mess.name}</option>))}
-                        </SelectInput>
+
                     </div>
                     <div className="flex items-center justify-end px-8 py-4 bg-gray-100 border-t border-gray-200">
                         <LoadingButton
@@ -100,7 +81,7 @@ const Create = () => {
                             type="submit"
                             className="btn-indigo"
                         >
-                            Create Notice
+                            Update Rule Item
                         </LoadingButton>
                     </div>
                 </form>
@@ -109,6 +90,6 @@ const Create = () => {
     );
 };
 
-Create.layout = (page) => <Layout title="Create User" children={page} />;
+Edit.layout = (page) => <Layout title="Edit Rule Item" children={page} />;
 
-export default Create;
+export default Edit;

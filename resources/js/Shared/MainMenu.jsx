@@ -23,6 +23,16 @@ export default ({ className }) => {
             link: "notice.index",
             icon: "FaAlignJustify",
         },
+        {
+            name: "Rules",
+            link: "rule.index",
+            icon: "FaListAlt",
+        },
+        {
+            name: "RuleItems",
+            link: "ruleItem.index",
+            icon: "FaListAlt",
+        },
     ];
     return (
         <div className={className}>

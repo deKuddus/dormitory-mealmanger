@@ -51,7 +51,7 @@ class NoticeController extends Controller
 
     public function edit(Notice $notice)
     {
-        return Inertia::render('Notice/Create', [
+        return Inertia::render('Notice/Edit', [
             'messes' => Mess::get(['id', 'name'])->toArray(),
             'notice' => $notice,
         ]);

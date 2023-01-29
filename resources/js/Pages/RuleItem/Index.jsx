@@ -6,30 +6,30 @@ import SearchFilter from "@/Shared/SearchFilter";
 import Pagination from "@/Shared/Pagination";
 
 const Index = () => {
-    const {notices} = usePage().props;
+    const {ruleItems} = usePage().props;
     const {
         data,
         meta: {links},
-    } = notices;
+    } = ruleItems;
 
-    const  deleteNotice = (id) => {
-        if (confirm("Are you sure you want to delete this notice?")) {
-            router.delete(route("notice.destroy", id));
+    const  deleteRuleItem = (id) => {
+        if (confirm("Are you sure you want to delete this Rule Item?")) {
+            router.delete(route("ruleItem.destroy", id));
         }
         return true;
     }
 
     return (
         <div>
-            <h1 className="mb-8 text-3xl font-bold">Notices</h1>
+            <h1 className="mb-8 text-3xl font-bold">Rules</h1>
             <div className="flex items-center justify-between mb-6">
                 <SearchFilter/>
                 <Link
                     className="btn-indigo focus:outline-none"
-                    href={route("notice.create")}
+                    href={route("ruleItem.create")}
                 >
                     <span>Create</span>
-                    <span className="hidden md:inline"> Notice</span>
+                    <span className="hidden md:inline"> Rule Item</span>
                 </Link>
             </div>
             <div className="overflow-x-auto bg-white rounded shadow">
@@ -46,7 +46,7 @@ const Index = () => {
                     </thead>
                     <tbody>
                     {data.map(
-                        ({id, title, description,status}) => {
+                        ({id, rule, description,status}) => {
                             return (
                                 <tr
                                     key={id}
@@ -56,7 +56,7 @@ const Index = () => {
                                         <p
                                             className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
                                         >
-                                            {title}
+                                            {rule.title}
                                         </p>
                                     </td>
                                     <td className="border-t">
@@ -76,7 +76,7 @@ const Index = () => {
                                     <td className="w-px border-t px-4 py-3 whitespace-nowrap">
                                         <div className="flex items-center gap-4 justify-end">
                                             <Link
-                                                href={route("notice.edit", id)}
+                                                href={route("ruleItem.edit", id)}
                                                 className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
                                             >
                                                 <Icon
@@ -85,7 +85,7 @@ const Index = () => {
                                                 />
                                             </Link>
                                             <button
-                                                onClick={() => deleteNotice(id)}
+                                                onClick={() => deleteRuleItem(id)}
                                                 className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
                                             >
                                                 <Icon
@@ -102,7 +102,7 @@ const Index = () => {
                     {data.length === 0 && (
                         <tr>
                             <td className="px-6 py-4 border-t" colSpan="4">
-                                No Notice found.
+                                No Rule Item found.
                             </td>
                         </tr>
                     )}
@@ -114,6 +114,6 @@ const Index = () => {
     );
 };
 
-Index.layout = (page) => <Layout title="Notices" children={page}/>;
+Index.layout = (page) => <Layout title="Rule Items" children={page}/>;
 
 export default Index;
