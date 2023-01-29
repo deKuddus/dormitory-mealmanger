@@ -6,30 +6,30 @@ import SearchFilter from "@/Shared/SearchFilter";
 import Pagination from "@/Shared/Pagination";
 
 const Index = () => {
-    const {rules} = usePage().props;
+    const {assets} = usePage().props;
     const {
         data,
         meta: {links},
-    } = rules;
+    } = assets;
 
-    const deleteRule = (id) => {
-        if (confirm("Are you sure you want to delete this notice?")) {
-            router.delete(route("rule.destroy", id));
+    const deleteAsset = (id) => {
+        if (confirm("Are you sure you want to delete this asset?")) {
+            router.delete(route("messAsset.destroy", id));
         }
         return true;
     }
 
     return (
         <div>
-            <h1 className="mb-8 text-3xl font-bold">Rules</h1>
+            <h1 className="mb-8 text-3xl font-bold">MessAssets</h1>
             <div className="flex items-center justify-between mb-6">
                 <SearchFilter/>
                 <Link
                     className="btn-indigo focus:outline-none"
-                    href={route("rule.create")}
+                    href={route("asset.create")}
                 >
                     <span>Create</span>
-                    <span className="hidden md:inline"> Rule</span>
+                    <span className="hidden md:inline"> MessAsset</span>
                 </Link>
             </div>
             <div className="overflow-x-auto bg-white rounded shadow">
@@ -37,8 +37,8 @@ const Index = () => {
                     <thead>
                     <tr className="font-bold text-left">
                         <th className="px-6 pt-5 pb-4">Title</th>
-                        <th className="px-6 pt-5 pb-4">Items</th>
-                        <th className="px-6 pt-5 pb-4">Published Date</th>
+                        <th className="px-6 pt-5 pb-4">Description</th>
+                        <th className="px-6 pt-5 pb-4">Purchase Date</th>
                         <th className="px-6 pt-5 pb-4">Status</th>
                         <th className="px-6 pt-5 pb-4">
                             Action
@@ -47,7 +47,7 @@ const Index = () => {
                     </thead>
                     <tbody>
                     {data.map(
-                        ({id, title, rule_items_count, published_date, status}) => {
+                        ({id, title, description, purchase_date, status}) => {
                             return (
                                 <tr
                                     key={id}
@@ -64,14 +64,14 @@ const Index = () => {
                                         <p
                                             className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
                                         >
-                                            {rule_items_count}
+                                            {description}
                                         </p>
                                     </td>
                                     <td className="border-t">
                                         <p
                                             className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
                                         >
-                                            {published_date}
+                                            {purchase_date}
                                         </p>
                                     </td>
                                     <td className="border-t">
@@ -84,7 +84,7 @@ const Index = () => {
                                     <td className="w-px border-t px-4 py-3 whitespace-nowrap">
                                         <div className="flex items-center gap-4 justify-end">
                                             <Link
-                                                href={route("rule.edit", id)}
+                                                href={route("asset.edit", id)}
                                                 className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
                                             >
                                                 <Icon
@@ -93,7 +93,7 @@ const Index = () => {
                                                 />
                                             </Link>
                                             <button
-                                                onClick={() => deleteRule(id)}
+                                                onClick={() => deleteAsset(id)}
                                                 className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
                                             >
                                                 <Icon
@@ -110,7 +110,7 @@ const Index = () => {
                     {data.length === 0 && (
                         <tr>
                             <td className="px-6 py-4 border-t" colSpan="4">
-                                No Rule found.
+                                No Asset found.
                             </td>
                         </tr>
                     )}
@@ -122,6 +122,6 @@ const Index = () => {
     );
 };
 
-Index.layout = (page) => <Layout title="Rules" children={page}/>;
+Index.layout = (page) => <Layout title="Asset" children={page}/>;
 
 export default Index;

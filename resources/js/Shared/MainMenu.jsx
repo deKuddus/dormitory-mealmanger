@@ -33,6 +33,11 @@ export default ({ className }) => {
             link: "ruleItem.index",
             icon: "FaListAlt",
         },
+        {
+            name: "Asset",
+            link: "asset.index",
+            icon: "FaListAlt",
+        },
     ];
     return (
         <div className={className}>

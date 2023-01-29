@@ -18,6 +18,7 @@ class RuleController extends Controller
             'filters' => $requestParam,
             'rules' => new RuleCollection(
                 Rule::query()
+                    ->withCount('ruleItems')
                     ->orderBy('created_at', 'desc')
                     ->filter($requestParam)
                     ->paginate()

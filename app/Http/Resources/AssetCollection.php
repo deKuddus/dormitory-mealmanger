@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class RuleCollection extends ResourceCollection
+class AssetCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.
@@ -16,11 +16,11 @@ class RuleCollection extends ResourceCollection
     {
         return $this->collection->map->only(
             'id',
-            'mess_id',
             'title',
+            'description',
+            'purchase_date',
             'status',
-            'published_date',
-            'rule_items_count',
+            'mess_id',
         );
     }
 }
