@@ -6,39 +6,38 @@ import SearchFilter from "@/Shared/SearchFilter";
 import Pagination from "@/Shared/Pagination";
 
 const Index = () => {
-    const {assets} = usePage().props;
+    const {rooms} = usePage().props;
     const {
         data,
         meta: {links},
-    } = assets;
+    } = rooms;
 
-    const deleteAsset = (id) => {
-        if (confirm("Are you sure you want to delete this asset?")) {
-            router.delete(route("asset.destroy", id));
+    const deleteRoom = (id) => {
+        if (confirm("Are you sure you want to delete this room?")) {
+            router.delete(route("room.destroy", id));
         }
         return true;
     }
 
     return (
         <div>
-            <h1 className="mb-8 text-3xl font-bold">Assets</h1>
+            <h1 className="mb-8 text-3xl font-bold">Rooms</h1>
             <div className="flex items-center justify-between mb-6">
                 <SearchFilter/>
                 <Link
                     className="btn-indigo focus:outline-none"
-                    href={route("asset.create")}
+                    href={route("room.create")}
                 >
                     <span>Create</span>
-                    <span className="hidden md:inline">Asset</span>
+                    <span className="hidden md:inline"> Room</span>
                 </Link>
             </div>
             <div className="overflow-x-auto bg-white rounded shadow">
                 <table className="w-full whitespace-nowrap">
                     <thead>
                     <tr className="font-bold text-left">
-                        <th className="px-6 pt-5 pb-4">Title</th>
-                        <th className="px-6 pt-5 pb-4">Description</th>
-                        <th className="px-6 pt-5 pb-4">Purchase Date</th>
+                        <th className="px-6 pt-5 pb-4">Name</th>
+                        <th className="px-6 pt-5 pb-4">Location</th>
                         <th className="px-6 pt-5 pb-4">Status</th>
                         <th className="px-6 pt-5 pb-4">
                             Action
@@ -47,7 +46,7 @@ const Index = () => {
                     </thead>
                     <tbody>
                     {data.map(
-                        ({id, title, description, purchase_date, status}) => {
+                        ({id, name, location, created_at, status}) => {
                             return (
                                 <tr
                                     key={id}
@@ -57,21 +56,14 @@ const Index = () => {
                                         <p
                                             className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
                                         >
-                                            {title}
+                                            {name}
                                         </p>
                                     </td>
                                     <td className="border-t">
                                         <p
                                             className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
                                         >
-                                            {description}
-                                        </p>
-                                    </td>
-                                    <td className="border-t">
-                                        <p
-                                            className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
-                                        >
-                                            {purchase_date}
+                                            {location}
                                         </p>
                                     </td>
                                     <td className="border-t">
@@ -84,7 +76,7 @@ const Index = () => {
                                     <td className="w-px border-t px-4 py-3 whitespace-nowrap">
                                         <div className="flex items-center gap-4 justify-end">
                                             <Link
-                                                href={route("asset.edit", id)}
+                                                href={route("room.edit", id)}
                                                 className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
                                             >
                                                 <Icon
@@ -93,7 +85,7 @@ const Index = () => {
                                                 />
                                             </Link>
                                             <button
-                                                onClick={() => deleteAsset(id)}
+                                                onClick={() => deleteRoom(id)}
                                                 className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
                                             >
                                                 <Icon
@@ -110,7 +102,7 @@ const Index = () => {
                     {data.length === 0 && (
                         <tr>
                             <td className="px-6 py-4 border-t" colSpan="4">
-                                No Asset found.
+                                No Room found.
                             </td>
                         </tr>
                     )}
@@ -122,6 +114,6 @@ const Index = () => {
     );
 };
 
-Index.layout = (page) => <Layout title="Asset" children={page}/>;
+Index.layout = (page) => <Layout title="Room" children={page}/>;
 
 export default Index;

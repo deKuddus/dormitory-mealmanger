@@ -38,6 +38,11 @@ export default ({ className }) => {
             link: "asset.index",
             icon: "FaListAlt",
         },
+        {
+            name: "Room",
+            link: "room.index",
+            icon: "FaListAlt",
+        },
     ];
     return (
         <div className={className}>

@@ -4,25 +4,20 @@ import Layout from "@/Shared/Layout";
 import LoadingButton from "@/Shared/LoadingButton";
 import TextInput from "@/Shared/TextInput";
 import SelectInput from "@/Shared/SelectInput";
-import Datepicker from "@/Shared/Datepicker";
 
 const Edit = () => {
-    const {asset} = usePage().props;
+    const{users,room} = usePage().props;
     const { data, setData, errors, post, processing } = useForm({
-        title: asset.title || "",
-        status: asset.status || "",
-        purchase_date: asset.purchase_date || "",
-        description: asset.description || "",
-        _method: "PUT",
+        name: room.name || "",
+        status: room.status || "",
+        location: room.location || "",
+        user_id: room.user_id || "",
+        _method: "PUT"
     });
 
     const handleSubmit = (e) =>{
         e.preventDefault();
-        post(route("asset.update", asset.id));
-    }
-
-    const setPurchaseDate = (date) => {
-        setData("purchase_date", date)
+        post(route("room.update",room.id));
     }
 
     return (
@@ -30,10 +25,10 @@ const Edit = () => {
             <div>
                 <h1 className="mb-8 text-3xl font-bold">
                     <Link
-                        href={route("asset.index")}
+                        href={route("room.index")}
                         className="text-indigo-600 hover:text-indigo-700"
                     >
-                        MessAsset
+                        Room
                     </Link>
                     <span className="font-medium text-indigo-600"> /</span>{" "}
                     Edit
@@ -42,37 +37,40 @@ const Edit = () => {
             <div className="w-full overflow-hidden bg-white rounded shadow">
                 <form name="createForm" onSubmit={handleSubmit}>
                     <div className="flex flex-wrap p-8 -mb-8 -mr-6">
+
+                        <SelectInput
+                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
+                            label="User"
+                            name="user_id"
+                            errors={errors.user_id}
+                            value={data.user_id}
+                            onChange={(e) => setData("user_id}", e.target.value)}
+                        >
+                            {users && users.map(({id,first_name})=>( <option key={id} defaultValue={room.user_id} value={id}>{first_name}</option>))}
+                        </SelectInput>
+
                         <TextInput
                             className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
-                            label="Title"
-                            name="title"
+                            label="Name"
+                            name="name"
                             type="text"
-                            errors={errors.title}
-                            value={data.title}
+                            errors={errors.name}
+                            value={data.name}
                             onChange={(e) =>
-                                setData("title", e.target.value)
+                                setData("name", e.target.value)
                             }
                         />
 
                         <TextInput
                             className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
-                            label="Description"
-                            name="description"
+                            label="Location"
+                            name="location"
                             type="text"
-                            errors={errors.description}
-                            value={data.description}
+                            errors={errors.location}
+                            value={data.location}
                             onChange={(e) =>
-                                setData("description", e.target.value)
+                                setData("location", e.target.value)
                             }
-                        />
-
-                        <Datepicker
-                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
-                            label="Published Date"
-                            errors={errors.purchase_date}
-                            value={data.purchase_date}
-                            handleDateChange={setPurchaseDate}
-                            startDate={data.purchase_date?  new Date(data.purchase_date) : new Date()}
                         />
 
                         <SelectInput
@@ -94,7 +92,7 @@ const Edit = () => {
                             type="submit"
                             className="btn-indigo"
                         >
-                            Update Asset
+                            Edit Room
                         </LoadingButton>
                     </div>
                 </form>
@@ -103,6 +101,6 @@ const Edit = () => {
     );
 };
 
-Edit.layout = (page) => <Layout title="Update Asset" children={page} />;
+Edit.layout = (page) => <Layout title="Edit Room" children={page} />;
 
 export default Edit;

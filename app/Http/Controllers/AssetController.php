@@ -44,9 +44,11 @@ class AssetController extends Controller
     }
 
 
-    public function edit(Asset $messAssets)
+    public function edit(Asset $asset)
     {
-        return Inertia::render('Asset/Edit');
+        return Inertia::render('Asset/Edit',[
+            'asset' => $asset
+        ]);
     }
 
     public function update(AssetRequest $request, Asset $asset)
