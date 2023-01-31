@@ -33,18 +33,18 @@ const Edit = () => {
         e.preventDefault();
 
         // NOTE: We are using POST method here, not PUT/PACH. See comment above.
-        post(route("users.update", user.id));
+        post(route("user.update", user.id));
     }
 
     const destroy = () =>{
         if (confirm("Are you sure you want to delete this user?")) {
-            router.delete(route("users.destroy", user.id));
+            router.delete(route("user.destroy", user.id));
         }
     }
 
     const restore = () =>{
         if (confirm("Are you sure you want to restore this user?")) {
-            router.put(route("users.restore", user.id));
+            router.put(route("user.restore", user.id));
         }
     }
 

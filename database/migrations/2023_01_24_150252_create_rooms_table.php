@@ -18,7 +18,7 @@ return new class () extends Migration {
             $table->foreignId('user_id')->constrained();
             $table->string('name');
             $table->string('location')->nullable();
-            $table->boolean('status')->default(0);
+            $table->integer('status')->default(1);
             $table->timestamps();
             $table->softDeletes();
         });

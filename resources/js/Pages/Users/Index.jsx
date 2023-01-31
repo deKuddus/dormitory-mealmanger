@@ -14,7 +14,7 @@ const Index = () => {
 
     const deleteUser = (id) =>{
         if (confirm("Are you sure you want to delete this user?")) {
-            router.delete(route("users.destroy", id));
+            router.delete(route("user.destroy", id));
         }
         return true;
     }
@@ -26,7 +26,7 @@ const Index = () => {
                 <SearchFilter/>
                 <Link
                     className="btn-indigo focus:outline-none"
-                    href={route("users.create")}
+                    href={route("user.create")}
                 >
                     <span>Create</span>
                     <span className="hidden md:inline"> User</span>
@@ -68,7 +68,7 @@ const Index = () => {
                                     <td className="w-px border-t px-4 py-3 whitespace-nowrap">
                                         <div className="flex items-center gap-4 justify-end">
                                             <Link
-                                                href={route("users.edit", id)}
+                                                href={route("user.edit", id)}
                                                 className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
                                             >
                                                 <Icon

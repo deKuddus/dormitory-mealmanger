@@ -81,7 +81,7 @@ const Index = () => {
                                             >
                                                 <Icon
                                                     name="FaEdit"
-                                                    className="w-6 h-6 text-gray-400 fill-current"
+                                                    className="w-6 h-4 text-gray-400 fill-current"
                                                 />
                                             </Link>
                                             <button

@@ -4,6 +4,7 @@ import Layout from "@/Shared/Layout";
 import LoadingButton from "@/Shared/LoadingButton";
 import TextInput from "@/Shared/TextInput";
 import SelectInput from "@/Shared/SelectInput";
+import Datepicker from "@/Shared/Datepicker";
 // import FileInput from "@/Shared/FileInput";
 
 const Create = () => {
@@ -20,6 +21,11 @@ const Create = () => {
         e.preventDefault();
         post(route("notice.store"));
     }
+
+    const setPublishedDate = (date) => {
+        setData("published_date", date)
+    }
+
 
     return (
         <div>
@@ -61,16 +67,13 @@ const Create = () => {
                             }
                         />
 
-                        <TextInput
+                        <Datepicker
                             className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
                             label="Published Date"
-                            name="published_date"
-                            type="date"
                             errors={errors.published_date}
                             value={data.published_date}
-                            onChange={(e) =>
-                                setData("published_date", e.target.value)
-                            }
+                            handleDateChange={setPublishedDate}
+                            startDate={data.published_date ? new Date(data.published_date) :  new Date()}
                         />
 
                         <SelectInput
@@ -102,7 +105,7 @@ const Create = () => {
                             type="submit"
                             className="btn-indigo"
                         >
-                            Create User
+                            Create Notice
                         </LoadingButton>
                     </div>
                 </form>

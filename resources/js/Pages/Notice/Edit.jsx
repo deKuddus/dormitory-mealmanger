@@ -4,6 +4,7 @@ import Layout from "@/Shared/Layout";
 import LoadingButton from "@/Shared/LoadingButton";
 import TextInput from "@/Shared/TextInput";
 import SelectInput from "@/Shared/SelectInput";
+import Datepicker from "@/Shared/Datepicker";
 
 const Edit = () => {
     const { notice ,messes } = usePage().props;
@@ -11,7 +12,7 @@ const Edit = () => {
         title: notice.title || "",
         description: notice.description || "",
         status: notice.status || "",
-        mess_id: notice.mess_id || "",
+        mess_id: 1,
         published_date: notice.published_date || "",
         _method: "PUT",
     });
@@ -19,6 +20,10 @@ const Edit = () => {
     const handleSubmit = (e) =>{
         e.preventDefault();
         post(route("notice.update", notice.id));
+    }
+
+    const setPublishedDate = (date) => {
+        setData("published_date", date)
     }
 
     return (
@@ -59,16 +64,13 @@ const Edit = () => {
                             }
                         />
 
-                        <TextInput
+                        <Datepicker
                             className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
                             label="Published Date"
-                            name="published_date"
-                            type="date"
                             errors={errors.published_date}
                             value={data.published_date}
-                            onChange={(e) =>
-                                setData("published_date", e.target.value)
-                            }
+                            handleDateChange={setPublishedDate}
+                            startDate={data.published_date ? new Date(data.published_date) : new Date()}
                         />
 
                         <SelectInput
@@ -81,18 +83,6 @@ const Edit = () => {
                         >
                             <option value="1">Active</option>
                             <option value="0">InActive</option>
-                        </SelectInput>
-
-                        <SelectInput
-                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
-                            label="Mess"
-                            name="mess_id"
-                            errors={errors.mess_id}
-                            value={data.mess_id}
-                            onChange={(e) => setData("mess_id", e.target.value)}
-                        >
-                            {messes.map((mess) => (<option key={mess.id} {mess.id === data.mess_id ? 'selected' : ''}
-                                                          value={mess.id}>{mess.name}</option>))}
                         </SelectInput>
                     </div>
                     <div className="flex items-center justify-end px-8 py-4 bg-gray-100 border-t border-gray-200">

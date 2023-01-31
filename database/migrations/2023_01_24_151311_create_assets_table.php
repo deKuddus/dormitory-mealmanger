@@ -12,7 +12,7 @@ return new class () extends Migration {
      */
     public function up()
     {
-        Schema::create('mess_assets', function (Blueprint $table) {
+        Schema::create('assets', function (Blueprint $table) {
             $table->id();
             $table->string('title')->nullable();
             $table->text('description')->nullable();
@@ -31,6 +31,6 @@ return new class () extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('mess_assets');
+        Schema::dropIfExists('assets');
     }
 };

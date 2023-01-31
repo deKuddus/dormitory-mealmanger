@@ -10,7 +10,7 @@ export default ({ className }) => {
         },
         {
             name: "Users",
-            link: "users.index",
+            link: "user.index",
             icon: "FaUsers",
         },
         {
@@ -22,6 +22,46 @@ export default ({ className }) => {
             name: "Notices",
             link: "notice.index",
             icon: "FaAlignJustify",
+        },
+        {
+            name: "Rules",
+            link: "rule.index",
+            icon: "FaListAlt",
+        },
+        {
+            name: "RuleItems",
+            link: "ruleItem.index",
+            icon: "FaListAlt",
+        },
+        {
+            name: "Asset",
+            link: "asset.index",
+            icon: "FaListAlt",
+        },
+        {
+            name: "Room",
+            link: "room.index",
+            icon: "FaListAlt",
+        },
+        {
+            name: "Seat",
+            link: "seat.index",
+            icon: "FaListAlt",
+        },
+        {
+            name: "Chef",
+            link: "chef.index",
+            icon: "FaListAlt",
+        },
+        {
+            name: "Deposit",
+            link: "deposit.index",
+            icon: "FaListAlt",
+        },
+        {
+            name: "AdditionalCost",
+            link: "additional.index",
+            icon: "FaListAlt",
         },
     ];
     return (

@@ -16,6 +16,7 @@ return new class () extends Migration {
             $table->id();
             $table->text('description')->nullable();
             $table->float('amount')->default(0);
+            $table->integer('status')->default(0);
             $table->foreignId('mess_id')->constrained();
             $table->timestamps();
             $table->softDeletes();
