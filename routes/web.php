@@ -37,4 +37,6 @@ Route::group(['middleware' => ['auth', 'remember']], function () {
     Route::resource('ruleItem', \App\Http\Controllers\RuleItemController::class);
     Route::resource('asset', \App\Http\Controllers\AssetController::class);
     Route::resource('room', \App\Http\Controllers\RoomController::class);
+    Route::resource('seat', \App\Http\Controllers\SeatController::class);
+    Route::resource('chef', \App\Http\Controllers\ChefController::class);
 });

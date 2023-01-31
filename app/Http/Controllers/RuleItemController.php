@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper\Helper;
 use App\Http\Requests\RuleItemRequest;
 use App\Http\Resources\RuleItemCollection;
 use App\Models\Rule;
@@ -29,7 +30,7 @@ class RuleItemController extends Controller
     public function create()
     {
         return Inertia::render('RuleItem/Create',[
-            'rules' => Rule::active()->get(['id', 'title'])->toArray(),
+          ...Helper::rulesArray()
         ]);
     }
 
@@ -52,7 +53,7 @@ class RuleItemController extends Controller
     {
         return Inertia::render('RuleItem/Edit', [
             'ruleItem' => $ruleItem,
-            'rules' => Rule::active()->get(['id', 'title'])->toArray(),
+            ...Helper::rulesArray()
         ]);
     }
 

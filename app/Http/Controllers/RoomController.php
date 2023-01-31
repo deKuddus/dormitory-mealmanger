@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper\Helper;
 use App\Http\Requests\RoomRequest;
 use App\Http\Resources\RoomCollection;
 use App\Models\Room;
@@ -28,7 +29,7 @@ class RoomController extends Controller
     public function create()
     {
         return Inertia::render('Room/Create',[
-            'users' => User::query()->get(['id', 'first_name'])->toArray(),
+            ...Helper::usersArray()
         ]);
     }
 
@@ -51,7 +52,7 @@ class RoomController extends Controller
     {
         return Inertia::render('Room/Edit',[
             'room' => $room,
-            'users' => User::query()->get(['id', 'first_name'])->toArray(),
+            ...Helper::usersArray()
         ]);
     }
 

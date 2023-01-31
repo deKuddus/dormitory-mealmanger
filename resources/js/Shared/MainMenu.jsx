@@ -43,6 +43,16 @@ export default ({ className }) => {
             link: "room.index",
             icon: "FaListAlt",
         },
+        {
+            name: "Seat",
+            link: "seat.index",
+            icon: "FaListAlt",
+        },
+        {
+            name: "Chef",
+            link: "chef.index",
+            icon: "FaListAlt",
+        },
     ];
     return (
         <div className={className}>

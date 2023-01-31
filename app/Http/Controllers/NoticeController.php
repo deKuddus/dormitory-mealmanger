@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper\Helper;
 use App\Http\Requests\NoticeCreateRequest;
 use App\Http\Resources\NoticeCollection;
 use App\Models\Mess;
@@ -30,7 +31,7 @@ class NoticeController extends Controller
     public function create()
     {
         return Inertia::render('Notice/Create', [
-            'messes' => Mess::get(['id', 'name'])->toArray(),
+            ...Helper::messArray(),
         ]);
     }
 
@@ -52,7 +53,7 @@ class NoticeController extends Controller
     public function edit(Notice $notice)
     {
         return Inertia::render('Notice/Edit', [
-            'messes' => Mess::get(['id', 'name'])->toArray(),
+            ...Helper::messArray(),
             'notice' => $notice,
         ]);
     }
