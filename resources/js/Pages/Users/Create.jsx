@@ -25,7 +25,7 @@ const Create = () => {
 
     const handleSubmit = (e) =>  {
         e.preventDefault();
-        post(route("users.store"));
+        post(route("user.store"));
     }
 
     return (

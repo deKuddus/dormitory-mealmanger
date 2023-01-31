@@ -6,38 +6,39 @@ import SearchFilter from "@/Shared/SearchFilter";
 import Pagination from "@/Shared/Pagination";
 
 const Index = () => {
-    const {users} = usePage().props;
+    const {deposits} = usePage().props;
     const {
         data,
         meta: {links},
-    } = users;
+    } = deposits;
 
-    const deleteUser = (id) =>{
-        if (confirm("Are you sure you want to delete this user?")) {
-            router.delete(route("user.destroy", id));
+    const deleteDeposit = (id) => {
+        if (confirm("Are you sure you want to delete this chef?")) {
+            router.delete(route("chef.destroy", id));
         }
         return true;
     }
 
     return (
         <div>
-            <h1 className="mb-8 text-3xl font-bold">Users</h1>
+            <h1 className="mb-8 text-3xl font-bold">Deposits</h1>
             <div className="flex items-center justify-between mb-6">
                 <SearchFilter/>
                 <Link
                     className="btn-indigo focus:outline-none"
-                    href={route("user.create")}
+                    href={route("deposit.create")}
                 >
                     <span>Create</span>
-                    <span className="hidden md:inline"> User</span>
+                    <span className="hidden md:inline">Deposit</span>
                 </Link>
             </div>
             <div className="overflow-x-auto bg-white rounded shadow">
                 <table className="w-full whitespace-nowrap">
                     <thead>
                     <tr className="font-bold text-left">
-                        <th className="px-6 pt-5 pb-4">Name</th>
-                        <th className="px-6 pt-5 pb-4">Email</th>
+                        <th className="px-6 pt-5 pb-4">Amount</th>
+                        <th className="px-6 pt-5 pb-4">Deposit Date</th>
+                        <th className="px-6 pt-5 pb-4">Status</th>
                         <th className="px-6 pt-5 pb-4">
                             Action
                         </th>
@@ -45,7 +46,7 @@ const Index = () => {
                     </thead>
                     <tbody>
                     {data.map(
-                        ({id, name, email}) => {
+                        ({id, amount,deposit_date, status}) => {
                             return (
                                 <tr
                                     key={id}
@@ -55,20 +56,27 @@ const Index = () => {
                                         <p
                                             className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
                                         >
-                                            {name}
+                                            {amount}
                                         </p>
                                     </td>
                                     <td className="border-t">
                                         <p
                                             className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
                                         >
-                                            {email}
+                                            {status}
+                                        </p>
+                                    </td>
+                                    <td className="border-t">
+                                        <p
+                                            className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
+                                        >
+                                            {deposit_date}
                                         </p>
                                     </td>
                                     <td className="w-px border-t px-4 py-3 whitespace-nowrap">
                                         <div className="flex items-center gap-4 justify-end">
                                             <Link
-                                                href={route("user.edit", id)}
+                                                href={route("deposit.edit", id)}
                                                 className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
                                             >
                                                 <Icon
@@ -77,7 +85,7 @@ const Index = () => {
                                                 />
                                             </Link>
                                             <button
-                                                onClick={() => deleteUser(id)}
+                                                onClick={() => deleteDeposit(id)}
                                                 className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
                                             >
                                                 <Icon
@@ -94,7 +102,7 @@ const Index = () => {
                     {data.length === 0 && (
                         <tr>
                             <td className="px-6 py-4 border-t" colSpan="4">
-                                No users found.
+                                No Deposit found.
                             </td>
                         </tr>
                     )}
@@ -106,6 +114,6 @@ const Index = () => {
     );
 };
 
-Index.layout = (page) => <Layout title="Users" children={page}/>;
+Index.layout = (page) => <Layout title="Deposit" children={page}/>;
 
 export default Index;

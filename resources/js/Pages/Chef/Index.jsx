@@ -12,7 +12,7 @@ const Index = () => {
         meta: {links},
     } = chefs;
 
-    const deleteNotice = (id) => {
+    const deleteChef = (id) => {
         if (confirm("Are you sure you want to delete this chef?")) {
             router.delete(route("chef.destroy", id));
         }

@@ -31,7 +31,7 @@ Route::group(['middleware' => ['auth', 'remember']], function () {
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
 
     Route::resource('notice', \App\Http\Controllers\NoticeController::class);
-    Route::resource('users', \App\Http\Controllers\UsersController::class);
+    Route::resource('user', \App\Http\Controllers\UsersController::class);
     Route::resource('mess', \App\Http\Controllers\MessController::class);
     Route::resource('rule', \App\Http\Controllers\RuleController::class);
     Route::resource('ruleItem', \App\Http\Controllers\RuleItemController::class);
@@ -39,4 +39,6 @@ Route::group(['middleware' => ['auth', 'remember']], function () {
     Route::resource('room', \App\Http\Controllers\RoomController::class);
     Route::resource('seat', \App\Http\Controllers\SeatController::class);
     Route::resource('chef', \App\Http\Controllers\ChefController::class);
+    Route::resource('deposit', \App\Http\Controllers\DepositController::class);
+    Route::resource('additional', \App\Http\Controllers\AdditionalCostController::class);
 });

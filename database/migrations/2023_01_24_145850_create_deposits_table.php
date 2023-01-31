@@ -18,6 +18,7 @@ return new class () extends Migration {
             $table->foreignId('mess_id')->constrained();
             $table->float('amount');
             $table->dateTime('deposit_date');
+            $table->integer('status')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

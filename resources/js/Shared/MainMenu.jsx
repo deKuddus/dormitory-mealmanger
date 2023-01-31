@@ -10,7 +10,7 @@ export default ({ className }) => {
         },
         {
             name: "Users",
-            link: "users.index",
+            link: "user.index",
             icon: "FaUsers",
         },
         {
@@ -51,6 +51,16 @@ export default ({ className }) => {
         {
             name: "Chef",
             link: "chef.index",
+            icon: "FaListAlt",
+        },
+        {
+            name: "Deposit",
+            link: "deposit.index",
+            icon: "FaListAlt",
+        },
+        {
+            name: "AdditionalCost",
+            link: "additional.index",
             icon: "FaListAlt",
         },
     ];
