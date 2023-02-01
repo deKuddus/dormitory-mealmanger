@@ -73,6 +73,11 @@ export default ({ className }) => {
             link: "bazar.index",
             icon: "FaListAlt",
         },
+        {
+            name: "Menu",
+            link: "menu.index",
+            icon: "FaListAlt",
+        },
     ];
     return (
         <div className={className}>
