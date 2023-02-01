@@ -6,44 +6,44 @@ import SearchFilter from "@/Shared/SearchFilter";
 import Pagination from "@/Shared/Pagination";
 
 const Index = () => {
-    const {additionals} = usePage().props;
+    const {bazarSchedules} = usePage().props;
     const {
         data,
         meta: {links},
-    } = additionals;
+    } = bazarSchedules;
 
-    const deleteAdditionalCost = (id) => {
-        if (confirm("Are you sure you want to delete this additional?")) {
-            router.delete(route("additional.destroy", id));
+    const deleteBazarSchedule = (id) => {
+        if (confirm("Are you sure you want to delete this bazar-schedule?")) {
+            router.delete(route("bazar-schedule.destroy", id));
         }
         return true;
     }
 
     return (
         <div>
-            <h1 className="mb-8 text-3xl font-bold">AdditionalCosts</h1>
+            <h1 className="mb-8 text-3xl font-bold">Bazar Schedules</h1>
             <div className="flex items-center justify-between mb-6">
                 <SearchFilter/>
                 <Link
                     className="btn-indigo focus:outline-none"
-                    href={route("additional.create")}
+                    href={route("bazar-schedule.create")}
                 >
                     <span>Create</span>
-                    <span className="hidden md:inline">AdditionalCost</span>
+                    <span className="hidden md:inline"> Bazar Schedule</span>
                 </Link>
             </div>
             <div className="overflow-x-auto bg-white rounded shadow">
                 <table className="w-full whitespace-nowrap">
                     <thead>
                     <tr className="font-bold text-left">
-                        <th className="px-6 pt-5 pb-4">Amount</th>
-                        <th className="px-6 pt-5 pb-4">Description</th>
+                        <th className="px-6 pt-5 pb-4">Date</th>
+                        <th className="px-6 pt-5 pb-4">Status</th>
                         <th className="px-6 pt-5 pb-4">Action</th>
                     </tr>
                     </thead>
                     <tbody>
                     {data.map(
-                        ({id, amount,description, status}) => {
+                        ({id, bazar_date, status}) => {
                             return (
                                 <tr
                                     key={id}
@@ -53,15 +53,7 @@ const Index = () => {
                                         <p
                                             className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
                                         >
-                                            {amount}
-                                        </p>
-                                    </td>
-
-                                    <td className="border-t">
-                                        <p
-                                            className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
-                                        >
-                                            {description}
+                                            {bazar_date}
                                         </p>
                                     </td>
                                     <td className="border-t">
@@ -74,7 +66,7 @@ const Index = () => {
                                     <td className="w-px border-t px-4 py-3 whitespace-nowrap">
                                         <div className="flex items-center gap-4 justify-end">
                                             <Link
-                                                href={route("additional.edit", id)}
+                                                href={route("bazar-schedule.edit", id)}
                                                 className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
                                             >
                                                 <Icon
@@ -83,7 +75,7 @@ const Index = () => {
                                                 />
                                             </Link>
                                             <button
-                                                onClick={() => deleteAdditionalCost(id)}
+                                                onClick={() => deleteBazarSchedule(id)}
                                                 className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
                                             >
                                                 <Icon
@@ -100,7 +92,7 @@ const Index = () => {
                     {data.length === 0 && (
                         <tr>
                             <td className="px-6 py-4 border-t" colSpan="4">
-                                No AdditionalCost found.
+                                No Bazar Schedule found.
                             </td>
                         </tr>
                     )}
@@ -112,6 +104,6 @@ const Index = () => {
     );
 };
 
-Index.layout = (page) => <Layout title="Additional Cost" children={page}/>;
+Index.layout = (page) => <Layout title="Bazar Schedule" children={page}/>;
 
 export default Index;

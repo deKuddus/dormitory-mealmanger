@@ -59,8 +59,13 @@ export default ({ className }) => {
             icon: "FaListAlt",
         },
         {
-            name: "AdditionalCost",
+            name: "Additional",
             link: "additional.index",
+            icon: "FaListAlt",
+        },
+        {
+            name: "Bazar Schedule",
+            link: "bazar-schedule.index",
             icon: "FaListAlt",
         },
     ];
