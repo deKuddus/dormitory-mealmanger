@@ -68,6 +68,11 @@ export default ({ className }) => {
             link: "bazar-schedule.index",
             icon: "FaListAlt",
         },
+        {
+            name: "Bazar",
+            link: "bazar.index",
+            icon: "FaListAlt",
+        },
     ];
     return (
         <div className={className}>
