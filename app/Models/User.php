@@ -18,6 +18,7 @@ class User extends Authenticatable
 {
     use HasFactory;
     use Notifiable;
+
     // use HasApiTokens;
     use SoftDeletes;
 
@@ -34,6 +35,7 @@ class User extends Authenticatable
         'institution',
         'company',
         'status',
+        'mess_id'
     ];
     protected $perPage = 10;
 
@@ -44,9 +46,14 @@ class User extends Authenticatable
             : parent::resolveRouteBinding($value);
     }
 
+    public function mess()
+    {
+        return $this->belongsTo(Mess::class, 'mess_id', 'id');
+    }
+
     public function getNameAttribute()
     {
-        return $this->first_name.' '.$this->last_name;
+        return $this->first_name . ' ' . $this->last_name;
     }
 
     public function setPasswordAttribute($password)
@@ -88,9 +95,9 @@ class User extends Authenticatable
     {
         $query->when($filters['search'] ?? null, function ($query, $search) {
             $query->where(function ($query) use ($search) {
-                $query->where('first_name', 'like', '%'.$search.'%')
-                    ->orWhere('last_name', 'like', '%'.$search.'%')
-                    ->orWhere('email', 'like', '%'.$search.'%');
+                $query->where('first_name', 'like', '%' . $search . '%')
+                    ->orWhere('last_name', 'like', '%' . $search . '%')
+                    ->orWhere('email', 'like', '%' . $search . '%');
             });
         })->when($filters['trashed'] ?? null, function ($query, $trashed) {
             if ($trashed === 'with') {
@@ -99,5 +106,10 @@ class User extends Authenticatable
                 $query->onlyTrashed();
             }
         });
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', 1);
     }
 }

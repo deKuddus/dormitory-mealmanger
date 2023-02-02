@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper\Helper;
 use App\Http\Requests\UserDeleteRequest;
 use App\Http\Requests\UserStoreRequest;
 use App\Http\Requests\UserUpdateRequest;
@@ -31,7 +32,9 @@ class UsersController extends Controller
 
     public function create()
     {
-        return Inertia::render('Users/Create');
+        return Inertia::render('Users/Create',[
+           ...Helper::messArray()
+        ]);
     }
 
     public function store(UserStoreRequest $request)
@@ -47,6 +50,7 @@ class UsersController extends Controller
     {
         return Inertia::render('Users/Edit', [
             'user' => new UserResource($user),
+            ...Helper::messArray()
         ]);
     }
 

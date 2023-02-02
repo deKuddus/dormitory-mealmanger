@@ -21,7 +21,11 @@ const Index = () => {
 
     return (
         <div>
-            <h1 className="mb-8 text-3xl font-bold">Rules</h1>
+            <h1 className="mb-8 text-3xl font-bold">Rules
+            <Link className="ml-4 text-xl text-blue-400 flex-row " href={route('ruleItem.index')}>
+                {'<'} Rule Item {'>'}
+            </Link>
+            </h1>
             <div className="flex items-center justify-between mb-6">
                 <SearchFilter/>
                 <Link

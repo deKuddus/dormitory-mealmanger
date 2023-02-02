@@ -61,7 +61,7 @@ const Dashboard = () => {
         <div>
             <h1 className="mb-8 text-3xl font-bold">Dashboard</h1>
             <div className="col-span-full mb-5">
-                <div className="filament-stats grid gap-4 lg:gap-8 md:grid-cols-3">
+                <div className="grid gap-4 lg:gap-8 md:grid-cols-3">
                     <div className="filament-stats-card relative p-6 rounded-2xl bg-white shadow  filament-stats-overview-widget-card">
                         <div className="space-y-2">
                             <div className="flex items-center space-x-2 rtl:space-x-reverse text-sm font-medium text-gray-800 ">
