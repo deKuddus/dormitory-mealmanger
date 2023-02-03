@@ -1,51 +1,114 @@
-import dayjs from "dayjs";
-import React, {useState, useEffect} from "react";
-import EventModal from "@/Calendar/EventModal";
 
+let eventGuid = 0
+let todayStr = new Date().toISOString().replace(/T.*$/, '') // YYYY-MM-DD of today
 
-export default function Day({day, rowIdx, meal}) {
-    const [showModal, setShowModal] = useState(false);
-
-
-    function getCurrentDayClass() {
-        return day.format("DD-MM-YY") === dayjs().format("DD-MM-YY")
-            ? "bg-blue-600 text-white rounded-full w-7"
-            : "";
+export const INITIAL_EVENTS = [
+    {
+        "date": "2023-02-01",
+        "title": "Lunch: 2 | Dinner: 2"
+    },
+    {
+        "date": "2023-02-02",
+        "title": "Lunch: 2 | Dinner: 2"
+    },
+    {
+        "date": "2023-02-03",
+        "title": "Lunch: 2 | Dinner: 2"
+    },
+    {
+        "date": "2023-02-04",
+        "title": "Lunch: 2 | Dinner: 2"
+    },
+    {
+        "date": "2023-02-05",
+        "title": "Lunch: 2 | Dinner: 2"
+    },
+    {
+        "date": "2023-02-06",
+        "title": "Lunch: 2 | Dinner: 2"
+    },
+    {
+        "date": "2023-02-07",
+        "title": "Lunch: 2 | Dinner: 2"
+    },
+    {
+        "date": "2023-02-08",
+        "title": "Lunch: 2 | Dinner: 2"
+    },
+    {
+        "date": "2023-02-09",
+        "title": "Lunch: 2 | Dinner: 2"
+    },
+    {
+        "date": "2023-02-10",
+        "title": "Lunch: 2 | Dinner: 2"
+    },
+    {
+        "date": "2023-02-11",
+        "title": "Lunch: 2 | Dinner: 2"
+    },
+    {
+        "date": "2023-02-12",
+        "title": "Lunch: 2 | Dinner: 2"
+    },
+    {
+        "date": "2023-02-13",
+        "title": "Lunch: 2 | Dinner: 2"
+    },
+    {
+        "date": "2023-02-14",
+        "title": "Lunch: 2 | Dinner: 2"
+    },
+    {
+        "date": "2023-02-15",
+        "title": "Lunch: 2 | Dinner: 2"
+    },
+    {
+        "date": "2023-02-16",
+        "title": "Lunch: 2 | Dinner: 2"
+    },
+    {
+        "date": "2023-02-17",
+        "title": "Lunch: 2 | Dinner: 2"
+    },
+    {
+        "date": "2023-02-18",
+        "title": "Lunch: 2 | Dinner: 2"
+    },
+    {
+        "date": "2023-02-19",
+        "title": "Lunch: 2 | Dinner: 2"
+    },
+    {
+        "date": "2023-02-20",
+        "title": "Lunch: 2 | Dinner: 2"
+    },
+    {
+        "date": "2023-02-21",
+        "title": "Lunch: 2 | Dinner: 2"
+    },
+    {
+        "date": "2023-02-22",
+        "title": "Lunch: 2 | Dinner: 2"
+    },
+    {
+        "date": "2023-02-23",
+        "title": "Lunch: 2 | Dinner: 2"
+    },
+    {
+        "date": "2023-02-24",
+        "title": "Lunch: 2 | Dinner: 2"
+    },
+    {
+        "date": "2023-02-25",
+        "title": "Lunch: 2 | Dinner: 2"
+    },
+    {
+        "date": "2023-02-26",
+        "title": "Lunch: 2 | Dinner: 2"
     }
+]
 
-    function activeDate() {
-        return day.format("DD-MM-YY") === dayjs().format("DD-MM-YY");
-    }
-
-    return (
-        <>
-            {showModal && <EventModal mealData={meal} setShowModal={setShowModal}/>}
-            <div className={`border border-gray-200 flex flex-col ${activeDate() ? 'bg-yellow-200' : ''}`}>
-                <header className="flex flex-col items-center">
-                    {rowIdx === 0 && (
-                        <p className="text-sm mt-1">
-                            {day.format("ddd").toUpperCase()}
-                        </p>
-                    )}
-                    <p
-                        className={`text-sm p-1 my-1 text-center  ${getCurrentDayClass()}`}
-                    >
-                        {day.format("DD")}
-                    </p>
-                </header>
-                <div
-                    className="flex-1 cursor-pointer"
-                    onClick={() => {
-                        setShowModal(true);
-                    }}
-                >
-                    <div
-                        className={`${activeDate() ? 'bg-blue-500' : 'bg-gray-200'} items-center p-2 m-2 text-white text-gray-600 text-xl font-bold rounded mb-1`}
-                    >
-                        Meal: 20
-                    </div>
-                </div>
-            </div>
-        </>
-    );
+export function createEventId() {
+    return String(eventGuid++)
 }
