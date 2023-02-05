@@ -8,21 +8,3 @@
 
 /* Utilities */
 @import "tailwindcss/utilities";
-
-.fc-event{
-    background-color: #0f05b3 !important;
-    border: 1px solid #0f05b3 !important;
-}
-.fc-event-today{
-    padding-top: 20px;
-    padding-bottom: 20px;
-    font-size: 12px !important;
-    font-weight: bold;
-    text-align: center;
-}
-.fc-daygrid-event-harness{
-    margin-top: 11px !important;
-}
-/*.fc-day-today{*/
-/*    background-color: #f7da16 !important;*/
-/*}*/

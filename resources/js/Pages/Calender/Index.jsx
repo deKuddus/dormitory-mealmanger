@@ -7,12 +7,19 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
-import {INITIAL_EVENTS} from "@/Calendar/Day";
+import EventModal from "@/Calendar/EventModal";
 
 const Index = () => {
     const {messId} = usePage().props;
     const [meals, setMeals] = useState([]);
-    const [currentEvents, setCurrentEvents] = useState([]);
+    const [open, setOpen] = useState(false)
+    const [meal, setMeal] = useState({
+        id: Number(0),
+        lunch: '',
+        dinner: '',
+        notes: '',
+        mess_id:Number(0)
+    });
     const month = dayjs(new Date(dayjs().year(), dayjs().month())).format(
         "YYYY-MM-DD"
     );
@@ -24,10 +31,16 @@ const Index = () => {
         if (error) {
             console.log(error.data.message)
         } else if (response.data && response.data.length > 0) {
-            let s = response.data.map(({created_at, break_fast_total, lunch_total, dinner_total}) => {
+            let s = response.data.map(({id, created_at, break_fast_total,mess_id, lunch_total, dinner_total}) => {
                 return {
+                    id,
+                    mess_id,
                     date: dayjs(created_at).format("YYYY-MM-DD"),
-                    title: `Lunch: ${lunch_total} | Dinner: ${dinner_total}`
+                    title: `Meal`,
+                    breakfast: break_fast_total,
+                    lunch: lunch_total,
+                    dinner: dinner_total,
+                    today: dayjs(created_at).format("YYYY-MM-DD") === dayjs(new Date()).format("YYYY-MM-DD")
                 }
             });
             setMeals(s)
@@ -43,70 +56,67 @@ const Index = () => {
     }, [messId])
 
 
-    const handleDateSelect = (selectInfo) => {
-        console.log(selectInfo)
-        let title = '';
-        let calendarApi = selectInfo.view.calendar
-
-        // calendarApi.unselect() // clear date selection
-
-        if (title) {
-            calendarApi.addEvent({
-                id: createEventId(),
-                title,
-                start: selectInfo.startStr,
-                end: selectInfo.endStr,
-                allDay: selectInfo.allDay
-            })
-        }
+    const handleEvents = ({event}) => {
+        console.log(event)
+        const {lunch, dinner,id,mess_id} = event._def.extendedProps;
+        setMeal({
+            lunch,
+            dinner,
+            id,
+            mess_id
+        });
+        setOpen(true)
     }
 
-    const handleEventClick = (clickInfo) => {
-        console.log(clickInfo)
-    }
-
-    const handleEvents = (events) => {
-        setCurrentEvents(events)
-    }
-
-    function renderEventContent(eventInfo) {
+    function renderEventContent({event}) {
+        const {lunch, dinner, today} = event._def.extendedProps;
         return (
             <>
-                <span style={{
-                    paddingTop:10,
-                    paddingBottom:10
-                }}>{eventInfo.event.title}</span>
+                <div
+                    className={`p-2 flex flex-col font-bold text-md ${today ? 'bg-blue-600 shadow-2xl' : 'border-0 bg-gray-300'}`}>
+                    <span className="p-1 mb-1">Lunch : {lunch}</span>
+                    <span className="p-1">Dinner : {dinner}</span>
+                </div>
+
             </>
         )
     }
-    console.log(meals)
+
+    console.log(meal)
+
     return (
         <>
-            <FullCalendar
-                plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-                headerToolbar={{
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
-                }}
-                initialView='dayGridMonth'
-                editable={true}
-                selectable={true}
-                selectMirror={true}
-                dayMaxEvents={true}
-                firstDay={6}
-                events={meals}
-                select={handleDateSelect}
-                eventContent={renderEventContent}
-                eventClick={handleEventClick}
-                eventsSet={handleEvents}
-
-                /* you can update a remote database when these fire:
-                eventAdd={function(){}}
-                eventChange={function(){}}
-                eventRemove={function(){}}
-                */
+            <EventModal
+                meal={meal}
+                setMeal={setMeal}
+                open={open}
+                setOpen={setOpen}
             />
+            <div className="p-3 rounded-2xl bg-white shadow ">
+                <FullCalendar
+                    plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+                    headerToolbar={{
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                    }}
+                    initialView='dayGridMonth'
+                    editable={true}
+                    selectable={true}
+                    selectMirror={true}
+                    dayMaxEvents={true}
+                    firstDay={6}
+                    events={meals}
+                    eventContent={renderEventContent}
+                    eventClick={handleEvents}
+
+                    /* you can update a remote database when these fire:
+                    eventAdd={function(){}}
+                    eventChange={function(){}}
+                    eventRemove={function(){}}
+                    */
+                />
+            </div>
         </>
     );
 };
