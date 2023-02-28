@@ -32,7 +32,7 @@ class UsersController extends Controller
 
     public function create()
     {
-        return Inertia::render('Users/Create',[
+        return Inertia::render('Users/Create', [
            ...Helper::messArray()
         ]);
     }
@@ -53,6 +53,13 @@ class UsersController extends Controller
             ...Helper::messArray()
         ]);
     }
+     public function show(User $user)
+     {
+         return Inertia::render('Users/Show', [
+             'user' => new UserResource($user),
+             ...Helper::messArray()
+         ]);
+     }
 
     public function update(User $user, UserUpdateRequest $request)
     {

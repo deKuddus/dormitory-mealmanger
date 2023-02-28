@@ -36,6 +36,7 @@
         "@fullcalendar/timegrid": "^6.1.1",
         "@headlessui/react": "^1.7.9",
         "dayjs": "^1.11.7",
+        "notiflix": "^3.2.6",
         "react-datepicker": "^4.8.0",
         "react-icons": "^4.7.1"
     }

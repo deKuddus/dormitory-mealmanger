@@ -18,7 +18,24 @@ const Index = () => {
         }
         return true;
     }
-
+    const StautsColumn = ({status}) => {
+        if (status === 1) {
+            return (<p
+                    className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none text-green-400 "
+                >
+                    Done
+                </p>
+            );
+        }
+        if (status === 0) {
+            return (<p
+                    className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none text-red-400"
+                >
+                    Pending
+                </p>
+            );
+        }
+    }
     return (
         <div>
             <h1 className="mb-8 text-3xl font-bold">Bazar Schedules</h1>
@@ -32,38 +49,53 @@ const Index = () => {
                     <span className="hidden md:inline"> Bazar Schedule</span>
                 </Link>
             </div>
-            <div className="overflow-x-auto bg-white rounded shadow">
+            <div className="overflow-x-auto bg-white rounded shadow p-3">
                 <table className="w-full whitespace-nowrap">
                     <thead>
                     <tr className="font-bold text-left">
+                        <th className="px-6 pt-5 pb-4">No.</th>
                         <th className="px-6 pt-5 pb-4">Date</th>
+                        <th className="px-6 pt-5 pb-4">Name</th>
                         <th className="px-6 pt-5 pb-4">Status</th>
                         <th className="px-6 pt-5 pb-4">Action</th>
                     </tr>
                     </thead>
                     <tbody>
                     {data.map(
-                        ({id, bazar_date, status}) => {
+                        ({id, bazar_date, status, users}, key) => {
                             return (
                                 <tr
                                     key={id}
                                     className="hover:bg-gray-100 focus-within:bg-gray-100"
                                 >
-                                    <td className="border-t">
+                                    <td className="border">
+                                        <p
+                                            className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
+                                        >
+                                            {key + 1}
+                                        </p>
+                                    </td>
+                                    <td className="border">
                                         <p
                                             className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
                                         >
                                             {bazar_date}
                                         </p>
                                     </td>
-                                    <td className="border-t">
+                                    <td className="border">
                                         <p
                                             className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
                                         >
-                                            {status}
+                                            {users && users.length > 0 ? users.map(
+                                                ({first_name, last_name}) => <span
+                                                    className={`bg-${status === 1 ? 'green':'red'}-200 text-gray-800  mr-2 px-2.5 py-0.5 rounded`}>{`${first_name} ${last_name}`}</span>
+                                            ) : 'N/A'}
                                         </p>
                                     </td>
-                                    <td className="w-px border-t px-4 py-3 whitespace-nowrap">
+                                    <td className="border">
+                                        <StautsColumn status={status}/>
+                                    </td>
+                                    <td className="w-px border px-4 py-3 whitespace-nowrap">
                                         <div className="flex items-center gap-4 justify-end">
                                             <Link
                                                 href={route("bazar-schedule.edit", id)}
@@ -91,7 +123,7 @@ const Index = () => {
                     )}
                     {data.length === 0 && (
                         <tr>
-                            <td className="px-6 py-4 border-t" colSpan="4">
+                            <td className="px-6 py-4 border" colSpan="4">
                                 No Bazar Schedule found.
                             </td>
                         </tr>

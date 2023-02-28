@@ -7,16 +7,17 @@ import Datepicker from "@/Shared/Datepicker";
 
 
 const Edit = () => {
-    const {users,bazarSchedule} = usePage().props;
+    const {users, bazarSchedule} = usePage().props;
     const {data, setData, errors, post, processing} = useForm({
         bazar_date: bazarSchedule.bazar_date || "",
         users_id: [],
-        status: bazarSchedule.status || "",
+        status: bazarSchedule.status || 0,
+        _method: 'PUT'
     });
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        post(route("bazar-schedule.update",bazarSchedule.id));
+        post(route("bazar-schedule.update", bazarSchedule.id));
     }
 
     const setBazarDate = (date) => {

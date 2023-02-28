@@ -32,10 +32,11 @@ const Index = () => {
                     <span className="hidden md:inline"> Rule Item</span>
                 </Link>
             </div>
-            <div className="overflow-x-auto bg-white rounded shadow">
+            <div className="overflow-x-auto bg-white rounded shadow p-3">
                 <table className="w-full whitespace-nowrap">
                     <thead>
                     <tr className="font-bold text-left">
+                        <th className="px-6 pt-5 pb-4">No</th>
                         <th className="px-6 pt-5 pb-4">Title</th>
                         <th className="px-6 pt-5 pb-4">Description</th>
                         <th className="px-6 pt-5 pb-4">Status</th>
@@ -46,34 +47,41 @@ const Index = () => {
                     </thead>
                     <tbody>
                     {data.map(
-                        ({id, rule, description,status}) => {
+                        ({id, rule, description,status},key) => {
                             return (
                                 <tr
                                     key={id}
                                     className="hover:bg-gray-100 focus-within:bg-gray-100"
                                 >
-                                    <td className="border-t">
+                                    <td className="border">
+                                        <p
+                                            className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
+                                        >
+                                            {seat_no}
+                                        </p>
+                                    </td>
+                                    <td className="border">
                                         <p
                                             className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
                                         >
                                             {rule.title}
                                         </p>
                                     </td>
-                                    <td className="border-t">
+                                    <td className="border">
                                         <p
                                             className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
                                         >
                                             {description}
                                         </p>
                                     </td>
-                                    <td className="border-t">
+                                    <td className="border">
                                         <p
                                             className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
                                         >
                                             {status}
                                         </p>
                                     </td>
-                                    <td className="w-px border-t px-4 py-3 whitespace-nowrap">
+                                    <td className="w-px border px-4 py-3 whitespace-nowrap">
                                         <div className="flex items-center gap-4 justify-end">
                                             <Link
                                                 href={route("ruleItem.edit", id)}
@@ -101,7 +109,7 @@ const Index = () => {
                     )}
                     {data.length === 0 && (
                         <tr>
-                            <td className="px-6 py-4 border-t" colSpan="4">
+                            <td className="px-6 py-4 border" colSpan="4">
                                 No Rule Item found.
                             </td>
                         </tr>

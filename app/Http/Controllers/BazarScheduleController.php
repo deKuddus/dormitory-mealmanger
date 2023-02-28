@@ -18,7 +18,8 @@ class BazarScheduleController extends Controller
             'filters' => $requestParam,
             'bazarSchedules' => new BazarScheduleCollection(
                 BazarSchedule::query()
-                    ->orderBy('created_at', 'desc')
+                    ->with('users:id,first_name,last_name')
+                    ->orderBy('status','asc')
                     ->paginate()
                     ->appends(request()->all())
             ),

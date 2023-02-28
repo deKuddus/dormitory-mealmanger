@@ -3,21 +3,18 @@ import {Link, useForm} from "@inertiajs/react";
 import Layout from "@/Shared/Layout";
 import LoadingButton from "@/Shared/LoadingButton";
 import TextInput from "@/Shared/TextInput";
-import Datepicker from "@/Shared/Datepicker";
 
 const Create = () => {
     const { data, setData, errors, post, processing } = useForm({
-        item: "",
+        break_fast: "",
+        lunch: "",
+        dinner: "",
         menu_date: "",
     });
 
     const handleSubmit = (e) =>{
         e.preventDefault();
         post(route("menu.store"));
-    }
-
-    const setPurchaseDate = (date) => {
-        setData("menu_date", date)
     }
 
     return (
@@ -39,23 +36,48 @@ const Create = () => {
                     <div className="flex flex-wrap p-8 -mb-8 -mr-6">
                         <TextInput
                             className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
-                            label="Item"
-                            name="item"
+                            label="Breakfast"
+                            name="break_fast"
                             type="text"
-                            errors={errors.item}
-                            value={data.item}
+                            errors={errors.break_fast}
+                            value={data.break_fast}
                             onChange={(e) =>
-                                setData("item", e.target.value)
+                                setData("break_fast", e.target.value)
+                            }
+                        />
+                        <TextInput
+                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
+                            label="Lunch"
+                            name="lunch"
+                            type="text"
+                            errors={errors.lunch}
+                            value={data.lunch}
+                            onChange={(e) =>
+                                setData("lunch", e.target.value)
+                            }
+                        />
+                        <TextInput
+                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
+                            label="Dinner"
+                            name="dinner"
+                            type="text"
+                            errors={errors.dinner}
+                            value={data.dinner}
+                            onChange={(e) =>
+                                setData("dinner", e.target.value)
                             }
                         />
 
-                        <Datepicker
+                        <TextInput
                             className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
-                            label="Published Date"
+                            label="Day"
+                            name="menu_date"
+                            type="text"
                             errors={errors.menu_date}
                             value={data.menu_date}
-                            handleDateChange={setPurchaseDate}
-                            startDate={data.menu_date?  new Date(data.menu_date) : new Date()}
+                            onChange={(e) =>
+                                setData("menu_date", e.target.value)
+                            }
                         />
                     </div>
                     <div className="flex items-center justify-end px-8 py-4 bg-gray-100 border-t border-gray-200">

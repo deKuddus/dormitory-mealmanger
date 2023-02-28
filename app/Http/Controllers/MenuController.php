@@ -26,7 +26,8 @@ class MenuController extends Controller
 
     public function create()
     {
-        return Inertia::render('Menu/Create');
+        return to_route('menu.index');
+//        return Inertia::render('Menu/Create');
     }
 
     public function store(MenuRequest $request)
@@ -62,9 +63,9 @@ class MenuController extends Controller
 
     public function destroy(Menu $menu)
     {
-        $menu->delete();
-
         return to_route('menu.index');
+//        $menu->delete();
+//        return to_route('menu.index');
     }
 
     public function restore(Menu $menu)

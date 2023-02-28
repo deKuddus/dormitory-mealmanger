@@ -45,4 +45,11 @@ class UserUpdateRequest extends FormRequest
             'mess_id'           => ['required', 'integer']
         ];
     }
+
+    public function prepareForValidation()
+    {
+        return $this->merge([
+            'mess_id' => 1,
+        ]);
+    }
 }

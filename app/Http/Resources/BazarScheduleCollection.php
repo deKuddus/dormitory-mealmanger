@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class BazarScheduleCollection extends ResourceCollection
@@ -18,7 +19,8 @@ class BazarScheduleCollection extends ResourceCollection
             'id',
             'mess_id',
             'bazar_date',
-            'status'
+            'status',
+            'users'
         );
     }
 }

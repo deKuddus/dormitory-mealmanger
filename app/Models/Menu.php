@@ -15,17 +15,11 @@ class Menu extends Model
 
     protected $fillable = [
         'mess_id',
-        'item',
+        'break_fast',
+        'lunch',
+        'dinner',
         'menu_date'
     ];
-
-    protected function menuDate(): Attribute
-    {
-        return Attribute::make(
-            get: fn($value) => Carbon::parse($value)->format('Y-m-d'),
-            set: fn($value) => Carbon::parse($value)->format('Y-m-d'),
-        );
-    }
 
     public function mess()
     {

@@ -12,7 +12,8 @@ import {
     FaArrowLeft,
     FaArrowRight,
     FaTimes,
-    FaBars
+    FaBars,
+    FaEye,
 } from "react-icons/fa";
 const IconComponentArray = {
     FaRegClock,
@@ -27,7 +28,8 @@ const IconComponentArray = {
     FaArrowLeft,
     FaArrowRight,
     FaTimes,
-    FaBars
+    FaBars,
+    FaEye,
 };
 
 export default ({ name, className }) => {

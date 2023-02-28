@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { usePage } from "@inertiajs/react";
 import classNames from "classnames";
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
+
 
 const IconSuccess = () => (
     <svg
@@ -51,43 +53,15 @@ export default () => {
     const { flash, errors } = usePage().props;
     const numOfErrors = Object.keys(errors).length;
 
-    useEffect(() => {
-        setVisible(true);
-    }, [flash, errors]);
+    if(flash.success){
+        return Notify.success(flash.success,{
+            closeButton:true
+        });
+    }
 
-    return (
-        <div>
-            {flash.success && visible && (
-                <div className="mb-8 flex items-center justify-between bg-green-500 rounded max-w-3xl">
-                    <div className="flex items-center">
-                        <IconSuccess />
-                        <div className="py-4 text-white text-sm font-medium">
-                            {flash.success}
-                        </div>
-                    </div>
-                    <ButtonClose
-                        onClick={() => setVisible(false)}
-                        color="green"
-                    />
-                </div>
-            )}
-            {(flash.error || numOfErrors > 0) && visible && (
-                <div className="mb-8 flex items-center justify-between bg-red-500 rounded max-w-3xl">
-                    <div className="flex items-center">
-                        <IconDanger />
-                        <div className="py-4 text-white text-sm font-medium">
-                            {flash.error && flash.error}
-                            {numOfErrors === 1 && "There is one form error"}
-                            {numOfErrors > 1 &&
-                                `There are ${numOfErrors} form errors.`}
-                        </div>
-                    </div>
-                    <ButtonClose
-                        onClick={() => setVisible(false)}
-                        color="red"
-                    />
-                </div>
-            )}
-        </div>
-    );
+    if(numOfErrors > 0){
+        return Notify.failure('There was an error!',{
+            closeButton:true
+        });
+    }
 };
