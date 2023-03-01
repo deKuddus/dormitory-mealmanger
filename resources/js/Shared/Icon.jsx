@@ -14,6 +14,8 @@ import {
     FaTimes,
     FaBars,
     FaEye,
+    FaPlus,
+    FaCheck
 } from "react-icons/fa";
 const IconComponentArray = {
     FaRegClock,
@@ -30,6 +32,8 @@ const IconComponentArray = {
     FaTimes,
     FaBars,
     FaEye,
+    FaPlus,
+    FaCheck,
 };
 
 export default ({ name, className }) => {

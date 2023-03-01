@@ -43,7 +43,7 @@ class UsersController extends Controller
             $request->validated()
         );
 
-        return Redirect::route('users')->with('success', 'User created.');
+        return Redirect::route('user')->with('success', 'User created.');
     }
 
     public function edit(User $user)

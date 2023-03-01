@@ -30,4 +30,11 @@ class DepositRequest extends FormRequest
             'deposit_date' => 'required|date'
         ];
     }
+
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'mess_id' => 1,
+        ]);
+    }
 }

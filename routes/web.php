@@ -38,9 +38,14 @@ Route::group(['middleware' => ['auth', 'remember']], function () {
     Route::resource('room', \App\Http\Controllers\RoomController::class);
     Route::resource('seat', \App\Http\Controllers\SeatController::class);
     Route::resource('chef', \App\Http\Controllers\ChefController::class);
-    Route::resource('deposit', \App\Http\Controllers\DepositController::class);
+
     Route::resource('additional', \App\Http\Controllers\AdditionalCostController::class);
     Route::resource('menu', \App\Http\Controllers\MenuController::class);
     Route::resource('bazar', \App\Http\Controllers\BazarController::class);
     Route::resource('bazar-schedule', \App\Http\Controllers\BazarScheduleController::class);
+
+
+    Route::resource('deposit', \App\Http\Controllers\DepositController::class)->only('index','create','edit','update');
+    Route::get('deposit/show/{user}',[\App\Http\Controllers\DepositController::class,'show'])->name('deposit.show');
+
 });

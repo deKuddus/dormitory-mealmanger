@@ -6,6 +6,7 @@ use App\Helper\Helper;
 use App\Http\Requests\DepositRequest;
 use App\Http\Resources\DepositCollection;
 use App\Models\Deposit;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -16,8 +17,11 @@ class DepositController extends Controller
         $requestParam = \request()->all('search', 'trashed');
         return Inertia::render('Deposit/Index', [
             'filters' => $requestParam,
-            'deposits' => new DepositCollection(
-                Deposit::query()
+            'usersWithDeposit' => new DepositCollection(
+                User::query()
+                    ->active()
+                    ->select('id', 'first_name', 'last_name')
+                    ->withSum('deposits', 'amount')
                     ->orderBy('created_at', 'desc')
                     ->paginate()
                     ->appends(request()->all())
@@ -27,9 +31,8 @@ class DepositController extends Controller
 
     public function create()
     {
-        return Inertia::render('Deposit/Create',[
-            ...Helper::usersArray(),
-            ...Helper::messArray()
+        return Inertia::render('Deposit/Create', [
+            ...Helper::usersArray()
         ]);
     }
 
@@ -42,8 +45,11 @@ class DepositController extends Controller
         return to_route('deposit.index');
     }
 
-    public function show($id)
+    public function show($userId)
     {
+        return Inertia::render('Deposit/Show', [
+            'user' => User::with('deposits')->find($userId)
+        ]);
 
     }
 
@@ -52,8 +58,7 @@ class DepositController extends Controller
     {
         return Inertia::render('Deposit/Edit', [
             'deposit' => $deposit,
-            ...Helper::usersArray(),
-            ...Helper::messArray()
+            ...Helper::usersArray()
         ]);
     }
 

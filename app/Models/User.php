@@ -112,4 +112,8 @@ class User extends Authenticatable
     {
         return $query->where('status', 1);
     }
+
+    public function deposits(){
+        return $this->hasMany(Deposit::class);
+    }
 }

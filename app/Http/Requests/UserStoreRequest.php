@@ -42,4 +42,10 @@ class UserStoreRequest extends FormRequest
         ];
     }
 
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'mess_id' => 1,
+        ]);
+    }
 }
