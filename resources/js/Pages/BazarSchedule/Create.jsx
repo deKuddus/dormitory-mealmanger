@@ -1,13 +1,15 @@
-import React from "react";
+import React, {useState} from "react";
 import {Link, useForm, usePage} from "@inertiajs/react";
 import Layout from "@/Shared/Layout";
 import LoadingButton from "@/Shared/LoadingButton";
 import TextInput from "@/Shared/TextInput";
 import SelectInput from "@/Shared/SelectInput";
 import Datepicker from "@/Shared/Datepicker";
+import Select from 'react-select'
 
 
 const Create = () => {
+
     const {users} = usePage().props;
     const {data, setData, errors, post, processing} = useForm({
         bazar_date: "",
@@ -29,6 +31,12 @@ const Create = () => {
         prevId.push(id);
         setData("users_id", prevId)
     }
+
+
+    const options = users && users.length ? users.map((row) => ({
+        value: row.id,
+        label: `${row.first_name} ${row.last_name}`
+    })) : [];
 
     return (
         <div>
@@ -68,19 +76,19 @@ const Create = () => {
                             <option value="0">InActive</option>
                         </SelectInput>
 
-                        <SelectInput
-                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
-                            label="Users"
-                            multiple={true}
-                            name="users_id"
-                            errors={errors.users_id}
-                            value={data.users_id}
-                            onChange={(e) => setUsersId(e.target.value)}
-                        >
-                            {users?.length > 0 && users.map((user) => (
-                                <option key={user.id} value={user.id}>{user.first_name}</option>
-                            ))}
-                        </SelectInput>
+                        <Select
+                            isMulti
+                            isClearable
+                            className={{
+                                control:(state)=> state.focused ? 'w-full pb-8 pr-6 md:w-1/2 lg:w-1/3':'w-full pb-8 pr-6 md:w-1/2 lg:w-1/3'
+                            }}
+                            options={options}
+                            onChange={(selected) =>
+                                setData('users_id',
+                                    (selected && selected.map((select) => select.value)) || []
+                                )
+                            }
+                        />
 
                     </div>
                     <div className="flex items-center justify-end px-8 py-4 bg-gray-100 border-t border-gray-200">

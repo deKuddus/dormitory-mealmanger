@@ -123,7 +123,7 @@ const Index = () => {
                     )}
                     {data.length === 0 && (
                         <tr>
-                            <td className="px-6 py-4 border" colSpan="4">
+                            <td className="px-6 py-4 border" colSpan="5">
                                 No Bazar Schedule found.
                             </td>
                         </tr>

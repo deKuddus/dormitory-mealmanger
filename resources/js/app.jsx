@@ -1,10 +1,14 @@
 import "./bootstrap";
 import "../css/app.css";
 import "react-datepicker/dist/react-datepicker.css";
+import {Flip, ToastContainer} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-import { createRoot } from "react-dom/client";
-import { createInertiaApp } from "@inertiajs/react";
-import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
+
+
+import {createRoot} from "react-dom/client";
+import {createInertiaApp} from "@inertiajs/react";
+import {resolvePageComponent} from "laravel-vite-plugin/inertia-helpers";
 
 const appName =
     window.document.getElementsByTagName("title")[0]?.innerText || "Laravel";
@@ -16,12 +20,14 @@ createInertiaApp({
             `./Pages/${name}.jsx`,
             import.meta.glob("./Pages/**/*.jsx")
         ),
-    setup({ el, App, props }) {
+    setup({el, App, props}) {
         const root = createRoot(el);
 
         root.render(
-            // <ContextWrapper><App {...props} /></ContextWrapper>
-            <App {...props} />
+            <>
+                <App {...props} />
+                <ToastContainer transition={Flip} autoClose={2000} />
+            </>
         );
     },
     progress: {

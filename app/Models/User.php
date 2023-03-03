@@ -34,8 +34,7 @@ class User extends Authenticatable
         'nid_type',
         'institution',
         'company',
-        'status',
-        'mess_id'
+        'status'
     ];
     protected $perPage = 10;
 
@@ -48,7 +47,7 @@ class User extends Authenticatable
 
     public function mess()
     {
-        return $this->belongsTo(Mess::class, 'mess_id', 'id');
+        return $this->belongsToMany(Mess::class, 'mess_users', 'user_id','mess_id');
     }
 
     public function getNameAttribute()
@@ -115,5 +114,10 @@ class User extends Authenticatable
 
     public function deposits(){
         return $this->hasMany(Deposit::class);
+    }
+
+
+    public function meals(){
+        return $this->hasMany(Meal::class);
     }
 }

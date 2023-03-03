@@ -39,9 +39,11 @@ class UsersController extends Controller
 
     public function store(UserStoreRequest $request)
     {
-        User::create(
+        $user = User::create(
             $request->validated()
         );
+
+        $user->mess()->sync($request->mess_id);
 
         return Redirect::route('user')->with('success', 'User created.');
     }
@@ -66,6 +68,8 @@ class UsersController extends Controller
         $user->update(
             $request->validated()
         );
+
+        $user->mess()->sync($request->mess_id);
 
         return Redirect::back()->with('success', 'User updated.');
     }

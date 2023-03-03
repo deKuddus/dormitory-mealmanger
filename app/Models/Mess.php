@@ -27,7 +27,7 @@ class Mess extends Model
 
     public function users()
     {
-        return $this->hasMany(User::class,'mess_id','id');
+        return $this->belongsToMany(User::class,'mess_users','mess_id','user_id');
     }
 
     public function scopeFilter($query, array $filters)

@@ -32,4 +32,8 @@ class Meal extends Model
             get: fn ($value) => Carbon::parse($value)->format('Y-m-d'),
         );
     }
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
 }

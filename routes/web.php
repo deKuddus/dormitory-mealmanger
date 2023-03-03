@@ -45,7 +45,14 @@ Route::group(['middleware' => ['auth', 'remember']], function () {
     Route::resource('bazar-schedule', \App\Http\Controllers\BazarScheduleController::class);
 
 
-    Route::resource('deposit', \App\Http\Controllers\DepositController::class)->only('index','create','edit','update');
+    Route::resource('deposit', \App\Http\Controllers\DepositController::class)->except('show');
     Route::get('deposit/show/{user}',[\App\Http\Controllers\DepositController::class,'show'])->name('deposit.show');
+    Route::post('deposit/accept/{deposit}',[\App\Http\Controllers\DepositController::class,'accept'])->name('deposit.accept');
+    Route::post('deposit/reject/{deposit}',[\App\Http\Controllers\DepositController::class,'reject'])->name('deposit.reject');
+    Route::post('deposit/withdraw',[\App\Http\Controllers\DepositController::class,'withdraw'])->name('deposit.withdraw');
+
+
+    Route::get('meals',[\App\Http\Controllers\MealController::class,'index'])->name('meals');
+    Route::get('meals/show/{user}',[\App\Http\Controllers\MealController::class,'show'])->name('meals.show');
 
 });

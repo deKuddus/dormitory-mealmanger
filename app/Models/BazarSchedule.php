@@ -28,7 +28,7 @@ class BazarSchedule extends Model
     }
 
     public function users(){
-        return $this->belongsToMany(User::class);
+        return $this->belongsToMany(User::class,'bazar_schedule_user');
     }
 
     public function mess(){

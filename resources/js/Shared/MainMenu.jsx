@@ -10,6 +10,12 @@ export default ({ className }) => {
             icon: "FaRegClock",
         },
         {
+            name: "Meals",
+            link: "meals",
+            uri_root:"meal",
+            icon: "FaRegClock",
+        },
+        {
             name: "Users",
             link: "user.index",
             uri_root: "user",
