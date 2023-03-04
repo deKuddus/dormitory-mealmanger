@@ -18,7 +18,7 @@ class DepositCollection extends ResourceCollection
             'id',
             'first_name',
             'last_name',
-            'deposits_sum_amount',
+            'deposits',
         );
     }
 }

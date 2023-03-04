@@ -113,7 +113,7 @@ const Index = () => {
                     )}
                     {data.length === 0 && (
                         <tr>
-                            <td className="px-6 py-4 border" colSpan="4">
+                            <td className="px-6 py-4 border" colSpan="6">
                                 No Menu found.
                             </td>
                         </tr>

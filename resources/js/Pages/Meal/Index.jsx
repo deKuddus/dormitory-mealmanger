@@ -1,12 +1,26 @@
-import React from "react";
+import React, {useState} from "react";
 import {Link, router, usePage} from "@inertiajs/react";
 import Layout from "@/Shared/Layout";
 import Icon from "@/Shared/Icon";
 import SelectInput from "@/Shared/SelectInput";
+import moment from "moment/moment";
+import {currentYearMontList} from "@/utils";
 
 
 const Index = () => {
     const {users} = usePage().props;
+    const [currentMonth,setCurrentMonth] = useState(moment().format('MMM-YYYY'));
+    const dateOptions = currentYearMontList();
+
+    const handleDateChange = (value) => {
+        // if(value){
+        //    return router.get(route('meals.show',user.id), {month:value}, {
+        //         replace: true,
+        //         preserveState: true,
+        //     });
+        //
+        // }
+    }
 
 
     const Status = ({status}) => {
@@ -45,14 +59,15 @@ const Index = () => {
                 <div className="flex items-center">
                     <div className="relative z-30 w-64 px-4 py-6 mt-2">
                         <SelectInput
-                            label="Trashed"
-                            name="trashed"
-                            value={0}
-                            onChange={() => alert(3)}
+                            label="Month"
+                            name="month"
+                            value={currentMonth}
+                            onChange={(e) => {
+                                setCurrentMonth(e.target.value);
+                                handleDateChange(e.target.value);
+                            }}
                         >
-                            <option value=""></option>
-                            <option value="with">With Trashed</option>
-                            <option value="only">Only Trashed</option>
+                            {dateOptions && dateOptions.map((row,key)=>(<option key={key} value={row} defaultValue={moment().format('MMMM-YYYY')}>{row}</option>))}
                         </SelectInput>
                     </div>
                 </div>

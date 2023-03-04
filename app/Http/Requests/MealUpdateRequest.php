@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class BazarRequest extends FormRequest
+class MealUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,17 +24,11 @@ class BazarRequest extends FormRequest
     public function rules()
     {
         return [
-            'description' => 'nullable|string',
-            'amount' => 'numeric|required',
-            'mess_id' => 'required|integer'
+            'id' => 'required',
+            'user_id' => 'required',
+            'break_fast' => 'nullable|numeric',
+            'lunch' => 'required|numeric',
+            'dinner' => 'required|numeric',
         ];
-    }
-
-    protected function prepareForValidation()
-    {
-        $this->merge([
-            'mess_id' => 1,
-            'status' => 1
-        ]);
     }
 }

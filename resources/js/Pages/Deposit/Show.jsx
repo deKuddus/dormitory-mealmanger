@@ -7,11 +7,11 @@ import Icon from "@/Shared/Icon";
 import {Flip, toast} from "react-toastify";
 
 const Show = () => {
-    const {user, total, approvedDeposit, pendingDeposit} = usePage().props;
+    const {user, total, approvedDeposit, pendingDeposit,flash} = usePage().props;
 
     const [withdraw, setWithdraw] = useState(0);
 
-    const {data, setData, errors, post, processing} = useForm({
+    const {data,setData, errors, post, processing} = useForm({
         amount: 0,
         deposit_date: new Date(),
         status: 1,
@@ -59,6 +59,16 @@ const Show = () => {
             return setWithdraw(0);
         }
     }
+
+    useEffect(()=>{
+        if(errors && errors.length){
+            toast.error('There was an error.');
+        }
+
+        if(flash && flash.success){
+            toast.success(flash.success);
+        }
+    },[errors,flash])
 
 
     return (

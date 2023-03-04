@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import moment from "moment/moment";
 
 export function filesize(size) {
     const i = Math.floor(Math.log(size) / Math.log(1024));
@@ -21,4 +22,17 @@ export function getMonth(month = dayjs().month()) {
             return dayjs(new Date(year, month, currentMonthCount));
         });
     });
+}
+
+
+export const currentYearMontList = () =>{
+    const today = moment();
+    const currentYear = today.year();
+    const dateOptions = [];
+
+    for(let month = 0; month < 12; month++){
+        let monthDate = moment([currentYear, month, 1]);
+        dateOptions.push(monthDate.format('MMMM-YYYY'));
+    }
+    return dateOptions;
 }

@@ -39,8 +39,7 @@ const Index = () => {
     return (
         <div>
             <h1 className="mb-8 text-3xl font-bold">Bazar Schedules</h1>
-            <div className="flex items-center justify-between mb-6">
-                <SearchFilter/>
+            <div className="flex items-center justify-end mb-6">
                 <Link
                     className="btn-indigo focus:outline-none"
                     href={route("bazar-schedule.create")}

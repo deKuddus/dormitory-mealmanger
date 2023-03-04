@@ -9,6 +9,7 @@ use App\Http\Resources\DepositCollection;
 use App\Models\Deposit;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class DepositController extends Controller
@@ -21,8 +22,15 @@ class DepositController extends Controller
             'usersWithDeposit' => new DepositCollection(
                 User::query()
                     ->active()
+                    ->with(
+                        'deposits', function ($query) {
+                        $query->select(
+                            'user_id',
+                            DB::raw('SUM(CASE WHEN status = 1 THEN amount ELSE 0 END) as deposit_amount'),
+                            DB::raw('SUM(CASE WHEN status = 3 THEN amount ELSE 0 END) as withdraw_amount')
+                        )->groupBy('user_id');
+                    })
                     ->select('id', 'first_name', 'last_name')
-                    ->withSum('deposits', 'amount')
                     ->orderBy('created_at', 'desc')
                     ->paginate()
                     ->appends(request()->all())
@@ -51,8 +59,8 @@ class DepositController extends Controller
         $queryModel = Deposit::whereUserId($userId)->where('status', '!=', 0);
         return Inertia::render('Deposit/Show', [
             'user' => User::find($userId),
-            'approvedDeposit' => $queryModel->get(),
-            'total' => $queryModel->sum('amount'),
+            'approvedDeposit' => Deposit::whereUserId($userId)->where('status', '!=', 0)->get(),
+            'total' => Deposit::whereUserId($userId)->whereIn('status', [1])->sum('amount'),
             'pendingDeposit' => Deposit::whereUserId($userId)->whereStatus(0)->get(),
         ]);
 

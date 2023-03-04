@@ -40,7 +40,7 @@ const Index = () => {
                     </thead>
                     <tbody>
                     {data.map(
-                        ({ id,first_name, last_name,deposits_sum_amount}, key) => {
+                        ({id, first_name, last_name, deposits}, key) => {
                             return (
                                 <tr
                                     key={key}
@@ -62,22 +62,43 @@ const Index = () => {
                                         </p>
                                     </td>
 
-                                    <td className="border">
-                                        <p
-                                            className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
-                                        >
-                                            {deposits_sum_amount}
-                                        </p>
-                                    </td>
+                                    {deposits && deposits.length ? deposits.map(({deposit_amount, withdraw_amount},key) => (
+                                        <>
+                                            <td className="border">
+                                                <p
+                                                    className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
+                                                >
+                                                    {deposit_amount || 0} BDT
+                                                </p>
+                                            </td>
 
-                                    <td className="border">
-                                        <p
-                                            className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
-                                        >
-                                            {0}
-                                        </p>
-                                    </td>
+                                            <td className="border">
+                                                <p
+                                                    className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
+                                                >
+                                                    {withdraw_amount || 0} BDT
+                                                </p>
+                                            </td>
+                                        </>
+                                    )) : (
+                                        <>
+                                            <td className="border">
+                                                <p
+                                                    className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
+                                                >
+                                                    0 BDT
+                                                </p>
+                                            </td>
 
+                                            <td className="border">
+                                                <p
+                                                    className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
+                                                >
+                                                    0 BDT
+                                                </p>
+                                            </td>
+                                        </>
+                                    )}
 
 
                                     <td className="w-px border px-4 py-3 whitespace-nowrap">

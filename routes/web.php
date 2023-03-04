@@ -52,7 +52,11 @@ Route::group(['middleware' => ['auth', 'remember']], function () {
     Route::post('deposit/withdraw',[\App\Http\Controllers\DepositController::class,'withdraw'])->name('deposit.withdraw');
 
 
-    Route::get('meals',[\App\Http\Controllers\MealController::class,'index'])->name('meals');
+    Route::get('meals',[\App\Http\Controllers\MealController::class,'index'])->name('meals.index');
     Route::get('meals/show/{user}',[\App\Http\Controllers\MealController::class,'show'])->name('meals.show');
+    Route::post('meal/update',[\App\Http\Controllers\MealController::class,'update'])->name('meal.update');
+
+
+    Route::get('expenses',[\App\Http\Controllers\ExpenseController::class,'index'])->name('expense.index');
 
 });

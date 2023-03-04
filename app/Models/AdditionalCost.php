@@ -22,4 +22,8 @@ class AdditionalCost extends Model
     {
         return $this->belongsTo(Mess::class);
     }
+
+    public function scopeActive($query){
+        $query->whereStatus(1);
+    }
 }

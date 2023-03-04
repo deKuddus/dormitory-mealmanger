@@ -1,19 +1,55 @@
 import React from "react";
 import MainMenuItem from "@/Shared/MainMenuItem";
 
-export default ({ className }) => {
+export default ({className}) => {
     const route = [
         {
             name: "Dashboard",
             link: "dashboard",
-            uri_root:"dashboard",
+            uri_root: "dashboard",
             icon: "FaRegClock",
         },
         {
             name: "Meals",
-            link: "meals",
-            uri_root:"meal",
+            link: "meals.index",
+            uri_root: "meal",
             icon: "FaRegClock",
+        },
+        {
+            name: "Deposit",
+            link: "deposit.index",
+            uri_root: "deposit",
+            icon: "FaListAlt",
+        },
+        {
+            name: "Expenses",
+            link: "expense.index",
+            uri_root: "expense",
+            icon: "FaListAlt",
+        },
+        {
+            name: "Bazar",
+            link: "bazar.index",
+            uri_root: "bazar",
+            icon: "FaListAlt",
+        },
+        {
+            name: "Additional",
+            link: "additional.index",
+            uri_root: "additional",
+            icon: "FaListAlt",
+        },
+        {
+            name: "Menu",
+            link: "menu.index",
+            uri_root: "menu",
+            icon: "FaListAlt",
+        },
+        {
+            name: "Bazar Schedule",
+            link: "bazar-schedule.index",
+            uri_root: "bazar-schedule",
+            icon: "FaListAlt",
         },
         {
             name: "Users",
@@ -24,79 +60,49 @@ export default ({ className }) => {
         {
             name: "Messes",
             link: "mess.index",
-            uri_root:"mess",
+            uri_root: "mess",
             icon: "FaTiktok",
         },
         {
             name: "Notices",
             link: "notice.index",
-            uri_root:"notice",
+            uri_root: "notice",
             icon: "FaAlignJustify",
         },
         {
             name: "Rules",
             link: "rule.index",
-            uri_root:"rule",
+            uri_root: "rule",
             icon: "FaListAlt",
         },
         {
             name: "RuleItems",
             link: "ruleItem.index",
-            uri_root:"ruleItem",
+            uri_root: "ruleItem",
             icon: "FaListAlt",
         },
         {
             name: "Asset",
             link: "asset.index",
-            uri_root:"asset",
+            uri_root: "asset",
             icon: "FaListAlt",
         },
         {
             name: "Room",
             link: "room.index",
-            uri_root:"room",
+            uri_root: "room",
             icon: "FaListAlt",
         },
         {
             name: "Seat",
             link: "seat.index",
-            uri_root:"seat",
+            uri_root: "seat",
             icon: "FaListAlt",
         },
         {
             name: "Chef",
             link: "chef.index",
-            uri_root:"chef",
-            icon: "FaListAlt",
-        },
-        {
-            name: "Deposit",
-            link: "deposit.index",
-            uri_root:"deposit",
-            icon: "FaListAlt",
-        },
-        {
-            name: "Additional",
-            link: "additional.index",
-            uri_root:"additional",
-            icon: "FaListAlt",
-        },
-        {
-            name: "Bazar Schedule",
-            link: "bazar-schedule.index",
-            uri_root:"bazar-schedule",
-            icon: "FaListAlt",
-        },
-        {
-            name: "Bazar",
-            link: "bazar.index",
-            uri_root:"bazar",
-            icon: "FaListAlt",
-        },
-        {
-            name: "Menu",
-            link: "menu.index",
-            uri_root:"menu",
+            uri_root: "chef",
             icon: "FaListAlt",
         },
     ];
@@ -291,7 +297,7 @@ export default ({ className }) => {
                 </div>
             </aside> */}
             {route.map((item, key) => (
-                <MainMenuItem {...item} key={key} />
+                <MainMenuItem {...item} key={key}/>
             ))}
         </div>
     );

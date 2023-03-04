@@ -10,7 +10,6 @@ const Edit = () => {
         break_fast: menu.break_fast || "",
         lunch: menu.lunch || "",
         dinner: menu.dinner || "",
-        menu_date: menu.menu_date || "",
         _method: 'PUT'
     });
 
@@ -70,17 +69,6 @@ const Edit = () => {
                             }
                         />
 
-                        <TextInput
-                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
-                            label="Day"
-                            name="menu_date"
-                            type="text"
-                            errors={errors.menu_date}
-                            value={data.menu_date}
-                            onChange={(e) =>
-                                setData("menu_date", e.target.value)
-                            }
-                        />
                     </div>
                     <div className="flex items-center justify-end px-8 py-4 bg-gray-100 border-t border-gray-200">
                         <LoadingButton
@@ -88,7 +76,7 @@ const Edit = () => {
                             type="submit"
                             className="btn-indigo"
                         >
-                            Edit Menu
+                            Update Menu
                         </LoadingButton>
                     </div>
                 </form>

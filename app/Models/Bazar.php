@@ -14,11 +14,18 @@ class Bazar extends Model
     protected $fillable = [
         'description',
         'amount',
-        'mess_id'
+        'mess_id',
+        'status'
     ];
 
     public function mess()
     {
         return $this->belongsTo(Mess::class);
     }
+
+
+    public function scopeActive($query){
+        return $query->whereStatus(1);
+    }
+
 }

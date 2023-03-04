@@ -1,31 +1,87 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {Link, router, usePage} from "@inertiajs/react";
 import Layout from "@/Shared/Layout";
 import SelectInput from "@/Shared/SelectInput";
 import moment from 'moment';
-
+import {currentYearMontList} from "@/utils";
+import Icon from "@/Shared/Icon";
+import MealEditModal from "@/Pages/Meal/MealEditModal";
 
 
 const Index = () => {
-    const {user,balance} = usePage().props;
+    const {user, balance, member, additional, bazar, totalMeal} = usePage().props;
+    const [currentMonth, setCurrentMonth] = useState(moment().format('MMMM-YYYY'));
+    const mealEditInitialObject = {
+        id: undefined,
+        break_fast: 0,
+        lunch: 0,
+        dinner: 0,
+        created_at: '',
+        user: '',
+        user_id: 0
+    };
+    const [mealData, setMealData] = useState(mealEditInitialObject);
+    const [open, setOpen] = useState(false);
+
+    const mealCost = bazar / totalMeal;
+    const totalMealCost = user.total_meals * mealCost;
+    const fixedCost = additional / member;
+    const dateOptions = currentYearMontList();
+
+    const handleDateChange = (value) => {
+        if (value) {
+            return router.get(route('meals.show', user.id), {month: value}, {
+                replace: true,
+                preserveState: true,
+            });
+
+        }
+    }
+
+
+    const handleMealEdit = (id, break_fast, lunch, dinner, created_at) => {
+        setMealData({
+            id,
+            break_fast,
+            lunch,
+            dinner,
+            created_at,
+            user: user.name,
+            user_id: user.id,
+
+        })
+        setOpen(true);
+    }
+
+
+    const handleUpdateMela = () => {
+        router.post(route('meal.update'), mealData);
+        setOpen(false);
+        setMealData(mealEditInitialObject);
+    }
 
 
     return (
         <div>
-            <h1 className="mb-8 text-3xl font-bold">Meals</h1>
+            <MealEditModal mealData={mealData} setOpen={setOpen} setMealData={setMealData} open={open}
+                           handleConfirm={handleUpdateMela}/>
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
-                <div className="flex items-center"></div>
+                <div className="flex items-center">
+                    <h1 className="text-3xl font-bold">Meals</h1>
+                </div>
                 <div className="flex items-center">
                     <div className="relative z-30 w-64 px-4 py-6 mt-2">
                         <SelectInput
                             label="Month"
                             name="month"
-                            value={0}
-                            onChange={() => alert(3)}
+                            value={currentMonth}
+                            onChange={(e) => {
+                                setCurrentMonth(e.target.value);
+                                handleDateChange(e.target.value);
+                            }}
                         >
-                            <option value=""></option>
-                            <option value="with">With Trashed</option>
-                            <option value="only">Only Trashed</option>
+                            {dateOptions && dateOptions.map((row, key) => (<option key={key} value={row}
+                                                                                   defaultValue={moment().format('MMMM-YYYY')}>{row}</option>))}
                         </SelectInput>
                     </div>
                 </div>
@@ -38,7 +94,7 @@ const Index = () => {
                             <div className="space-y-2 text-white text-center">
                                 <div
                                     className="flex flex-col items-center space-x-2 rtl:space-x-reverse text-xl font-medium ">
-                                    <span className="text-xxl font-bold text-gray-900"> {user.first_name} {user.last_name}</span>
+                                    <span className="text-xxl font-bold text-gray-900"> {user.name}</span>
                                     <span className="text-sm text-gray-900">Balance {balance} BDT</span>
                                 </div>
                             </div>
@@ -47,9 +103,11 @@ const Index = () => {
                             <div className="space-y-2 text-white">
                                 <div
                                     className="flex flex-col items-center space-x-2 rtl:space-x-reverse text-xl font-medium ">
-                                    <span className="text-buttonColor-400">Meal Charge: 50 BDT </span>
-                                    <span className="text-gray-900 text-xl font-bold ">Total Meal : 50 </span>
-                                    <span className="text-gray-900 text-xl font-bold">Fixed Cost : 50 BDT</span>
+                                    <span className="text-buttonColor-400">Meal Charge: {mealCost} BDT </span>
+                                    <span
+                                        className="text-gray-900 text-xl font-bold ">Total Meal : {user.total_meals} </span>
+                                    <span
+                                        className="text-gray-900 text-xl font-bold">Fixed Cost : {fixedCost} BDT</span>
                                 </div>
                             </div>
                         </div>
@@ -58,8 +116,10 @@ const Index = () => {
                                 <div
                                     className="flex flex-col items-center space-x-2 rtl:space-x-reverse text-xl font-medium ">
                                     <span className="text-red-600 text-xl font-bold ">Total Due: 50 BDT </span>
-                                    <span className="text-gray-900 text-xl font-bold ">Total Cost : 50 </span>
-                                    <span className="text-gray-900 text-xl font-bold">Total Fixed Cost : 50 BDT</span>
+                                    <span
+                                        className="text-gray-900 text-xl font-bold ">Total Cost : {totalMealCost} </span>
+                                    <span
+                                        className="text-gray-900 text-xl font-bold">Total Fixed Cost : {fixedCost} BDT</span>
                                 </div>
                             </div>
                         </div>
@@ -72,6 +132,7 @@ const Index = () => {
                         <th className="px-6 pt-5 pb-4 border">Break Fast</th>
                         <th className="px-6 pt-5 pb-4 border">Lunch</th>
                         <th className="px-6 pt-5 pb-4 border">Dinner</th>
+                        <th className="px-6 pt-5 pb-4 border">Action</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -98,6 +159,20 @@ const Index = () => {
 
                             <td className="border">
                                 {dinner}
+                            </td>
+
+                            <td className="border w-px border-t p-3 whitespace-nowrap">
+                                <div className="flex items-center gap-2 justify-end">
+                                    <button
+                                        onClick={() => handleMealEdit(id, break_fast, lunch, dinner, created_at)}
+                                        className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
+                                    >
+                                        <Icon
+                                            name="FaEdit"
+                                            className="w-6 h-4 text-gray-400 hover:text-buttonColor-400 fill-current cursor-pointer"
+                                        />
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     )) : (
