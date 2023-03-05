@@ -1,21 +1,20 @@
 import React from "react";
-import {Link, useForm, usePage} from "@inertiajs/react";
+import {Link, useForm} from "@inertiajs/react";
 import Layout from "@/Shared/Layout";
 import LoadingButton from "@/Shared/LoadingButton";
 import TextInput from "@/Shared/TextInput";
 
 const Edit = () => {
-    const {menu} = usePage().props;
-    const {data, setData, errors, post, processing} = useForm({
-        break_fast: menu.break_fast || "",
-        lunch: menu.lunch || "",
-        dinner: menu.dinner || "",
-        _method: 'PUT'
+    const { data, setData, errors, post, processing } = useForm({
+        break_fast: "",
+        lunch: "",
+        dinner: "",
+        menu_date: "",
     });
 
-    const handleSubmit = (e) => {
+    const handleSubmit = (e) =>{
         e.preventDefault();
-        post(route("menu.update", menu.id));
+        post(route("menu.store"));
     }
 
     return (
@@ -69,6 +68,17 @@ const Edit = () => {
                             }
                         />
 
+                        <TextInput
+                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
+                            label="Day"
+                            name="menu_date"
+                            type="text"
+                            errors={errors.menu_date}
+                            value={data.menu_date}
+                            onChange={(e) =>
+                                setData("menu_date", e.target.value)
+                            }
+                        />
                     </div>
                     <div className="flex items-center justify-end px-8 py-4 bg-gray-100 border-t border-gray-200">
                         <LoadingButton
@@ -76,7 +86,7 @@ const Edit = () => {
                             type="submit"
                             className="btn-indigo"
                         >
-                            Update Menu
+                            Edit Menu
                         </LoadingButton>
                     </div>
                 </form>
@@ -85,6 +95,6 @@ const Edit = () => {
     );
 };
 
-Edit.layout = (page) => <Layout title="Edit Menu" children={page}/>;
+Edit.layout = (page) => <Layout title="Edit Menu" children={page} />;
 
 export default Edit;

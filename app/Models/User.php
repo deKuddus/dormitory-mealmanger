@@ -13,11 +13,13 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\UploadedFile;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     use HasFactory;
     use Notifiable;
+    use HasRoles;
 
     // use HasApiTokens;
     use SoftDeletes;

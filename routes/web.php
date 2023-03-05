@@ -62,4 +62,8 @@ Route::group(['middleware' => ['auth', 'remember']], function () {
     Route::post('settings/update',[\App\Http\Controllers\SettingController::class,'update'])->name('settings.update');
 
 
+    Route::get('permissions',[\App\Http\Controllers\PermissionController::class,'index'])->name('permissions.index');
+    Route::resource('role',\App\Http\Controllers\RoleController::class);
+
+
 });

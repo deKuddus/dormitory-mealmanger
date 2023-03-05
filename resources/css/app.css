@@ -68,3 +68,8 @@
     position: relative !important;
     zoom: 1;
 }
+
+.react-select__multi-value{
+    font-size: 22px;
+    padding: 6px 0px;
+}

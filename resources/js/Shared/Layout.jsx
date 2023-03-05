@@ -18,7 +18,7 @@ export default function Layout({ title, children }) {
                     <div className="flex flex-grow overflow-hidden">
                         <MainMenu className="hidden w-56 mx-2 overflow-y-auto bg-white md:block " />
                         <div className="w-full px-2 py-8 overflow-hidden overflow-y-auto md:p-8 bg-background-500">
-                            {/*<FlashMessages />*/}
+                            <FlashMessages />
                             {children}
                         </div>
                     </div>

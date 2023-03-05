@@ -106,6 +106,18 @@ export default ({className}) => {
             icon: "FaListAlt",
         },
         {
+            name: "Roles",
+            link: "role.index",
+            uri_root: "role",
+            icon: "FaListAlt",
+        },
+        {
+            name: "Permissions",
+            link: "permissions.index",
+            uri_root: "permissions",
+            icon: "FaListAlt",
+        },
+        {
             name: "Settings",
             link: "settings.index",
             uri_root: "settings",

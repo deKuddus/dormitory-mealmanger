@@ -8,11 +8,11 @@ export default () => {
     const { flash, errors } = usePage().props;
 
     if(flash.success){
-        return toast.success(flash.success);
+         toast.success(flash.success);
     }
-// console.log(errors)
-    if(errors){
-        return toast.error('There was an error!');
+
+    if(errors && errors.length){
+         toast.error('There was an error!');
     }
     return <></>
 };
