@@ -64,6 +64,7 @@ Route::group(['middleware' => ['auth', 'remember']], function () {
 
     Route::get('permissions',[\App\Http\Controllers\PermissionController::class,'index'])->name('permissions.index');
     Route::resource('role',\App\Http\Controllers\RoleController::class);
+    Route::get('report',[\App\Http\Controllers\ReportController::class,'index'])->name('report.index');
 
 
 });

@@ -11,6 +11,7 @@ use App\Models\Meal;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class MealController extends Controller
@@ -40,24 +41,58 @@ class MealController extends Controller
             }
 
             return Inertia::render('Meal/Show', [
-                'user' => new MealDetailsResource(
-                    User::with([
-                        'meals' => function ($query) use ($month) {
-                            $query->whereMonth('created_at', '=', $month->month)->whereYear('created_at', '=', $month->year);
-                        }
-                    ])->select('id', 'first_name', 'last_name', 'email', 'status')->findOrFail($user),
-                ),
-                'balance' => Deposit::whereUserId($user)->active()->sum('amount'),
-                'additional' => AdditionalCost::query()->whereMonth('created_at', '=', $month->month)->whereYear('created_at', '=', $month->year)->active()->sum('amount'),
-                'member' => User::query()->with('mess', function ($q) use ($messId) {
-                    $q->where('mess_id', $messId);
-                })->active()->count(),
-                'totalMeal' => Meal::whereMessId($messId)->whereMonth('created_at', '=', $month->month)->whereYear('created_at', '=', $month->year)->count(),
-                'bazar' => Bazar::query()->active()->whereMonth('created_at', '=', $month->month)->whereYear('created_at', '=', $month->year)->sum('amount'),
+                'user' => $this->getUserWithMeal($user, $month, $messId),
+                'balance' => $this->getUserTotalDeposit($user, $messId),
+                'additional' => $this->getTotalAdditionalCost($month, $messId),
+                'member' => $this->getTotalUser($messId),
+                'totalMeal' => $this->getTotalMeal($messId, $month),
+                'bazar' => $this->getTotalBazar($month, $messId)
             ]);
+
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }
+    }
+
+
+    private function getUserWithMeal($user, $month, $messId)
+    {
+        return new MealDetailsResource(
+            User::with([
+                'meals' => function ($query) use ($month, $messId) {
+                    $query->whereMessId($messId)->whereMonth('created_at', '=', $month->month)->whereYear('created_at', '=', $month->year);
+                }
+            ])
+                ->select('id', 'first_name', 'last_name', 'email', 'status')
+                ->findOrFail($user)
+        );
+    }
+
+    private function getUserTotalDeposit($user, $messId)
+    {
+        return Deposit::whereUserId($user)->whereMessId($messId)->active()->sum('amount');
+    }
+
+    private function getTotalAdditionalCost($month, $messId)
+    {
+        return AdditionalCost::query()->whereMessId($messId)->whereMonth('created_at', '=', $month->month)->whereYear('created_at', '=', $month->year)->active()->sum('amount');
+    }
+
+    private function getTotalUser($messId)
+    {
+        return User::query()->with('mess', function ($q) use ($messId) {
+            $q->where('mess_id', $messId);
+        })->active()->count();
+    }
+
+    private function getTotalMeal($messId, $month)
+    {
+        return Meal::whereMessId($messId)->whereMonth('created_at', '=', $month->month)->whereYear('created_at', '=', $month->year)->select(DB::raw("SUM(break_fast + lunch + dinner) as total_meals"))->first();
+    }
+
+    private function getTotalBazar($month, $messId)
+    {
+        return Bazar::query()->active()->whereMessId($messId)->whereMonth('created_at', '=', $month->month)->whereYear('created_at', '=', $month->year)->sum('amount');
     }
 
 
@@ -69,6 +104,6 @@ class MealController extends Controller
         $meal->lunch = $data['lunch'];
         $meal->dinner = $data['dinner'];
         $meal->save();
-        return to_route('meals.show',$data['user_id']);
+        return to_route('meals.show', $data['user_id']);
     }
 }

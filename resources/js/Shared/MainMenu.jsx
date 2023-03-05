@@ -106,6 +106,12 @@ export default ({className}) => {
             icon: "FaListAlt",
         },
         {
+            name: "Report",
+            link: "report.index",
+            uri_root: "reports",
+            icon: "FaListAlt",
+        },
+        {
             name: "Roles",
             link: "role.index",
             uri_root: "role",
