@@ -53,7 +53,7 @@ class BazarScheduleController extends Controller
     public function edit(BazarSchedule $bazarSchedule)
     {
         return Inertia::render('BazarSchedule/Edit',[
-            'bazarSchedule' =>$bazarSchedule,
+            'bazarSchedule' => $bazarSchedule->load('users:id,first_name,last_name'),
             ...Helper::usersArray()
         ]);
     }

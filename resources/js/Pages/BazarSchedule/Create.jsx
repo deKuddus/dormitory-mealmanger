@@ -76,19 +76,20 @@ const Create = () => {
                             <option value="0">InActive</option>
                         </SelectInput>
 
-                        <Select
-                            isMulti
-                            isClearable
-                            className={{
-                                control:(state)=> state.focused ? 'w-full pb-8 pr-6 md:w-1/2 lg:w-1/3':'w-full pb-8 pr-6 md:w-1/2 lg:w-1/3'
-                            }}
-                            options={options}
-                            onChange={(selected) =>
-                                setData('users_id',
-                                    (selected && selected.map((select) => select.value)) || []
-                                )
-                            }
-                        />
+                        <div className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3">
+                            <label className="form-label">Users</label>
+                            <Select
+                                isMulti
+                                isClearable
+                                classNamePrefix={"react-select"}
+                                options={options}
+                                onChange={(selected) =>
+                                    setData('users_id',
+                                        (selected && selected.map((select) => select.value)) || []
+                                    )
+                                }
+                            />
+                        </div>
 
                     </div>
                     <div className="flex items-center justify-end px-8 py-4 bg-gray-100 border-t border-gray-200">

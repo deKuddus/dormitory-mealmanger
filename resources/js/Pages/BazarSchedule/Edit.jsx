@@ -1,22 +1,30 @@
-import React from "react";
+import React, {useState} from "react";
 import {Link, useForm, usePage} from "@inertiajs/react";
 import Layout from "@/Shared/Layout";
 import LoadingButton from "@/Shared/LoadingButton";
 import SelectInput from "@/Shared/SelectInput";
 import Datepicker from "@/Shared/Datepicker";
+import Select from "react-select";
 
 
 const Edit = () => {
     const {users, bazarSchedule} = usePage().props;
     const {data, setData, errors, post, processing} = useForm({
         bazar_date: bazarSchedule.bazar_date || "",
-        users_id: [],
+        users_id: bazarSchedule.users && bazarSchedule.users.map(({id,first_name,last_name},key)=>(id)) || [],
         status: bazarSchedule.status || 0,
         _method: 'PUT'
     });
 
+    const options = users && users.length ? users.map((row) => ({
+        value: row.id,
+        label: `${row.first_name} ${row.last_name}`
+    })) : [];
+
+
     const handleSubmit = (e) => {
         e.preventDefault();
+
         post(route("bazar-schedule.update", bazarSchedule.id));
     }
 
@@ -29,7 +37,8 @@ const Edit = () => {
         prevId.push(id);
         setData("users_id", prevId)
     }
-    console.log(data)
+console.log(data.users_id)
+console.log(options.filter((option)=>data.users_id.includes(option.value)))
     return (
         <div>
             <div>
@@ -64,23 +73,27 @@ const Edit = () => {
                             value={data.status}
                             onChange={(e) => setData("status", e.target.value)}
                         >
-                            <option value="1">Active</option>
-                            <option value="0">InActive</option>
+                            <option value="1" defaultValue={bazarSchedule.status}>Active</option>
+                            <option value="0" defaultValue={bazarSchedule.status}>InActive</option>
                         </SelectInput>
 
-                        <SelectInput
-                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
-                            label="Users"
-                            multiple={true}
-                            name="users_id"
-                            errors={errors.users_id}
-                            value={data.users_id}
-                            onChange={(e) => setUsersId(e.target.value)}
-                        >
-                            {users?.length > 0 && users.map((user) => (
-                                <option key={user.id} value={user.id}>{user.first_name}</option>
-                            ))}
-                        </SelectInput>
+                        <div className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3">
+                            <label className="form-label">Users</label>
+                            <Select
+                                isMulti
+                                isClearable
+                                classNamePrefix={"react-select"}
+                                options={options}
+                                value={options.filter((option)=>data.users_id.includes(option.value))}
+                                onChange={(selected) =>
+                                    setData('users_id',((selected && selected.map((select) => select.value)) || []))
+                                }
+                                name='users_id[]'
+                            />
+                        </div>
+
+
+
 
                     </div>
                     <div className="flex items-center justify-end px-8 py-4 bg-gray-100 border-t border-gray-200">

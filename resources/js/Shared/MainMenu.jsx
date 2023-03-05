@@ -105,6 +105,12 @@ export default ({className}) => {
             uri_root: "chef",
             icon: "FaListAlt",
         },
+        {
+            name: "Settings",
+            link: "settings.index",
+            uri_root: "settings",
+            icon: "FaListAlt",
+        },
     ];
     return (
         <div className={className}>

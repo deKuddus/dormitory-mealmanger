@@ -4,6 +4,7 @@ import Layout from "@/Shared/Layout";
 import Icon from "@/Shared/Icon";
 import SearchFilter from "@/Shared/SearchFilter";
 import Pagination from "@/Shared/Pagination";
+import moment from "moment";
 
 const Index = () => {
     const {bazarSchedules} = usePage().props;
@@ -78,7 +79,7 @@ const Index = () => {
                                         <p
                                             className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
                                         >
-                                            {bazar_date}
+                                            {moment(bazar_date).format('dddd, LL')}
                                         </p>
                                     </td>
                                     <td className="border">
@@ -86,7 +87,7 @@ const Index = () => {
                                             className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
                                         >
                                             {users && users.length > 0 ? users.map(
-                                                ({first_name, last_name}) => <span
+                                                ({first_name, last_name},index) => <span key={index}
                                                     className={`bg-${status === 1 ? 'green':'red'}-200 text-gray-800  mr-2 px-2.5 py-0.5 rounded`}>{`${first_name} ${last_name}`}</span>
                                             ) : 'N/A'}
                                         </p>

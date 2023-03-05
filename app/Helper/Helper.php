@@ -20,7 +20,7 @@ class Helper
     public static function usersArray()
     {
         return [
-            'users' => User::get(['id', 'first_name'])->toArray(),
+            'users' => User::get(['id', 'first_name','last_name'])->toArray(),
         ];
     }
 

@@ -58,5 +58,8 @@ Route::group(['middleware' => ['auth', 'remember']], function () {
 
 
     Route::get('expenses',[\App\Http\Controllers\ExpenseController::class,'index'])->name('expense.index');
+    Route::get('settings',[\App\Http\Controllers\SettingController::class,'index'])->name('settings.index');
+    Route::post('settings/update',[\App\Http\Controllers\SettingController::class,'update'])->name('settings.update');
+
 
 });
