@@ -8,6 +8,7 @@ use App\Models\Bazar;
 use App\Models\Deposit;
 use App\Models\Meal;
 use App\Models\User;
+use App\Trait\Stats;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -15,6 +16,7 @@ use Inertia\Inertia;
 
 class ReportController extends Controller
 {
+    use Stats;
     public function index(Request $request)
     {
         $messId = 1;
@@ -64,52 +66,5 @@ class ReportController extends Controller
                 ->select('id', 'first_name', 'last_name', 'email', 'status')
                 ->get(),
         );
-    }
-
-    private function getTotalMeal($messId, $month)
-    {
-        $meals = Meal::whereMessId($messId)
-            ->whereMonth('created_at', '=', $month->month)
-            ->whereYear('created_at', '=', $month->year)
-            ->select(
-                DB::raw("SUM(break_fast + lunch + dinner) as total_meals")
-            )->first();
-
-        return $meals;
-    }
-
-    private function totalBazar($messId, $month)
-    {
-        return Bazar::query()
-            ->whereMessId($messId)
-            ->active()
-            ->whereMonth('created_at', '=', $month->month)
-            ->whereYear('created_at', '=', $month->year)
-            ->sum('amount');
-    }
-
-    private function totalMember($messId)
-    {
-        return User::query()
-            ->with('mess', function ($q) use ($messId) {
-                $q->where('mess_id', $messId);
-            })
-            ->active()
-            ->count();
-    }
-
-    private function getTotalAdditionalCost($messId, $month)
-    {
-        return AdditionalCost::query()
-            ->whereMessId($messId)
-            ->whereMonth('created_at', '=', $month->month)
-            ->whereYear('created_at', '=', $month->year)
-            ->active()
-            ->sum('amount');
-    }
-
-    private function getTotalDeposit($messId)
-    {
-        return Deposit::query()->whereMessId($messId)->active()->sum('amount');
     }
 }

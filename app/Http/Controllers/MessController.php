@@ -51,7 +51,8 @@ class MessController extends Controller
 
     public function edit(Mess $mess)
     {
-        return Inertia::render('Mess/Create', [
+//        dd($mess);
+        return Inertia::render('Mess/Edit', [
             'users' => User::get(['id', 'first_name'])->toArray(),
             'mess' => $mess,
         ]);
@@ -59,6 +60,8 @@ class MessController extends Controller
 
     public function update(MessCreateRequest $request, Mess $mess)
     {
+
+//        dd($request->all());
         $mess->update(
             $request->validated()
         );

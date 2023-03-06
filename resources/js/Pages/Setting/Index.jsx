@@ -51,33 +51,7 @@ const Index = () => {
                         onChange={(e) => setName(e.target.value)}
                     />
 
-                    <SelectInput
-                        className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/2"
-                        label="Breakfast will closed after"
-                        name="break_fast_close"
-                        value={breakFastClose}
-                        onChange={(e) => setBreakFastClose(e.target.value)}
-                    >
-                        {hours.map((row,key)=>(<option value={row} key={key} defaultValue={breakFastClose}>{row}</option>))}
-                    </SelectInput>
-                    <SelectInput
-                        className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/2"
-                        label="Lunch will closed after"
-                        name="lunch_close"
-                        value={lunchClose}
-                        onChange={(e) => setLunchClose(e.target.value)}
-                    >
-                        {hours.map((row,key)=>(<option value={row} key={key} defaultValue={lunchClose}>{row}</option>))}
-                    </SelectInput>
-                    <SelectInput
-                        className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/2"
-                        label="Breakfast will closed after"
-                        name="break_fast_close"
-                        value={dinnerClose}
-                        onChange={(e) => setDinnerClose(e.target.value)}
-                    >
-                        {hours.map((row,key)=>(<option value={row} key={key} defaultValue={dinnerClose}>{row}</option>))}
-                    </SelectInput>
+
 
                 </div>
                 <div className="flex items-center justify-end px-8 py-4 bg-gray-100 border-t border-gray-200">
