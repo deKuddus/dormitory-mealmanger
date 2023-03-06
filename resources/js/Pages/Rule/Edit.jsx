@@ -1,5 +1,5 @@
 import React from "react";
-import {Link, useForm, usePage} from "@inertiajs/react";
+import {Link, useForm} from "@inertiajs/react";
 import Layout from "@/Shared/Layout";
 import LoadingButton from "@/Shared/LoadingButton";
 import TextInput from "@/Shared/TextInput";
@@ -7,18 +7,17 @@ import SelectInput from "@/Shared/SelectInput";
 import Datepicker from "@/Shared/Datepicker";
 
 const Edit = () => {
-    const { rule } = usePage().props;
     const { data, setData, errors, post, processing } = useForm({
-        title: rule.title || "",
-        status:  rule.status || "",
+        title: "",
+        status: "",
         mess_id: 1,
-        published_date: rule.published_date || "",
-        _method: "PUT"
+        published_date: "",
+        _method:'PUT',
     });
 
     const handleSubmit = (e) =>{
         e.preventDefault();
-        post(route("rule.update",rule.id));
+        post(route("rule.store"));
     }
 
     const setPublishedDate = (date) => {
@@ -61,7 +60,7 @@ const Edit = () => {
                             errors={errors.published_date}
                             value={data.published_date}
                             handleDateChange={setPublishedDate}
-                            startDate={new Date(data.published_date) || new Date()}
+                            startDate={data.published_date?  new Date(data.published_date) : new Date()}
                         />
 
                         <SelectInput
@@ -83,7 +82,7 @@ const Edit = () => {
                             type="submit"
                             className="btn-indigo"
                         >
-                            Update Rule
+                            Edit Rule
                         </LoadingButton>
                     </div>
                 </form>

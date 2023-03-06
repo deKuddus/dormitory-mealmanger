@@ -20,10 +20,6 @@ export default () => {
         <div className="flex items-center justify-center min-h-screen p-6 bg-indigo-900">
             <Head title="Login" />
             <div className="w-full max-w-md">
-                <Logo
-                    className="block w-full max-w-xs mx-auto text-white fill-current text-center"
-                    height={50}
-                />
                 <form
                     onSubmit={handleSubmit}
                     className="mt-8 overflow-hidden bg-white rounded-lg shadow-xl"

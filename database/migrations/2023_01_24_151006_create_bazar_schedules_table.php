@@ -14,10 +14,9 @@ return new class () extends Migration {
     {
         Schema::create('bazar_schedules', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
             $table->foreignId('mess_id')->constrained();
             $table->dateTime('bazar_date')->nullable();
-            $table->integer('status')->default(1);
+            $table->integer('status')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

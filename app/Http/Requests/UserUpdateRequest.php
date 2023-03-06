@@ -42,6 +42,14 @@ class UserUpdateRequest extends FormRequest
             'company'           => ['nullable', 'max:50'],
             'status'            => ['required', 'boolean'],
             'photo'             => ['nullable', 'image'],
+            'mess_id'           => ['required', 'integer']
         ];
+    }
+
+    public function prepareForValidation()
+    {
+        return $this->merge([
+            'mess_id' => 1,
+        ]);
     }
 }

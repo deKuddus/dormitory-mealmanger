@@ -8,7 +8,14 @@ import {
     FaAlignJustify,
     FaTiktok,
     FaEdit,
-    FaListAlt
+    FaListAlt,
+    FaArrowLeft,
+    FaArrowRight,
+    FaTimes,
+    FaBars,
+    FaEye,
+    FaPlus,
+    FaCheck
 } from "react-icons/fa";
 const IconComponentArray = {
     FaRegClock,
@@ -19,8 +26,14 @@ const IconComponentArray = {
     FaAlignJustify,
     FaTiktok,
     FaEdit,
-    FaListAlt
-
+    FaListAlt,
+    FaArrowLeft,
+    FaArrowRight,
+    FaTimes,
+    FaBars,
+    FaEye,
+    FaPlus,
+    FaCheck,
 };
 
 export default ({ name, className }) => {

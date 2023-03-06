@@ -32,7 +32,7 @@ class UserFactory extends Factory
             'nid_type' => fake()->name(),
             'institution' => fake()->name(),
             'company' => fake()->name(),
-            'status' => fake()->numberBetween(1, 9),
+            'status' => fake()->numberBetween(0, 1),
         ];
     }
 

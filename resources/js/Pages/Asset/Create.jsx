@@ -31,7 +31,7 @@ const Create = () => {
                         href={route("asset.index")}
                         className="text-indigo-600 hover:text-indigo-700"
                     >
-                        MessAsset
+                        Asset
                     </Link>
                     <span className="font-medium text-indigo-600"> /</span>{" "}
                     Create

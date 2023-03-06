@@ -20,11 +20,21 @@ class Mess extends Model
         'is_fixed_meal_rate'
     ];
 
+    public function owner()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class,'mess_users','mess_id','user_id');
+    }
+
     public function scopeFilter($query, array $filters)
     {
         $query->when($filters['search'] ?? null, function ($query, $search) {
             $query->where(function ($query) use ($search) {
-                $query->where('name', 'like', '%'.$search.'%');
+                $query->where('name', 'like', '%' . $search . '%');
             });
         })->when($filters['trashed'] ?? null, function ($query, $trashed) {
             if ($trashed === 'with') {
@@ -33,5 +43,10 @@ class Mess extends Model
                 $query->onlyTrashed();
             }
         });
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', 1);
     }
 }

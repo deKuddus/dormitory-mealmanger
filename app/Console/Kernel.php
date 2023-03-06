@@ -15,7 +15,15 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+         $schedule->command('create:meal')
+             ->timezone('Asia/Dhaka')
+             ->everyMinute()
+             ->onSuccess(function (){
+                 //send email to all user
+             })
+             ->onFailure(function (){
+                 // send mail to admin
+             });
     }
 
     /**

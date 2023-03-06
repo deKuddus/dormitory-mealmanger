@@ -73,17 +73,17 @@ const Edit = () => {
                             <option value="0">InActive</option>
                         </SelectInput>
 
-                        <SelectInput
-                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
-                            label="User"
-                            name="user_id"
-                            errors={errors.user_id}
-                            value={data.user_id}
-                            onChange={(e) => setData("user_id", e.target.value)}
-                        >
-                            {users.map((user) => (<option key={user.id} {user.id == data.user_id ? 'selected' : ''}
-                                                          value={user.id}>{user.name}</option>))}
-                        </SelectInput>
+                        {/*<SelectInput*/}
+                        {/*    className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"*/}
+                        {/*    label="User"*/}
+                        {/*    name="user_id"*/}
+                        {/*    errors={errors.user_id}*/}
+                        {/*    value={data.user_id}*/}
+                        {/*    onChange={(e) => setData("user_id", e.target.value)}*/}
+                        {/*>*/}
+                        {/*    {users.map((user) => (<option key={user.id} {user.id == data.user_id ? 'selected' : ''}*/}
+                        {/*                                  value={user.id}>{user.name}</option>))}*/}
+                        {/*</SelectInput>*/}
 
                         <SelectInput
                             className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
