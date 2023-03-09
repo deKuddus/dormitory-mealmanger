@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, usePage, useForm, router, Head } from "@inertiajs/react";
+import {Link, usePage, useForm, router, Head} from "@inertiajs/react";
 import Layout from "@/Shared/Layout";
 import DeleteButton from "@/Shared/DeleteButton";
 import LoadingButton from "@/Shared/LoadingButton";
@@ -7,10 +7,11 @@ import TextInput from "@/Shared/TextInput";
 import SelectInput from "@/Shared/SelectInput";
 import FileInput from "@/Shared/FileInput";
 import TrashedMessage from "@/Shared/TrashedMessage";
+import Select from "react-select";
 
 const Edit = () => {
-    const { user } = usePage().props;
-    const { data, setData, errors, post, processing } = useForm({
+    const {user, roles} = usePage().props;
+    const {data, setData, errors, post, processing} = useForm({
         first_name: user.last_name || "",
         last_name: user.last_name || "",
         email: user.email || "",
@@ -23,34 +24,38 @@ const Edit = () => {
         institution: user.institution || "",
         company: user.company || "",
         status: user.status || "0",
-
-        // NOTE: When working with Laravel PUT/PATCH requests and FormData
-        // you SHOULD send POST request and fake the PUT request like this.
+        roles:user.roles && user.roles.map(({id,name},key)=>(id)) || [],
         _method: "PUT",
     });
 
-    const  handleSubmit = (e)  =>{
+    const handleSubmit = (e) => {
         e.preventDefault();
 
         // NOTE: We are using POST method here, not PUT/PACH. See comment above.
         post(route("user.update", user.id));
     }
 
-    const destroy = () =>{
+    const destroy = () => {
         if (confirm("Are you sure you want to delete this user?")) {
             router.delete(route("user.destroy", user.id));
         }
     }
 
-    const restore = () =>{
+    const restore = () => {
         if (confirm("Are you sure you want to restore this user?")) {
             router.put(route("user.restore", user.id));
         }
     }
 
+    const options = roles && roles.length ? roles.map((row) => ({
+        value: row.id,
+        label: `${row.name}`
+    })) : [];
+
+console.log(user)
     return (
         <div>
-            <Head title={`${data.first_name} ${data.last_name}`} />
+            <Head title={`${data.first_name} ${data.last_name}`}/>
             <div className="flex justify-start max-w-lg mb-8">
                 <h1 className="text-3xl font-bold">
                     <Link
@@ -188,15 +193,21 @@ const Edit = () => {
                             <option value="1">Active</option>
                             <option value="0">InActive</option>
                         </SelectInput>
-                        {/*<FileInput*/}
-                        {/*    className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"*/}
-                        {/*    label="Photo"*/}
-                        {/*    name="photo"*/}
-                        {/*    accept="image/*"*/}
-                        {/*    errors={errors.photo}*/}
-                        {/*    value={data.photo}*/}
-                        {/*    onChange={(photo) => setData("photo", photo)}*/}
-                        {/*/>*/}
+                        <div className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3">
+                            <label className="form-label">Roles</label>
+                            <Select
+                                isMulti
+                                isClearable
+                                classNamePrefix={"react-select"}
+                                options={options}
+                                value={options.filter((option)=>data.roles.includes(option.value))}
+                                onChange={(selected) =>
+                                    setData('roles',
+                                        (selected && selected.map((select) => select.value)) || []
+                                    )
+                                }
+                            />
+                        </div>
                     </div>
                     <div className="flex items-center justify-end px-8 py-4 bg-gray-100 border-t border-gray-200">
                         <LoadingButton
@@ -213,6 +224,6 @@ const Edit = () => {
     );
 };
 
-Edit.layout = (page) => <Layout children={page} />;
+Edit.layout = (page) => <Layout children={page}/>;
 
 export default Edit;

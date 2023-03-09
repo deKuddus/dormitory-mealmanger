@@ -4,6 +4,7 @@ namespace App\Helper;
 
 use App\Models\Meal;
 use App\Models\Mess;
+use App\Models\Role;
 use App\Models\Rule;
 use App\Models\User;
 use Carbon\Carbon;
@@ -28,6 +29,13 @@ class Helper
     {
         return [
             'rules' => Rule::get(['id', 'title'])->toArray(),
+        ];
+    }
+
+    public static function rolesArray()
+    {
+        return [
+            'roles' => Role::get(['id', 'name'])->toArray(),
         ];
     }
 

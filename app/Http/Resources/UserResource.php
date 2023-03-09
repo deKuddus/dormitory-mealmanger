@@ -28,6 +28,7 @@ class UserResource extends JsonResource
             'institution' => $this->institution,
             'company' => $this->company,
             'status' => $this->status,
+            'roles' => $this->roles
         ];
     }
 }

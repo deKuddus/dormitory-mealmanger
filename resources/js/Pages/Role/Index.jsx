@@ -37,6 +37,7 @@ const Index = () => {
                     <tr className="font-bold text-left">
                         <th className="px-6 pt-5 pb-4">No</th>
                         <th className="px-6 pt-5 pb-4">Name</th>
+                        <th className="px-6 pt-5 pb-4">Number of Users</th>
                         <th className="px-6 pt-5 pb-4">Permisison</th>
                         <th className="px-6 pt-5 pb-4">
                             Action
@@ -45,7 +46,7 @@ const Index = () => {
                     </thead>
                     <tbody>
                     {data.map(
-                        ({id, name, permissions}, key) => {
+                        ({id, name, permissions,users_count}, key) => {
                             return (
                                 <tr
                                     key={id}
@@ -63,6 +64,13 @@ const Index = () => {
                                             className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
                                         >
                                             {name}
+                                        </p>
+                                    </td>
+                                    <td className="border">
+                                        <p
+                                            className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
+                                        >
+                                            {users_count}
                                         </p>
                                     </td>
                                     <td className="border">

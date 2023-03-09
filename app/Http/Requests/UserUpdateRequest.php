@@ -27,22 +27,23 @@ class UserUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'first_name'        => ['required', 'max:50'],
-            'last_name'         => ['required', 'max:50'],
-            'email'             => ['required', 'max:50', 'email',
+            'first_name' => ['required', 'max:50'],
+            'last_name' => ['required', 'max:50'],
+            'email' => ['required', 'max:50', 'email',
                 Rule::unique('users')->ignore($this->route('user')->id)
             ],
-            'password'          => ['nullable', 'min:6', 'max:50'],
-            'phone'             => ['required', 'max:11'],
-            'present_address'   => ['required', 'max:255'],
+            'password' => ['nullable', 'min:6', 'max:50'],
+            'phone' => ['required', 'max:11'],
+            'present_address' => ['required', 'max:255'],
             'permanent_address' => ['required', 'max:255'],
-            'nid'               => ['required', 'max:50'],
-            'nid_type'          => ['required', 'max:50'],
-            'institution'       => ['nullable', 'max:50'],
-            'company'           => ['nullable', 'max:50'],
-            'status'            => ['required', 'boolean'],
-            'photo'             => ['nullable', 'image'],
-            'mess_id'           => ['required', 'integer']
+            'nid' => ['required', 'max:50'],
+            'nid_type' => ['required', 'max:50'],
+            'institution' => ['nullable', 'max:50'],
+            'company' => ['nullable', 'max:50'],
+            'status' => ['required', 'boolean'],
+            'photo' => ['nullable', 'image'],
+            'mess_id' => ['required', 'integer'],
+            'roles' => ['required','array']
         ];
     }
 
