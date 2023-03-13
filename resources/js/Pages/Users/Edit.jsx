@@ -24,8 +24,9 @@ const Edit = () => {
         institution: user.institution || "",
         company: user.company || "",
         status: user.status || "0",
-        roles:user.roles && user.roles.map(({id,name},key)=>(id)) || [],
+        roles: user.roles && user.roles.map(({id, name}, key) => (id)) || [],
         _method: "PUT",
+        is_admin: user.is_admin,
     });
 
     const handleSubmit = (e) => {
@@ -52,7 +53,7 @@ const Edit = () => {
         label: `${row.name}`
     })) : [];
 
-console.log(user)
+    console.log(user)
     return (
         <div>
             <Head title={`${data.first_name} ${data.last_name}`}/>
@@ -193,6 +194,19 @@ console.log(user)
                             <option value="1">Active</option>
                             <option value="0">InActive</option>
                         </SelectInput>
+
+                        <SelectInput
+                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
+                            label="Is Admin"
+                            name="is_admin"
+                            errors={errors.is_admin}
+                            value={data.is_admin}
+                            onChange={(e) => setData("is_admin", e.target.value)}
+                        >
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </SelectInput>
+
                         <div className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3">
                             <label className="form-label">Roles</label>
                             <Select
@@ -200,7 +214,7 @@ console.log(user)
                                 isClearable
                                 classNamePrefix={"react-select"}
                                 options={options}
-                                value={options.filter((option)=>data.roles.includes(option.value))}
+                                value={options.filter((option) => data.roles.includes(option.value))}
                                 onChange={(selected) =>
                                     setData('roles',
                                         (selected && selected.map((select) => select.value)) || []

@@ -25,6 +25,7 @@ const Create = () => {
         company: "",
         status: "0",
         roles: [],
+        is_admin: 0,
     });
 
     const handleSubmit = (e) => {
@@ -176,6 +177,17 @@ const Create = () => {
                         >
                             <option value="1">Active</option>
                             <option value="0">InActive</option>
+                        </SelectInput>
+                        <SelectInput
+                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
+                            label="Is Admin"
+                            name="is_admin"
+                            errors={errors.is_admin}
+                            value={data.is_admin}
+                            onChange={(e) => setData("is_admin", e.target.value)}
+                        >
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
                         </SelectInput>
                         <div className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3">
                             <label className="form-label">Roles</label>

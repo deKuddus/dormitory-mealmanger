@@ -31,7 +31,7 @@ class MealCreateCommand extends Command
         $this->info('Meal create task started');
         if (now()->format('Y-m-d') !== date('Y-m-01')) {
             Helper::createMeal();
-            $this->info("Meal successfully created for the month of " . now()->format('Y-m-d'));
+            $this->info("Meal successfully created for the month of " . now()->format('F, Y'));
             return Command::SUCCESS;
         }
         $this->error('No auto meal generated');

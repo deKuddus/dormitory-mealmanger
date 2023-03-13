@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Deposit;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -52,6 +53,8 @@ class HandleInertiaRequests extends Middleware
                     'error' => $request->session()->get('error'),
                 ];
             },
+
+            'deposit' => Auth::check() ? Deposit::whereUserId(auth()->id())->whereMessId(1)->active()->sum('amount') : 0
         ]);
     }
 }

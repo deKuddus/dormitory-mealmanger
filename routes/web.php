@@ -16,16 +16,27 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/test',function (){
+  abort(404);
+});
+
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login')->middleware('guest');
 Route::post('login', [LoginController::class, 'login'])->name('login.attempt')->middleware('guest');
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 // Images
 Route::get('/img/{path}', [ImagesController::class, 'show'])->where('path', '.*');
 
-// 500 error
-Route::group(['middleware' => ['auth', 'remember']], function () {
+Route::get('/',function (){
+    return 'you are in home';
+})->name('home');
+
+Route::group(['middleware' => 'auth'],function (){
+    Route::get('dashboard',[\App\Http\Controllers\Member\HomeController::class,'index'])->name('user.dashboard');
+    Route::post('meal-status/update',[\App\Http\Controllers\Member\HomeController::class,'updateMealStatus'])->name('user.meal.update');
+});
+
+Route::group(['middleware' => ['auth', 'remember','hasAccessInDashboard'],'prefix' => 'master'], function () {
     Route::get('/', DashboardController::class)->name('dashboard');
-    Route::get('/home', DashboardController::class)->name('dashboard');
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
     Route::get('/calender/{mess_id?}', [\App\Http\Controllers\CalendarController::class, 'showCalender'])->name('dashboard');
 

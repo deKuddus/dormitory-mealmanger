@@ -40,6 +40,7 @@ class UserStoreRequest extends FormRequest
             'photo' => ['nullable', 'image'],
             'mess_id' => ['required', 'integer'],
             'roles' => ['required', 'array'],
+            'is_admin' => ['required', 'boolean']
         ];
     }
 

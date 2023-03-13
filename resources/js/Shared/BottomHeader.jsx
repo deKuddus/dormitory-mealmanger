@@ -1,19 +1,21 @@
-import React, { useState } from "react";
-import { Link, usePage } from "@inertiajs/react";
+import React, {useState} from "react";
+import {Link, usePage} from "@inertiajs/react";
 import Icon from "@/Shared/Icon";
 
 export default () => {
-    const { auth } = usePage().props;
+    const {auth,deposit} = usePage().props;
     const [menuOpened, setMenuOpened] = useState(false);
     return (
-        <div className="flex items-center justify-between w-full p-4 text-sm bg-white border-b md:py-0 md:px-12 d:text-md">
-            <div className="mt-1 mr-4">{auth.user.name}</div>
+        <div
+            className="flex items-center justify-between w-full p-4 text-sm bg-white border-b md:py-0 md:px-12 d:text-md">
+            <div className="mt-1 mr-4">Current Balance : {deposit} BDT</div>
             <div className="relative">
                 <div
                     className="flex items-center cursor-pointer select-none group"
                     onClick={() => setMenuOpened(true)}
                 >
-                    <div className="mr-1 text-gray-800 whitespace-nowrap group-hover:text-background-200 focus:text-indigo-600">
+                    <div
+                        className="mr-1 text-gray-800 whitespace-nowrap group-hover:text-background-200 focus:text-indigo-600">
                         <span>{auth.user.first_name}</span>
                         <span className="hidden ml-1 md:inline">
                             {auth.user.last_name}
@@ -25,7 +27,8 @@ export default () => {
                     />
                 </div>
                 <div className={menuOpened ? "" : "hidden"}>
-                    <div className="absolute top-0 right-0 left-auto z-20 py-2 mt-8 text-sm whitespace-nowrap bg-white rounded shadow-xl">
+                    <div
+                        className="absolute top-0 right-0 left-auto z-20 py-2 mt-8 text-sm whitespace-nowrap bg-white rounded shadow-xl">
                         <Link
                             href={route("user.edit", auth.user.id)}
                             className="block px-6 py-2 hover:bg-background-200 hover:text-white"
@@ -33,13 +36,14 @@ export default () => {
                         >
                             My Profile
                         </Link>
-                        <Link
+
+                        {auth.user.is_admin && (<Link
                             href={route("user.index")}
                             className="block px-6 py-2 hover:bg-background-200 hover:text-white"
                             onClick={() => setMenuOpened(false)}
                         >
                             Manage Users
-                        </Link>
+                        </Link>)}
                         <Link
                             as="button"
                             href={route("logout")}

@@ -18,9 +18,6 @@ class UsersController extends Controller
 {
     public function index()
     {
-//        dd(User::query()
-//            ->with('roles')
-//            ->orderBy('created_at','desc')->get()->toArray());
         return Inertia::render('Users/Index', [
             'filters' => Request::all('search', 'role', 'trashed'),
             'users' => new UserCollection(

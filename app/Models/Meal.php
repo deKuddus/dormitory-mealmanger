@@ -27,11 +27,12 @@ class Meal extends Model
         return $this->belongsTo(Mess::class);
     }
 
-    public function createdAt(){
-        return Attribute::make(
-            get: fn ($value) => Carbon::parse($value)->format('Y-m-d'),
-        );
-    }
+//    protected function createdAt():Attribute
+//    {
+//        return Attribute::make(
+//            get: fn ($value) => Carbon::parse($value)->format('Y-m-d'),
+//        );
+//    }
 
     public function user(){
         return $this->belongsTo(User::class);
