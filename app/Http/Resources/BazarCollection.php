@@ -18,6 +18,10 @@ class BazarCollection extends ResourceCollection
             'id',
             'description',
             'amount',
+            'status',
+            'created_at',
+            'bazar_schedule_id',
+            'bazarSchedule'
         );
     }
 }

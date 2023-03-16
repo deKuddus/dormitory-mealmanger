@@ -1,14 +1,13 @@
 import React from "react";
 import { Head, useForm } from "@inertiajs/react";
-import Logo from "@/Shared/Logo";
 import LoadingButton from "@/Shared/LoadingButton";
 import TextInput from "@/Shared/TextInput";
 
 export default () => {
     const { data, setData, errors, post, processing } = useForm({
-        email: "johndoe@example.com",
-        password: "secret",
-        remember: true,
+        email: "",
+        password: "",
+        remember: false,
     });
 
     function handleSubmit(e) {

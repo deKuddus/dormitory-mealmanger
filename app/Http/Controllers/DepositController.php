@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\DepositStatus;
 use App\Helper\Helper;
 use App\Http\Requests\DepositRequest;
 use App\Http\Requests\WithDrawRequest;
@@ -27,7 +28,8 @@ class DepositController extends Controller
                         $query->select(
                             'user_id',
                             DB::raw('SUM(CASE WHEN status = 1 THEN amount ELSE 0 END) as deposit_amount'),
-                            DB::raw('SUM(CASE WHEN status = 3 THEN amount ELSE 0 END) as withdraw_amount')
+                            DB::raw('SUM(CASE WHEN status = 3 THEN amount ELSE 0 END) as withdraw_amount'),
+                            DB::raw('SUM(CASE WHEN status = 0 THEN amount ELSE 0 END) as pending_amount'),
                         )->groupBy('user_id');
                     })
                     ->select('id', 'first_name', 'last_name')
@@ -47,20 +49,22 @@ class DepositController extends Controller
 
     public function store(DepositRequest $request)
     {
-        Deposit::create(
+        $deposit = Deposit::create(
             $request->validated()
         );
+
+        $deposit->user()->increment('deposit', $deposit->amount);
+        $deposit->mess()->increment('deposit', $deposit->amount);
+
 
         return redirect()->back()->with('success', 'New Deposit Added');
     }
 
     public function show($userId)
     {
-        $queryModel = Deposit::whereUserId($userId)->where('status', '!=', 0);
         return Inertia::render('Deposit/Show', [
             'user' => User::find($userId),
             'approvedDeposit' => Deposit::whereUserId($userId)->where('status', '!=', 0)->get(),
-            'total' => Deposit::whereUserId($userId)->whereIn('status', [1])->sum('amount'),
             'pendingDeposit' => Deposit::whereUserId($userId)->whereStatus(0)->get(),
         ]);
 
@@ -86,6 +90,8 @@ class DepositController extends Controller
 
     public function destroy(Deposit $deposit)
     {
+        $deposit->user()->decrement('deposit', $deposit->amount);
+        $deposit->mess()->decrement('deposit', $deposit->amount);
         $deposit->delete();
 
         return redirect()->back()->with('success', 'Deposit deleted successfully');
@@ -100,8 +106,10 @@ class DepositController extends Controller
 
     public function accept(Deposit $deposit)
     {
-        $deposit->status = 1;
+        $deposit->status = DepositStatus::APPROVED;
         $deposit->save();
+        $deposit->user()->increment('deposit', $deposit->amount);
+        $deposit->mess()->increment('deposit', $deposit->amount);
         return redirect()->back()->with('success', 'Deposit approved');
     }
 
@@ -113,9 +121,17 @@ class DepositController extends Controller
 
     public function withdraw(WithDrawRequest $request)
     {
-        Deposit::create(
+        $user = User::find($request->user_id);
+
+        if($request->amount > $user->deposit){
+            return back()->with('error','Withdraw amount is greater than deposit amount');
+        }
+        $deposit = Deposit::create(
             $request->validated()
         );
+
+        $user->decrement('deposit', $deposit->amount);
+        $deposit->mess()->decrement('deposit', $deposit->amount);
 
         return redirect()->back()->with('success', 'New Withdrawal added');
     }

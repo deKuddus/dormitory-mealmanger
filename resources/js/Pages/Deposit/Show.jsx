@@ -5,16 +5,17 @@ import TextInput from "@/Shared/TextInput";
 import LoadingButton from "@/Shared/LoadingButton";
 import Icon from "@/Shared/Icon";
 import {Flip, toast} from "react-toastify";
+import {APPROVED, WITHDRAWN} from "@/Shared/const/depostiStatus";
 
 const Show = () => {
-    const {user, total, approvedDeposit, pendingDeposit,flash} = usePage().props;
+    const {user, approvedDeposit, pendingDeposit, flash} = usePage().props;
 
     const [withdraw, setWithdraw] = useState(0);
 
-    const {data,setData, errors, post, processing} = useForm({
+    const {data, setData, errors, post, processing} = useForm({
         amount: 0,
         deposit_date: new Date(),
-        status: 1,
+        status: APPROVED,
         user_id: user.id,
     });
 
@@ -22,7 +23,7 @@ const Show = () => {
     const handleDepositSubmit = (e) => {
         e.preventDefault();
         post(route("deposit.store"));
-        // setData('amount', 0);
+        setData('amount', 0);
     }
 
     const deleteDeposit = (id) => {
@@ -47,28 +48,28 @@ const Show = () => {
     }
 
     const addWithdraw = () => {
-        if (withdraw === 0) {
-            return toast.error('Woops! amount can not be zero');
+        if (withdraw === 0 || withdraw < 0) {
+            return toast.error('Woops! amount can not be equal or less than zero');
         } else {
             router.post(route("deposit.withdraw"), {
                 user_id: user.id,
                 deposit_date: new Date(),
-                status: 3,
+                status: WITHDRAWN,
                 amount: withdraw
             })
             return setWithdraw(0);
         }
     }
 
-    useEffect(()=>{
-        if(errors && errors.length){
+    useEffect(() => {
+        if (errors && errors.length) {
             toast.error('There was an error.');
         }
 
-        if(flash && flash.success){
+        if (flash && flash.success) {
             toast.success(flash.success);
         }
-    },[errors,flash])
+    }, [errors, flash])
 
 
     return (
@@ -76,7 +77,7 @@ const Show = () => {
             <h1 className="mb-8 text-3xl font-bold">Deposits of {user.first_name} {user.last_name}</h1>
             <div className="overflow-x-auto bg-white rounded shadow p-3">
                 <div className="col-span-full mb-5">
-                    <h6 className="mb-1 text-gray-900 text-xl font-bold">Total: {total} BDT</h6>
+                    <h6 className="mb-1 text-gray-900 text-xl font-bold">Total: {user.deposit} BDT</h6>
                     <div className="grid md:grid-cols-2">
                         <div className="relative p-6 rounded-xl">
                             <div className="space-y-2 text-white text-center">
@@ -173,7 +174,7 @@ const Show = () => {
                                         </p>
                                     </td>
                                     <td className="border">
-                                        {status === 3 ? (
+                                        {status === WITHDRAWN ? (
                                             <p
                                                 className="flex items-center px-6 py-4 text-red-600 focus:outline-none"
                                             >

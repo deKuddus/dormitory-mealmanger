@@ -5,14 +5,20 @@ export default ({className}) => {
     const route = [
         {
             name: "Dashboard",
-            link: "dashboard",
+            link: "user.dashboard",
             uri_root: "dashboard",
             icon: "FaRegClock",
         },
         {
-            name: "Meals",
-            link: "meals.index",
-            uri_root: "meal",
+            name: "Deposit",
+            link: "user.deposits.index",
+            uri_root: "deposit",
+            icon: "FaRegClock",
+        },
+        {
+            name: "Bazar",
+            link: "user.bazar.index",
+            uri_root: "bazar",
             icon: "FaRegClock",
         },
     ];

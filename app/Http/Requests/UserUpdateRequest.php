@@ -43,7 +43,7 @@ class UserUpdateRequest extends FormRequest
             'status' => ['required', 'boolean'],
             'photo' => ['nullable', 'image'],
             'mess_id' => ['required', 'integer'],
-            'roles' => ['required','array']
+            'roles' => ['required', 'array']
         ];
     }
 

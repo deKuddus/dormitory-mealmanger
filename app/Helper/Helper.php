@@ -57,8 +57,8 @@ class Helper
                             'lunch'      => $mess->has_lunch ? 1 : 0,
                             'dinner'     => $mess->has_dinner ? 1 : 0,
                             'status'     => 1,
-                            'created_at' => Carbon::parse(date('Y-m-' . $i.' 09:10:10'))->format('Y-m-d h:i:j'),
-                            'updated_at' => Carbon::parse(date('Y-m-' . $i.' 09:10:10'))->format('Y-m-d h:i:j'),
+                            'created_at' => Carbon::parse(date('Y-m-' . $i.' 09:00'))->format('Y-m-d h:i'),
+                            'updated_at' => Carbon::parse(date('Y-m-' . $i.' 09:00'))->format('Y-m-d h:i'),
                         ];
                     }
                     Meal::insert($dataArray);

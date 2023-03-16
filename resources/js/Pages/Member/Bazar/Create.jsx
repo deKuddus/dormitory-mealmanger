@@ -1,21 +1,24 @@
 import React from "react";
 import {Link, useForm, usePage} from "@inertiajs/react";
-import Layout from "@/Shared/Layout";
+import MemberLayout from "@/Shared/Member/MemberLayout";
 import LoadingButton from "@/Shared/LoadingButton";
 import TextInput from "@/Shared/TextInput";
+import SelectInput from "@/Shared/SelectInput";
 
-const Edit = () => {
-    const {bazar} = usePage().props;
-    const { data, setData, errors, post, processing } = useForm({
-        amount: bazar.amount || "",
-        description: bazar.description || "",
-        _method:'PUT'
+const Create = () => {
+    const {schedules} = usePage().props;
+    const {data, setData, errors, post, processing} = useForm({
+        amount: "",
+        description: "",
+        bazar_schedule_id: "",
+        status:0,
     });
 
-    const handleSubmit = (e) =>{
+    const handleSubmit = (e) => {
         e.preventDefault();
-        post(route("bazar.update",bazar.id));
+        post(route("user.bazar.store"));
     }
+
 
     return (
         <div>
@@ -28,7 +31,7 @@ const Edit = () => {
                         Bazar
                     </Link>
                     <span className="font-medium text-indigo-600"> /</span>{" "}
-                    Edit
+                    Add
                 </h1>
             </div>
             <div className="w-full overflow-hidden bg-white rounded shadow">
@@ -57,6 +60,18 @@ const Edit = () => {
                             }
                         />
 
+                        <SelectInput
+                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
+                            label="Select Schedule Pair"
+                            name="bazar_schedule_id"
+                            errors={errors.bazar_schedule_id}
+                            value={data.bazar_schedule_id}
+                            onChange={(e) => setData("bazar_schedule_id", e.target.value)}
+                        >
+                            {schedules && schedules.map(({id, pair},key) => (<option key={key} value={id}>{pair}</option>))}
+
+                        </SelectInput>
+
                     </div>
                     <div className="flex items-center justify-end px-8 py-4 bg-gray-100 border-t border-gray-200">
                         <LoadingButton
@@ -64,7 +79,7 @@ const Edit = () => {
                             type="submit"
                             className="btn-indigo"
                         >
-                            Update Bazar
+                            Add Bazar
                         </LoadingButton>
                     </div>
                 </form>
@@ -73,6 +88,6 @@ const Edit = () => {
     );
 };
 
-Edit.layout = (page) => <Layout title="Edit Bazar" children={page} />;
+Create.layout = (page) => <MemberLayout title="Add New Bazar" children={page}/>;
 
-export default Edit;
+export default Create;

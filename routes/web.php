@@ -20,19 +20,32 @@ Route::get('/test',function (){
   abort(404);
 });
 
+
+
+Route::get('/',[\App\Http\Controllers\HomeController::class,'index'])->name('home');
+
+
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login')->middleware('guest');
 Route::post('login', [LoginController::class, 'login'])->name('login.attempt')->middleware('guest');
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 // Images
 Route::get('/img/{path}', [ImagesController::class, 'show'])->where('path', '.*');
 
-Route::get('/',function (){
-    return 'you are in home';
-})->name('home');
+
 
 Route::group(['middleware' => 'auth'],function (){
     Route::get('dashboard',[\App\Http\Controllers\Member\HomeController::class,'index'])->name('user.dashboard');
+    Route::get('meal/show',[\App\Http\Controllers\Member\HomeController::class,'mealDetails'])->name('user.meal.show');
     Route::post('meal-status/update',[\App\Http\Controllers\Member\HomeController::class,'updateMealStatus'])->name('user.meal.update');
+    Route::post('meal/update',[\App\Http\Controllers\Member\HomeController::class,'mealUpdate'])->name('user.meal.update.each');
+    Route::get('deposits',[\App\Http\Controllers\Member\HomeController::class,'deposits'])->name('user.deposits.index');
+    Route::get('deposits/create',[\App\Http\Controllers\Member\HomeController::class,'createDeposit'])->name('user.deposits.create');
+    Route::post('deposits/store',[\App\Http\Controllers\Member\HomeController::class,'storeDeposit'])->name('user.deposits.store');
+    Route::get('profile/edit',[\App\Http\Controllers\Member\HomeController::class,'editProfile'])->name('user.profile.edit');
+    Route::post('profile/update',[\App\Http\Controllers\Member\HomeController::class,'updateProfile'])->name('user.profile.update');
+    Route::get('bazar', [\App\Http\Controllers\Member\BazarController::class,'index'])->name('user.bazar.index');
+    Route::get('bazar/create', [\App\Http\Controllers\Member\BazarController::class,'create'])->name('user.bazar.create');
+    Route::post('bazar/store', [\App\Http\Controllers\Member\BazarController::class,'store'])->name('user.bazar.store');
 });
 
 Route::group(['middleware' => ['auth', 'remember','hasAccessInDashboard'],'prefix' => 'master'], function () {
@@ -53,6 +66,7 @@ Route::group(['middleware' => ['auth', 'remember','hasAccessInDashboard'],'prefi
     Route::resource('additional', \App\Http\Controllers\AdditionalCostController::class);
     Route::resource('menu', \App\Http\Controllers\MenuController::class);
     Route::resource('bazar', \App\Http\Controllers\BazarController::class);
+    Route::post('bazar/approve',[\App\Http\Controllers\BazarController::class,'approveBazar'])->name('bazar.approve');
     Route::resource('bazar-schedule', \App\Http\Controllers\BazarScheduleController::class);
 
 

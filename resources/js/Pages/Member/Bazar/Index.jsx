@@ -1,11 +1,9 @@
 import React from "react";
 import {Link, router, usePage} from "@inertiajs/react";
-import Layout from "@/Shared/Layout";
+import MemberLayout from "@/Shared/Member/MemberLayout";
 import Icon from "@/Shared/Icon";
-import SearchFilter from "@/Shared/SearchFilter";
 import Pagination from "@/Shared/Pagination";
 import moment from "moment";
-import {FaCheck} from "react-icons/fa";
 
 const Index = () => {
     const {bazars} = usePage().props;
@@ -14,21 +12,6 @@ const Index = () => {
         meta: {links},
     } = bazars;
 
-    const deleteBazar = (id) => {
-        if (confirm("Are you sure you want to delete this bazar?")) {
-            router.delete(route("bazar.destroy", id));
-        }
-        return true;
-    }
-    const approvBazar = (id) => {
-        if (confirm("Are you sure you want to approve this bazar?")) {
-            router.post(route("bazar.approve"),{
-                id
-            });
-        }
-        return true;
-    }
-
 
     return (
         <div>
@@ -36,7 +19,7 @@ const Index = () => {
             <div className="flex items-center justify-end mb-6">
                 <Link
                     className="btn-indigo focus:outline-none"
-                    href={route("bazar.create")}
+                    href={route("user.bazar.create")}
                 >
                     <span>Add New </span>
                     <span className="hidden md:inline">Bazar</span>
@@ -52,12 +35,11 @@ const Index = () => {
                         <th className="px-6 pt-5 pb-4">Description</th>
                         <th className="px-6 pt-5 pb-4">Status</th>
                         <th className="px-6 pt-5 pb-4">Member</th>
-                        <th className="px-6 pt-5 pb-4">Action</th>
                     </tr>
                     </thead>
                     <tbody>
                     {data.map(
-                        ({id, amount, description, created_at, bazarSchedule, status}, key) => {
+                        ({id, amount, description, created_at, status, bazarSchedule}, key) => {
                             return (
                                 <tr
                                     key={id}
@@ -84,6 +66,7 @@ const Index = () => {
                                             {amount}
                                         </p>
                                     </td>
+
                                     <td className="border">
                                         <p
                                             className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
@@ -91,7 +74,6 @@ const Index = () => {
                                             {description}
                                         </p>
                                     </td>
-
                                     <td className="border">
                                         <p
                                             className={`flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none ${status ? 'text-green-500' : 'text-red-600'}`}
@@ -99,41 +81,11 @@ const Index = () => {
                                             {status ? 'Approved' : 'Pending'}
                                         </p>
                                     </td>
+
                                     <td className="border">
                                         <BazarScheduleUSer users={bazarSchedule && bazarSchedule.users}/>
                                     </td>
-                                    <td className="w-px border px-4 py-3 whitespace-nowrap">
-                                        <div className="flex items-center gap-4 justify-end">
-                                            {!status && (<button
-                                                onClick={() => approvBazar(id)}
-                                                className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
-                                            >
-                                                <Icon
-                                                    name="FaCheck"
-                                                    className="w-6 h-4 text-gray-400 fill-current"
-                                                />
-                                            </button>)}
-                                            <Link
-                                                href={route("bazar.edit", id)}
-                                                className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
-                                            >
-                                                <Icon
-                                                    name="FaEdit"
-                                                    className="w-6 h-4 text-gray-400 fill-current"
-                                                />
-                                            </Link>
-                                            <button
-                                                onClick={() => deleteBazar(id)}
-                                                className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
-                                            >
-                                                <Icon
-                                                    name="FaTrashAlt"
-                                                    className="w-6 h-4 text-gray-400 fill-current"
-                                                />
-                                            </button>
 
-                                        </div>
-                                    </td>
                                 </tr>
                             );
                         }
@@ -164,7 +116,6 @@ const BazarScheduleUSer = ({users}) => {
     </p>
 }
 
-
-Index.layout = (page) => <Layout title="Bazar" children={page}/>;
+Index.layout = (page) => <MemberLayout title="Bazar" children={page}/>;
 
 export default Index;

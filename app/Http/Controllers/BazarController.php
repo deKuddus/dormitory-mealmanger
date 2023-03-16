@@ -17,6 +17,9 @@ class BazarController extends Controller
             'filters' => $requestParam,
             'bazars' => new BazarCollection(
                 Bazar::query()
+                    ->with('bazarSchedule', function ($q) {
+                        $q->select('id')->with('users:id,first_name,last_name');
+                    })
                     ->orderBy('created_at', 'desc')
                     ->paginate()
                     ->appends(request()->all())
@@ -31,9 +34,11 @@ class BazarController extends Controller
 
     public function store(BazarRequest $request)
     {
-        Bazar::create(
+        $bazar = Bazar::create(
             $request->validated()
         );
+
+        $bazar->mess()->decrement('deposit',$bazar->amount);
 
         return to_route('bazar.index');
     }
@@ -71,5 +76,16 @@ class BazarController extends Controller
     {
         $bazar->restore();
         return redirect()->back();
+    }
+
+
+    public function approveBazar(Request $request){
+        $request->validate(['id' => 'required']);
+
+        $bazar = Bazar::find($request->id);
+        $bazar->status = 1;
+        $bazar->save();
+        $bazar->mess()->decrement('deposit',$bazar->amount);
+        return back()->with('success','Bazar approved and deposit decreases');
     }
 }

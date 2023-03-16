@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\Deposit;
+use App\Models\Mess;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -54,7 +55,7 @@ class HandleInertiaRequests extends Middleware
                 ];
             },
 
-            'deposit' => Auth::check() ? Deposit::whereUserId(auth()->id())->whereMessId(1)->active()->sum('amount') : 0
+            'deposit' => Auth::check() ? auth()->user()->isAdmin() ? Mess::query()->value('deposit') : auth()->user()->deposit : 0
         ]);
     }
 }

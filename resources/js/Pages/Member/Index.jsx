@@ -16,7 +16,7 @@ const Index = () => {
             status: value,
         })
     }
-
+console.log(meals)
 
     return (
         <div>
@@ -48,7 +48,7 @@ const Index = () => {
                 <div className="flex items-center justify-between p-2">
                     <div>
                         <h6 className="mb-4 text-xl font-bold pt-4 px-4">Stats of <span className="text-2xl">{moment().format('MMMM YYYY')}</span></h6>
-                        <Link href={'/'} className="mb-4 text-sm text-blue-400 pb-2 px-4">See Details</Link>
+                        <Link href={route("user.meal.show")} className="mb-4 text-sm text-blue-400 pb-2 px-4">See Details</Link>
                     </div>
                     <button className="rounded border shadow p-4">
                         <Icon name={'FaEye'}/>
@@ -103,8 +103,9 @@ const Index = () => {
                             </thead>
                             <tbody>
 
-                            {meals && meals.map(({lunch, dinner, break_fast, created_at}) => (
+                            {meals && meals.map(({lunch, dinner, break_fast, created_at},key) => (
                                 <tr
+                                    key={key}
                                     className="hover:bg-gray-100 focus-within:bg-gray-100"
                                 >
                                     <td className="border">

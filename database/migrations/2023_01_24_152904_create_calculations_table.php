@@ -19,7 +19,7 @@ return new class () extends Migration {
             $table->float('amount')->default(0);
             $table->dateTime('calculate_date');
             $table->string('description')->nullable();
-            $table->bigInteger('carry')->nullable();
+            $table->decimal('carry')->nullable();
             $table->boolean('status')->default(0);
             $table->float('total_meal')->nullable();
             $table->timestamps();

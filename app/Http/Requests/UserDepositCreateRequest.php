@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class BazarRequest extends FormRequest
+class UserDepositCreateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,19 +24,22 @@ class BazarRequest extends FormRequest
     public function rules()
     {
         return [
-            'description' => 'nullable|string',
-            'amount' => 'numeric|required',
-            'mess_id' => 'required|integer',
-            'bazar_schedule_id' => 'required|numeric',
-            'status' => 'required'
+            'amount' => 'required|numeric|min:1',
+            'user_id' => 'required',
+            'status' => 'required',
+            'mess_id' => 'required',
+            'deposit_date' => 'required|date'
         ];
     }
 
     protected function prepareForValidation()
     {
+        $messId = 1;
         $this->merge([
-            'mess_id' => 1,
-            'status' => auth()->user()->isAdmin() ? 1 : 0
+            'user_id' => auth()->id(),
+            'status' => 0,
+            'mess_id' => $messId,
+            'deposit_date' => now()->format('Y-m-d 09:00:00')
         ]);
     }
 }

@@ -17,15 +17,6 @@ const Index = () => {
     return (
         <div>
             <h1 className="mb-8 text-3xl font-bold">Deposits</h1>
-            <div className="flex items-center justify-end mb-6">
-                <Link
-                    className="btn-indigo focus:outline-none"
-                    href={route("user.create")}
-                >
-                    <span>Add</span>
-                    <span className="hidden md:inline">Member</span>
-                </Link>
-            </div>
             <div className="overflow-x-auto bg-white rounded shadow p-3">
                 <table className="w-full whitespace-nowrap">
                     <thead>
@@ -34,6 +25,7 @@ const Index = () => {
                         <th className="px-6 pt-5 pb-4">Name</th>
                         <th className="px-6 pt-5 pb-4">Amount</th>
                         <th className="px-6 pt-5 pb-4">Withdraw</th>
+                        <th className="px-6 pt-5 pb-4">Pending</th>
                         <th className="px-6 pt-5 pb-4">Action</th>
                     </tr>
                     </thead>
@@ -61,8 +53,8 @@ const Index = () => {
                                         </p>
                                     </td>
 
-                                    {deposits && deposits.length ? deposits.map(({deposit_amount, withdraw_amount},key) => (
-                                        <>
+                                    {deposits && deposits.length ? deposits.map(({deposit_amount,pending_amount, withdraw_amount},index) => (
+                                        <React.Fragment key={index}>
                                             <td className="border">
                                                 <p
                                                     className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
@@ -78,9 +70,16 @@ const Index = () => {
                                                     {withdraw_amount || 0} BDT
                                                 </p>
                                             </td>
-                                        </>
+                                            <td className="border">
+                                                <p
+                                                    className={`flex items-center px-6 py-4 ${pending_amount > 0 ? 'text-red-600':''}  focus:text-indigo-700 focus:outline-none`}
+                                                >
+                                                    {pending_amount || 0} BDT
+                                                </p>
+                                            </td>
+                                        </React.Fragment>
                                     )) : (
-                                        <>
+                                        <React.Fragment>
                                             <td className="border">
                                                 <p
                                                     className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
@@ -96,7 +95,14 @@ const Index = () => {
                                                     0 BDT
                                                 </p>
                                             </td>
-                                        </>
+                                            <td className="border">
+                                                <p
+                                                    className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
+                                                >
+                                                    0 BDT
+                                                </p>
+                                            </td>
+                                        </React.Fragment>
                                     )}
 
 
@@ -112,15 +118,15 @@ const Index = () => {
                                                 />
                                             </Link>
 
-                                            <Link
-                                                href={route("deposit.edit", id)}
-                                                className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
-                                            >
-                                                <Icon
-                                                    name="FaPlus"
-                                                    className="w-6 h-4 text-gray-400 fill-current"
-                                                />
-                                            </Link>
+                                            {/*<Link*/}
+                                            {/*    href={route("deposit.edit", id)}*/}
+                                            {/*    className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"*/}
+                                            {/*>*/}
+                                            {/*    <Icon*/}
+                                            {/*        name="FaPlus"*/}
+                                            {/*        className="w-6 h-4 text-gray-400 fill-current"*/}
+                                            {/*    />*/}
+                                            {/*</Link>*/}
 
 
                                         </div>

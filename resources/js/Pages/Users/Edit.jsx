@@ -12,7 +12,7 @@ import Select from "react-select";
 const Edit = () => {
     const {user, roles} = usePage().props;
     const {data, setData, errors, post, processing} = useForm({
-        first_name: user.last_name || "",
+        first_name: user.first_name || "",
         last_name: user.last_name || "",
         email: user.email || "",
         password: "",
@@ -53,7 +53,7 @@ const Edit = () => {
         label: `${row.name}`
     })) : [];
 
-    console.log(user)
+
     return (
         <div>
             <Head title={`${data.first_name} ${data.last_name}`}/>
@@ -229,7 +229,7 @@ const Edit = () => {
                             type="submit"
                             className="btn-indigo"
                         >
-                            Create User
+                            Update User
                         </LoadingButton>
                     </div>
                 </form>

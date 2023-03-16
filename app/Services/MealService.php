@@ -26,7 +26,7 @@ class MealService
         return Meal::whereUserId($userId)
             ->whereMessId($mssId)
             ->whereBetween(DB::raw('DATE(`created_at`)'), [$month->startOfMonth()->format('Y-m-d'), $month->lastOfMonth()->format('Y-m-d')])
-            ->get(['lunch', 'dinner', 'break_fast', 'created_at']);
+            ->get(['id','lunch', 'dinner', 'break_fast', 'created_at']);
     }
 
     public function getUserTotalDeposit($user, $messId)
@@ -48,7 +48,11 @@ class MealService
 
     public function getTotalMeal($messId, $month)
     {
-        return Meal::whereMessId($messId)->whereBetween(DB::raw('DATE(`created_at`)'), [$month->startOfMonth()->format('Y-m-d'), $month->lastOfMonth()->format('Y-m-d')])->select(DB::raw("SUM(break_fast + lunch + dinner) as total_meals"))->first();
+           $totalMeal =  Meal::whereMessId($messId)
+                ->whereBetween(DB::raw('DATE(`created_at`)'), [$month->startOfMonth()->format('Y-m-d'), $month->lastOfMonth()->format('Y-m-d')])
+                ->select(DB::raw("SUM(break_fast + lunch + dinner) as total_meals"))
+                ->first();
+           return $totalMeal->total_meals ? $totalMeal : collect(['total_meals'=>0]);
     }
 
 

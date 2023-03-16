@@ -26,7 +26,7 @@ const Create = () => {
                         Bazar
                     </Link>
                     <span className="font-medium text-indigo-600"> /</span>{" "}
-                    Create
+                    Add
                 </h1>
             </div>
             <div className="w-full overflow-hidden bg-white rounded shadow">
@@ -62,7 +62,7 @@ const Create = () => {
                             type="submit"
                             className="btn-indigo"
                         >
-                            Create Bazar
+                            Add Bazar
                         </LoadingButton>
                     </div>
                 </form>
