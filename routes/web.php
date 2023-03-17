@@ -51,7 +51,7 @@ Route::group(['middleware' => 'auth'],function (){
 Route::group(['middleware' => ['auth', 'remember','hasAccessInDashboard'],'prefix' => 'master'], function () {
     Route::get('/', DashboardController::class)->name('dashboard');
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
-    Route::get('/calender/{mess_id?}', [\App\Http\Controllers\CalendarController::class, 'showCalender'])->name('dashboard');
+//    Route::get('/calender/{mess_id?}', [\App\Http\Controllers\CalendarController::class, 'showCalender'])->name('dashboard');
 
     Route::resource('notice', \App\Http\Controllers\NoticeController::class);
     Route::resource('user', \App\Http\Controllers\UsersController::class);
@@ -86,7 +86,7 @@ Route::group(['middleware' => ['auth', 'remember','hasAccessInDashboard'],'prefi
     Route::get('settings',[\App\Http\Controllers\SettingController::class,'index'])->name('settings.index');
     Route::post('settings/update',[\App\Http\Controllers\SettingController::class,'update'])->name('settings.update');
 
-
+    Route::get('month/close',\App\Http\Controllers\MonthCloseController::class)->name('month.close');
     Route::get('permissions',[\App\Http\Controllers\PermissionController::class,'index'])->name('permissions.index');
     Route::resource('role',\App\Http\Controllers\RoleController::class);
     Route::get('report',[\App\Http\Controllers\ReportController::class,'index'])->name('report.index');

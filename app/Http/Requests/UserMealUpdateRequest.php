@@ -27,7 +27,8 @@ class UserMealUpdateRequest extends FormRequest
             'break_fast' => 'required|numeric',
             'lunch' => 'required|numeric',
             'dinner' => 'required|numeric',
-            'id' => 'required|numeric'
+            'id' => 'required|numeric',
+            'created_at' => 'required'
         ];
     }
 }

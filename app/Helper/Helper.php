@@ -2,6 +2,7 @@
 
 namespace App\Helper;
 
+use App\Enums\MealStatus;
 use App\Models\Meal;
 use App\Models\Mess;
 use App\Models\Role;
@@ -56,7 +57,7 @@ class Helper
                             'break_fast' => $mess->has_breakfast ? 1 : 0,
                             'lunch'      => $mess->has_lunch ? 1 : 0,
                             'dinner'     => $mess->has_dinner ? 1 : 0,
-                            'status'     => 1,
+                            'status'     => MealStatus::PENDING,
                             'created_at' => Carbon::parse(date('Y-m-' . $i.' 09:00'))->format('Y-m-d h:i'),
                             'updated_at' => Carbon::parse(date('Y-m-' . $i.' 09:00'))->format('Y-m-d h:i'),
                         ];

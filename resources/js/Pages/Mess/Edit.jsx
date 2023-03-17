@@ -28,7 +28,7 @@ const Edit = () => {
         e.preventDefault();
         post(route("mess.update", mess.id));
     }
-console.log(data);
+
     return (
         <div>
             <div>

@@ -160,7 +160,9 @@ const Index = () => {
                             </td>
 
                             <td className="border">
-                                {dinner}
+                                <p className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none">
+                                    {dinner}
+                                </p>
                             </td>
 
                             <td className="border w-px border-t p-3 whitespace-nowrap">

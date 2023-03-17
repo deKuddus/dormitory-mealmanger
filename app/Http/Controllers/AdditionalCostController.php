@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\AdditionalCostType;
 use App\Helper\Helper;
 use App\Http\Requests\AdditionalCostRequest;
 use App\Http\Resources\AdditionalCostCollection;
@@ -34,10 +35,12 @@ class AdditionalCostController extends Controller
 
     public function store(AdditionalCostRequest $request)
     {
-        AdditionalCost::create(
+        $additional = AdditionalCost::create(
             $request->validated()
         );
-
+        if($request->status === AdditionalCostType::APPROVED){
+            $additional->mess()->decrement('deposit',$additional->amount);
+        }
         return to_route('additional.index');
     }
 
@@ -50,22 +53,28 @@ class AdditionalCostController extends Controller
     public function edit(AdditionalCost $additional)
     {
         return Inertia::render('AdditionalCost/Edit', [
-            'additional' => $additional,
-            ...Helper::messArray()
+            'additional' => $additional
         ]);
     }
 
     public function update(AdditionalCostRequest $request, AdditionalCost $additional)
     {
+        $additional->mess()->increment('deposit',$additional->amount);
+
         $additional->update(
             $request->validated()
         );
+
+        if($request->status === AdditionalCostType::APPROVED){
+            $additional->mess()->decrement('deposit',$additional->amount);
+        }
 
         return to_route('additional.index');
     }
 
     public function destroy(AdditionalCost $additional)
     {
+        $additional->mess()->increment('deposit',$additional->amount);
         $additional->delete();
 
         return to_route('additional.index');

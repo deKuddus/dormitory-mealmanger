@@ -16,7 +16,6 @@ const Index = () => {
             status: value,
         })
     }
-console.log(meals)
 
     return (
         <div>

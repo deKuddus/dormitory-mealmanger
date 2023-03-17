@@ -54,7 +54,7 @@ class HandleInertiaRequests extends Middleware
                     'error' => $request->session()->get('error'),
                 ];
             },
-
+            'routePrefix' => $request->route()->getPrefix(),
             'deposit' => Auth::check() ? auth()->user()->isAdmin() ? Mess::query()->value('deposit') : auth()->user()->deposit : 0
         ]);
     }

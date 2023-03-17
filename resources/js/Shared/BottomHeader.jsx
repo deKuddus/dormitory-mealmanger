@@ -3,8 +3,9 @@ import {Link, usePage} from "@inertiajs/react";
 import Icon from "@/Shared/Icon";
 
 export default () => {
-    const {auth,deposit} = usePage().props;
+    const {auth, deposit,routePrefix} = usePage().props;
     const [menuOpened, setMenuOpened] = useState(false);
+
     return (
         <div
             className="flex items-center justify-between w-full p-4 text-sm bg-white border-b md:py-0 md:px-12 d:text-md">
@@ -37,13 +38,24 @@ export default () => {
                             My Profile
                         </Link>
 
-                        {auth.user.is_admin && (<Link
-                            href={route("user.index")}
-                            className="block px-6 py-2 hover:bg-background-200 hover:text-white"
-                            onClick={() => setMenuOpened(false)}
-                        >
-                            Manage Users
-                        </Link>)}
+                        {auth.user.is_admin && (
+                            <>
+                                <Link
+                                    href={routePrefix ?  route("user.dashboard") : route('dashboard')}
+                                    className="block px-6 py-2 hover:bg-background-200 hover:text-white"
+                                    onClick={() => setMenuOpened(false)}
+                                >
+                                    {routePrefix ?  'Switch to member' : 'Switch to Master'}
+                                </Link>
+                                <Link
+                                    href={route("user.index")}
+                                    className="block px-6 py-2 hover:bg-background-200 hover:text-white"
+                                    onClick={() => setMenuOpened(false)}
+                                >
+                                    Manage Users
+                                </Link>
+                            </>
+                        )}
                         <Link
                             as="button"
                             href={route("logout")}

@@ -57,7 +57,6 @@ const Show = () => {
         setMealData(mealEditInitialObject);
     }
 
-
     return (
         <div>
             <MealEditModal mealData={mealData} setOpen={setOpen} setMealData={setMealData} open={open}

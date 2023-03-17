@@ -56,42 +56,47 @@ class HomeController extends Controller
             $query->whereId($userId);
         }])->first();
 
-        $now = Carbon::now();
-        $lunchOff = Carbon::parse($mess->lunch_close)->format('Y-m-d');
-        $dinnerOff = Carbon::parse($mess->dinner_close)->format('Y-m-d');;
+
+        $lunchOffStrToTime = strtotime($mess->lunch_close);
+        $dinnerOffStrToTime = strtotime($mess->dinner_close);
+
+        $lunchOff = Carbon::parse(date('Y-m-d H:i', $lunchOffStrToTime))->format('Y-m-d H:i');
+        $dinnerOff = Carbon::parse(date('Y-m-d H:i', $dinnerOffStrToTime))->format('Y-m-d H:i');
 
 
-        $startOfMonth = $now->format('Y-m-d');
-        $lastOfMonth = $now->lastOfMonth()->addDay()->format('Y-m-d');
+
+        $startOfMonth = now()->format('Y-m-d');
+        $lastOfMonth = now()->lastOfMonth()->addDay()->format('Y-m-d');
 
 
-         $mealIds = Meal::whereUserId($userId)->whereBetween('created_at', [$startOfMonth, $lastOfMonth])->pluck('id','created_at')->toArray();
+        $mealIds = Meal::whereUserId($userId)->whereBetween('created_at', [$startOfMonth, $lastOfMonth])->pluck('id', 'created_at')->toArray();
 
-        if($now->gte($lunchOff) && $now->gte($dinnerOff)){
-            Meal::whereIn('id',$mealIds)->whereBetween('created_at',[now()->addDay()->format('Y-m-d 09:00') , now()->lastOfMonth()->format('Y-m-d 09:00')])
+        if (now()->gte($lunchOff) && now()->gte($dinnerOff)) {
+            Meal::whereIn('id', $mealIds)->whereBetween('created_at', [now()->addDay()->format('Y-m-d 09:00'), now()->lastOfMonth()->format('Y-m-d 09:00')])
                 ->update([
+                    'break_fast' => $status,
+                    'lunch' => $status,
+                    'dinner' => $status,
+                ]);
+        }
+
+        if (!now()->gte($lunchOff) && now()->gte($dinnerOff)) {
+            Meal::whereIn('id', $mealIds)->whereBetween('created_at', [now()->format('Y-m-d 09:00'), now()->lastOfMonth()->format('Y-m-d 09:00')])->update([
                 'break_fast' => $status,
                 'lunch' => $status,
                 'dinner' => $status,
             ]);
         }
 
-        if(!$now->gte($lunchOff) && $now->gte($dinnerOff)){
+        if (now()->gte($lunchOff) && !now()->gte($dinnerOff)) {
 
-            Meal::whereIn('id',$mealIds)->whereBetween('created_at',[now()->format('Y-m-d 09:00') , now()->lastOfMonth()->format('Y-m-d 09:00')])->update([
-                'break_fast' => $status,
-                'lunch' => $status,
-                'dinner' => $status,
-            ]);
-        }
+           Meal::whereIn('id', $mealIds)
+               ->whereDate('created_at', now()->format('Y-m-d'))
+               ->update([
+                    'dinner' => $status,
+               ]);
 
-        if($now->gte($lunchOff) && !$now->gte($dinnerOff)){
-
-            Meal::whereIn('id', $mealIds)->whereDate('created_at', now()->format('Y-m-d 09:00'))->update([
-                'dinner' => $status,
-            ]);
-
-            Meal::whereIn('id',$mealIds)->whereBetween('created_at',[now()->addDay()->format('Y-m-d 09:00') , now()->lastOfMonth()->format('Y-m-d 09:00')])->update([
+            Meal::whereIn('id', $mealIds)->whereBetween('created_at', [now()->addDay()->format('Y-m-d 09:00'), now()->lastOfMonth()->format('Y-m-d 09:00')])->update([
                 'break_fast' => $status,
                 'lunch' => $status,
                 'dinner' => $status,
@@ -158,7 +163,7 @@ class HomeController extends Controller
                 'additional' => $mealService->getTotalAdditionalCost($month, $messId),
                 'member' => $mealService->getTotalUser($messId),
                 'totalMeal' => $mealService->getTotalMeal($messId, $month),
-                'bazar' => $mealService->getTotalBazar($month, $messId)
+                'bazar' => $mealService->getTotalBazar($month, $messId),
             ]);
 
         } catch (\Exception $exception) {
@@ -168,11 +173,55 @@ class HomeController extends Controller
 
     public function mealUpdate(UserMealUpdateRequest $request)
     {
-        Meal::whereUserId(auth()->id())->whereId($request->id)->update([
-            'break_fast' => $request->break_fast,
-            'lunch' => $request->lunch,
-            'dinner' => $request->dinner,
-        ]);
-        return back()->with('success', 'Meal Updated');
+
+        $mess = Mess::query()->select(['lunch_close', 'dinner_close', 'break_fast_close'])->first();
+
+        $lunchOffStrToTime = strtotime($mess->lunch_close);
+        $dinnerOffStrToTime = strtotime($mess->dinner_close);
+
+        $lunchOff = Carbon::parse(date('Y-m-d H:i', $lunchOffStrToTime))->format('Y-m-d H:i');
+        $dinnerOff = Carbon::parse(date('Y-m-d H:i', $dinnerOffStrToTime))->format('Y-m-d H:i');
+
+
+        if ($this->isPast($request->created_at)) {
+            return back()->with('error', 'Can not update previous meal');
+        }
+        else if (Carbon::parse($request->created_at)->isToday()) {
+            if (now()->gte($lunchOff) && now()->gte($dinnerOff)) {
+                return back()->with('error', 'Error');
+            }
+
+            if (now()->gte($lunchOff)) {
+
+                Meal::whereUserId(auth()->id())->whereId($request->id)->update([
+                    'break_fast' => $request->break_fast,
+                    'lunch' => $request->lunch,
+                    'dinner' => $request->dinner,
+                ]);
+                return back()->with('success', 'Meal Updated');
+            }
+
+            if (now()->gte($lunchOff) && !now()->gte($dinnerOff)) {
+
+                Meal::whereUserId(auth()->id())->whereId($request->id)->update([
+                    'dinner' => $request->dinner,
+                ]);
+                return back()->with('success', 'Lunch Time over, only dinner Updated');
+            }
+        } else {
+            Meal::whereUserId(auth()->id())->whereId($request->id)->update([
+                'break_fast' => $request->break_fast,
+                'lunch' => $request->lunch,
+                'dinner' => $request->dinner,
+            ]);
+            return back()->with('success', 'Meal Updated');
+        }
     }
+
+    private function isPast($date){
+
+        return strtotime(Carbon::parse($date)->endOfDay()->format('Y-m-d H:i:s')) < strtotime(now()->format('Y-m-d H:i:s'));
+
+    }
+
 }
