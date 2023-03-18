@@ -21,11 +21,12 @@ const Index = () => {
                     <tr className="font-bold text-left">
                         <th className="px-6 pt-5 pb-4">No</th>
                         <th className="px-6 pt-5 pb-4">Name</th>
+                        <th className="px-6 pt-5 pb-4">Guard</th>
                     </tr>
                     </thead>
                     <tbody>
                     {data ? data.map(
-                        ({id, name},key) => {
+                        ({id, name,guard_name},key) => {
                             return (
                                 <tr
                                     key={id}
@@ -43,6 +44,13 @@ const Index = () => {
                                             className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
                                         >
                                             {name}
+                                        </p>
+                                    </td>
+                                    <td className="border">
+                                        <p
+                                            className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
+                                        >
+                                            {guard_name}
                                         </p>
                                     </td>
                                 </tr>

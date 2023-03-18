@@ -52,8 +52,10 @@ class HandleInertiaRequests extends Middleware
                 return [
                     'success' => $request->session()->get('success'),
                     'error' => $request->session()->get('error'),
+                    'registration_success' => $request->session()->get('registration_success')
                 ];
             },
+            'app_url' => env('APP_URL'),
             'routePrefix' => $request->route()->getPrefix(),
             'deposit' => Auth::check() ? auth()->user()->isAdmin() ? Mess::query()->value('deposit') : auth()->user()->deposit : 0
         ]);

@@ -17,7 +17,7 @@ class RoleCollection extends ResourceCollection
         return $this->collection->map->only(
             'id',
             'name',
-            'permissions',
+            'permissions_count',
             'users_count'
         );
     }

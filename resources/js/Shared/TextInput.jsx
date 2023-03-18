@@ -1,6 +1,6 @@
 import React from "react";
 
-export default ({ label, name, className, errors = [], ...props }) => {
+export default ({ label, name, className, errors = undefined, ...props }) => {
     return (
         <div className={className}>
             {label && (
@@ -12,9 +12,9 @@ export default ({ label, name, className, errors = [], ...props }) => {
                 id={name}
                 name={name}
                 {...props}
-                className={`form-input ${errors.length ? "error" : ""}`}
+                className={`form-input ${errors ? "error" : ""}`}
             />
-            {errors && errors[name] && <div className="form-error">{errors[name]}</div>}
+            {errors && <div className="form-error">{errors}</div>}
         </div>
     );
 };

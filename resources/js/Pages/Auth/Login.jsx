@@ -1,9 +1,10 @@
 import React from "react";
-import { Head, useForm } from "@inertiajs/react";
+import {Head, useForm, usePage} from "@inertiajs/react";
 import LoadingButton from "@/Shared/LoadingButton";
 import TextInput from "@/Shared/TextInput";
 
 export default () => {
+    const {flash} = usePage().props;
     const { data, setData, errors, post, processing } = useForm({
         email: "",
         password: "",
@@ -14,6 +15,7 @@ export default () => {
         e.preventDefault();
         post(route("login.attempt"));
     }
+
 
     return (
         <div className="flex items-center justify-center min-h-screen p-6 bg-indigo-900">
@@ -27,6 +29,12 @@ export default () => {
                         <h1 className="text-3xl font-bold text-center">
                             Welcome Back!
                         </h1>
+                        {flash && flash.registration_success && (
+                            <div
+                                className="flex items-center justify-center ">
+                                <span className="text-xl text-green-500">{flash.registration_success}</span>
+                            </div>
+                        )}
                         <div className="w-24 mx-auto mt-6 border-b-2" />
                         <TextInput
                             className="mt-10"

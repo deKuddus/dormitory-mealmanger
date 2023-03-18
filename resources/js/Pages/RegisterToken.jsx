@@ -1,52 +1,78 @@
 import React from "react";
-import {Link, router, usePage} from "@inertiajs/react";
+import {router, usePage} from "@inertiajs/react";
 import Layout from "@/Shared/Layout";
 import Icon from "@/Shared/Icon";
-import SearchFilter from "@/Shared/SearchFilter";
 import Pagination from "@/Shared/Pagination";
+import moment from "moment";
+import {toast} from "react-toastify";
 
-const Index = () => {
-    const {roles} = usePage().props;
+const RegisterToken = () => {
+    const {tokens,app_url} = usePage().props;
     const {
         data,
         meta: {links},
-    } = roles;
+    } = tokens;
 
-    const deleteRule = (id) => {
-        if (confirm("Are you sure you want to delete this notice?")) {
-            router.delete(route("rule.destroy", id));
+    const deleteToken = (id) => {
+        if (confirm("Are you sure you want to delete this token?")) {
+            router.post(route("tokens.destroy"),{id});
         }
         return true;
     }
 
+
+    const copyLink = uuid => {
+        if (window.isSecureContext && navigator.clipboard) {
+            navigator.clipboard.writeText(route('register',uuid));
+        } else {
+            unsecuredCopyToClipboard(route('register',uuid));
+        }
+       return toast.success('Link copied');
+    };
+
+    const unsecuredCopyToClipboard = (text) =>{
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+            document.execCommand('copy');
+        } catch (err) {
+            console.error('Unable to copy to clipboard', err);
+        }
+        document.body.removeChild(textArea);
+    }
+
+    const handleCreateTokenRequest = () =>{
+        return router.post(route("tokens.create"));
+    }
+
     return (
         <div>
-            <div className="flex items-center justify-between mb-6">
-                <h1 className="text-3xl font-bold">Rules</h1>
-                <Link
+            <h1 className="mb-8 text-3xl font-bold">Retister Token</h1>
+            <div className="flex items-center justify-end mb-6">
+                <button
                     className="btn-indigo focus:outline-none"
-                    href={route("role.create")}
+                    onClick={handleCreateTokenRequest}
                 >
                     <span>Create</span>
-                    <span className="hidden md:inline"> Role</span>
-                </Link>
+                    <span className="hidden md:inline">Token</span>
+                </button>
             </div>
             <div className="overflow-x-auto bg-white rounded shadow p-3">
                 <table className="w-full whitespace-nowrap">
                     <thead>
                     <tr className="font-bold text-left">
                         <th className="px-6 pt-5 pb-4">No</th>
-                        <th className="px-6 pt-5 pb-4">Name</th>
-                        <th className="px-6 pt-5 pb-4">Number of Users</th>
-                        <th className="px-6 pt-5 pb-4">Permisison</th>
-                        <th className="px-6 pt-5 pb-4">
-                            Action
-                        </th>
+                        <th className="px-6 pt-5 pb-4">Token</th>
+                        <th className="px-6 pt-5 pb-4">Expire At</th>
+                        <th className="px-6 pt-5 pb-4">Action</th>
                     </tr>
                     </thead>
                     <tbody>
                     {data.map(
-                        ({id, name, permissions_count,users_count}, key) => {
+                        ({id, uuid, expire_at},key) => {
                             return (
                                 <tr
                                     key={id}
@@ -56,44 +82,36 @@ const Index = () => {
                                         <p
                                             className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
                                         >
-                                            {key + 1}
+                                            {key+1}
                                         </p>
                                     </td>
                                     <td className="border">
                                         <p
                                             className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
                                         >
-                                            {name}
+                                            {uuid}
                                         </p>
                                     </td>
                                     <td className="border">
                                         <p
                                             className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
                                         >
-                                            {users_count}
+                                            {moment(expire_at).format('Do MMMM YYYY')}
                                         </p>
                                     </td>
-                                    <td className="border">
-                                        <p
-                                            className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
-                                        >
-                                            {permissions_count}
-                                        </p>
-                                    </td>
-
                                     <td className="w-px border px-4 py-3 whitespace-nowrap">
                                         <div className="flex items-center gap-4 justify-end">
-                                            <Link
-                                                href={route("role.edit", id)}
+                                            <button
+                                                onClick={() => copyLink(uuid)}
                                                 className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
                                             >
                                                 <Icon
-                                                    name="FaEdit"
+                                                    name="FaCopy"
                                                     className="w-6 h-4 text-gray-400 fill-current"
                                                 />
-                                            </Link>
+                                            </button>
                                             <button
-                                                onClick={() => deleteRole(id)}
+                                                onClick={() => deleteToken(id)}
                                                 className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
                                             >
                                                 <Icon
@@ -110,7 +128,7 @@ const Index = () => {
                     {data.length === 0 && (
                         <tr>
                             <td className="px-6 py-4 border" colSpan="4">
-                                No Rule found.
+                                No Token found.
                             </td>
                         </tr>
                     )}
@@ -122,6 +140,6 @@ const Index = () => {
     );
 };
 
-Index.layout = (page) => <Layout title="Roles" children={page}/>;
+RegisterToken.layout = (page) => <Layout title="Register Token" children={page}/>;
 
-export default Index;
+export default RegisterToken;

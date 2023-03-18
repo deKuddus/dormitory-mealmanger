@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ImagesController;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +28,8 @@ Route::get('/',[\App\Http\Controllers\HomeController::class,'index'])->name('hom
 
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login')->middleware('guest');
 Route::post('login', [LoginController::class, 'login'])->name('login.attempt')->middleware('guest');
+Route::get('register/{uuid?}', [RegisterController::class, 'showRegistrationForm'])->name('register')->middleware('guest');
+Route::post('register/store', [RegisterController::class, 'register'])->name('register.attempt')->middleware('guest');
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 // Images
 Route::get('/img/{path}', [ImagesController::class, 'show'])->where('path', '.*');
@@ -52,6 +55,10 @@ Route::group(['middleware' => ['auth', 'remember','hasAccessInDashboard'],'prefi
     Route::get('/', DashboardController::class)->name('dashboard');
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
 //    Route::get('/calender/{mess_id?}', [\App\Http\Controllers\CalendarController::class, 'showCalender'])->name('dashboard');
+
+    Route::get('tokens',[\App\Http\Controllers\RegisterTokenController::class,'index'])->name('tokens.index');
+    Route::post('tokens/create',[\App\Http\Controllers\RegisterTokenController::class,'create'])->name('tokens.create');
+    Route::post('tokens/destroy',[\App\Http\Controllers\RegisterTokenController::class,'destroy'])->name('tokens.destroy');
 
     Route::resource('notice', \App\Http\Controllers\NoticeController::class);
     Route::resource('user', \App\Http\Controllers\UsersController::class);
