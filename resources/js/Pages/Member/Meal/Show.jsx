@@ -134,7 +134,7 @@ const Show = () => {
                     </tr>
                     </thead>
                     <tbody>
-                    {user.meals ? user.meals.map(({id, break_fast, lunch, dinner, created_at}, key) => (
+                    {user.meals ? user.meals.map(({id, break_fast, lunch, dinner, created_at,is_editable}, key) => (
                         <tr
                             key={key}
                             className="hover:bg-gray-100 focus-within:bg-gray-100"
@@ -162,8 +162,9 @@ const Show = () => {
                             <td className="border w-px border-t p-3 whitespace-nowrap">
                                 <div className="flex items-center gap-2 justify-end">
                                     <button
+                                        disabled={!is_editable}
                                         onClick={() => handleMealEdit(id, break_fast, lunch, dinner, created_at)}
-                                        className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
+                                        className={`inline-flex ${!is_editable ?' opacity-10':''} items-center justify-center gap-0.5 focus:outline-none focus:underline`}
                                     >
                                         <Icon
                                             name="FaEdit"

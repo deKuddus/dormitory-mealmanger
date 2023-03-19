@@ -7,6 +7,7 @@ use App\Http\Requests\RuleItemRequest;
 use App\Http\Resources\RuleItemCollection;
 use App\Models\Rule;
 use App\Models\RuleItem;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -14,6 +15,8 @@ class RuleItemController extends Controller
 {
     public function index()
     {
+        $this->authorize('showRuleItem',User::class);
+
         $requestParam = \request()->all('search', 'trashed');
         return Inertia::render('RuleItem/Index', [
             'filters' => $requestParam,
@@ -29,6 +32,9 @@ class RuleItemController extends Controller
 
     public function create()
     {
+        $this->authorize('createRuleItem',User::class);
+
+
         return Inertia::render('RuleItem/Create',[
           ...Helper::rulesArray()
         ]);
@@ -36,6 +42,8 @@ class RuleItemController extends Controller
 
     public function store(RuleItemRequest $request)
     {
+        $this->authorize('createRuleItem',User::class);
+
         RuleItem::create(
             $request->validated()
         );
@@ -51,6 +59,8 @@ class RuleItemController extends Controller
 
     public function edit(RuleItem $ruleItem)
     {
+        $this->authorize('editRuleItem',User::class);
+
         return Inertia::render('RuleItem/Edit', [
             'ruleItem' => $ruleItem,
             ...Helper::rulesArray()
@@ -59,6 +69,8 @@ class RuleItemController extends Controller
 
     public function update(RuleItemRequest $request, RuleItem $ruleItem)
     {
+        $this->authorize('editRuleItem',User::class);
+
         $ruleItem->update(
             $request->validated()
         );
@@ -68,6 +80,8 @@ class RuleItemController extends Controller
 
     public function destroy(RuleItem $ruleItem)
     {
+        $this->authorize('deleteRuleItem',User::class);
+
         $ruleItem->delete();
 
         return to_route('ruleItem.index');

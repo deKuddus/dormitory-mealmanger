@@ -28,7 +28,7 @@ const Index = () => {
                     className="btn-indigo focus:outline-none"
                     href={route("room.create")}
                 >
-                    <span>Create</span>
+                    <span>Add</span>
                     <span className="hidden md:inline"> Room</span>
                 </Link>
             </div>

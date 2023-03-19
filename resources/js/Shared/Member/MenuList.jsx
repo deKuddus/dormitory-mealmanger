@@ -21,6 +21,18 @@ export default ({className}) => {
             uri_root: "bazar",
             icon: "FaRegClock",
         },
+        {
+            name: "Menus",
+            link: "user.menu.index",
+            uri_root: "menu",
+            icon: "FaRegClock",
+        },
+        {
+            name: "Schedule",
+            link: "user.schedule.index",
+            uri_root: "schedule",
+            icon: "FaRegClock",
+        },
     ];
     return (
         <div className={className}>

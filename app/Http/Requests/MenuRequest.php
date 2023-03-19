@@ -28,7 +28,6 @@ class MenuRequest extends FormRequest
             'break_fast' => 'nullable|string|max:255',
             'lunch'      => 'nullable|string|max:255',
             'dinner'     => 'nullable|string|max:255',
-            'menu_date'  => 'required|string'
         ];
     }
 

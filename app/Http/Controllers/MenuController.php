@@ -15,12 +15,7 @@ class MenuController extends Controller
         $requestParam = \request()->all('search', 'trashed');
         return Inertia::render('Menu/Index', [
             'filters' => $requestParam,
-            'menus' => new MenuCollection(
-                Menu::query()
-                    ->orderBy('created_at', 'desc')
-                    ->paginate()
-                    ->appends(request()->all())
-            ),
+            'menus' => Menu::query()->get(),
         ]);
     }
 
@@ -58,7 +53,7 @@ class MenuController extends Controller
             $request->validated()
         );
 
-        return to_route('menu.index');
+        return back()->with('success','Menu updated');
     }
 
     public function destroy(Menu $menu)

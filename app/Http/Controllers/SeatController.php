@@ -14,6 +14,8 @@ class SeatController extends Controller
 {
     public function index()
     {
+        $this->authorize('showSeat',User::class);
+
         $requestParam = \request()->all('search', 'trashed');
         return Inertia::render('Seat/Index', [
             'filters' => $requestParam,
@@ -28,6 +30,8 @@ class SeatController extends Controller
 
     public function create()
     {
+        $this->authorize('createSeat',User::class);
+
         return Inertia::render('Seat/Create',[
             ...$this->getRoomAndUser()
         ]);
@@ -35,6 +39,8 @@ class SeatController extends Controller
 
     public function store(SeatRequest $request)
     {
+        $this->authorize('createSeat',User::class);
+
         Seat::create(
             $request->validated()
         );
@@ -50,6 +56,8 @@ class SeatController extends Controller
 
     public function edit(Seat $seat)
     {
+        $this->authorize('editSeat',User::class);
+
         return Inertia::render('Seat/Edit', [
             'seat' => $seat,
             ...$this->getRoomAndUser()
@@ -58,6 +66,8 @@ class SeatController extends Controller
 
     public function update(SeatRequest $request, Seat $seat)
     {
+        $this->authorize('editSeat',User::class);
+
         $seat->update(
             $request->validated()
         );
@@ -67,6 +77,8 @@ class SeatController extends Controller
 
     public function destroy(Seat $seat)
     {
+        $this->authorize('deleteSeat',User::class);
+
         $seat->delete();
 
         return to_route('seat.index');

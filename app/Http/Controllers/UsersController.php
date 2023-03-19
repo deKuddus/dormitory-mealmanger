@@ -18,6 +18,8 @@ class UsersController extends Controller
 {
     public function index()
     {
+        $this->authorize('showUser',User::class);
+
         return Inertia::render('Users/Index', [
             'filters' => Request::all('search', 'role', 'trashed'),
             'users' => new UserCollection(
@@ -43,6 +45,7 @@ class UsersController extends Controller
 
     public function store(UserStoreRequest $request)
     {
+        $this->authorize('createUser',User::class);
 
         $user = User::create(
             $request->validated()
@@ -56,6 +59,8 @@ class UsersController extends Controller
 
     public function edit(User $user)
     {
+        $this->authorize('editUser',User::class);
+
         return Inertia::render('Users/Edit', [
             'user' => new UserResource($user->load('roles')),
             ...Helper::messArray(),
@@ -65,6 +70,8 @@ class UsersController extends Controller
 
     public function show(User $user)
     {
+        $this->authorize('showUser',User::class);
+
         return Inertia::render('Users/Show', [
             'user' => new UserResource($user),
             ...Helper::messArray()
@@ -73,6 +80,8 @@ class UsersController extends Controller
 
     public function update(User $user, UserUpdateRequest $request)
     {
+        $this->authorize('editUser',User::class);
+
         $user->update(
             $request->validated()
         );
@@ -85,6 +94,8 @@ class UsersController extends Controller
 
     public function destroy(User $user, UserDeleteRequest $request)
     {
+        $this->authorize('deleteUser',User::class);
+
         $user->delete();
 
         return Redirect::back()->with('success', 'User deleted.');

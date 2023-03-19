@@ -19,6 +19,9 @@ class MealController extends Controller
 {
     public function index()
     {
+        $this->authorize('showMeal',User::class);
+
+
         $messId = 1;
 
         return Inertia::render('Meal/Index', [
@@ -31,6 +34,9 @@ class MealController extends Controller
 
     public function show($user, Request $request,MealService $mealService)
     {
+        $this->authorize('detailsMeal',User::class);
+
+
         $messId = 1;
 
         try {
@@ -59,6 +65,8 @@ class MealController extends Controller
 
     public function update(MealUpdateRequest $request)
     {
+        $this->authorize('editMeal',User::class);
+
         $data = $request->validated();
         $meal = Meal::whereUserId($data['user_id'])->findOrFail($data['id']);
         $meal->break_fast = $data['break_fast'];

@@ -6,8 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UserDepositCreateRequest;
 use App\Http\Requests\UserMealUpdateRequest;
 use App\Http\Requests\UserProfileUpdateRequest;
+use App\Http\Resources\BazarScheduleCollection;
+use App\Models\BazarSchedule;
 use App\Models\Deposit;
 use App\Models\Meal;
+use App\Models\Menu;
 use App\Models\Mess;
 use App\Models\User;
 use App\Services\MealService;
@@ -188,17 +191,7 @@ class HomeController extends Controller
         }
         else if (Carbon::parse($request->created_at)->isToday()) {
             if (now()->gte($lunchOff) && now()->gte($dinnerOff)) {
-                return back()->with('error', 'Error');
-            }
-
-            if (now()->gte($lunchOff)) {
-
-                Meal::whereUserId(auth()->id())->whereId($request->id)->update([
-                    'break_fast' => $request->break_fast,
-                    'lunch' => $request->lunch,
-                    'dinner' => $request->dinner,
-                ]);
-                return back()->with('success', 'Meal Updated');
+                return back()->with('error', 'Can not update Meal for today, time is over.');
             }
 
             if (now()->gte($lunchOff) && !now()->gte($dinnerOff)) {
@@ -208,6 +201,16 @@ class HomeController extends Controller
                 ]);
                 return back()->with('success', 'Lunch Time over, only dinner Updated');
             }
+
+            if (now()->gte($lunchOff) ) {
+                Meal::whereUserId(auth()->id())->whereId($request->id)->update([
+                    'break_fast' => $request->break_fast,
+                    'lunch' => $request->lunch,
+                    'dinner' => $request->dinner,
+                ]);
+                return back()->with('success', 'Meal Updated');
+            }
+
         } else {
             Meal::whereUserId(auth()->id())->whereId($request->id)->update([
                 'break_fast' => $request->break_fast,
@@ -224,4 +227,27 @@ class HomeController extends Controller
 
     }
 
+
+    public function menus(){
+        return Inertia::render('Member/Menu/Index',[
+            'menus' =>  Menu::query()->get()
+        ]);
+    }
+
+    public function updateMenu(Request $request){
+        Menu::whereId($request->id)->update($request->all());
+        return back()->with('success','menu updated');
+    }
+
+
+    public function schedule(){
+        return Inertia::render('Member/Schedule',[
+            'bazarSchedules' => new BazarScheduleCollection(
+                BazarSchedule::query()
+                    ->with('users:id,first_name,last_name')
+                    ->orderBy('status','asc')
+                    ->paginate()
+            )
+        ]);
+    }
 }

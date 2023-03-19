@@ -7,6 +7,7 @@ use App\Http\Requests\NoticeCreateRequest;
 use App\Http\Resources\NoticeCollection;
 use App\Models\Mess;
 use App\Models\Notice;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -15,6 +16,8 @@ class NoticeController extends Controller
 
     public function index()
     {
+        $this->authorize('showNotice',User::class);
+
         $requestParam = \request()->all('search', 'trashed');
         return Inertia::render('Notice/Index', [
             'filters' => $requestParam,
@@ -30,6 +33,8 @@ class NoticeController extends Controller
 
     public function create()
     {
+        $this->authorize('createNotice',User::class);
+
         return Inertia::render('Notice/Create', [
             ...Helper::messArray(),
         ]);
@@ -37,6 +42,9 @@ class NoticeController extends Controller
 
     public function store(NoticeCreateRequest $request)
     {
+        $this->authorize('showNotice',User::class);
+
+
         Notice::create(
             $request->validated()
         );
@@ -52,6 +60,8 @@ class NoticeController extends Controller
 
     public function edit(Notice $notice)
     {
+        $this->authorize('editNotice',User::class);
+
         return Inertia::render('Notice/Edit', [
             ...Helper::messArray(),
             'notice' => $notice,
@@ -60,6 +70,8 @@ class NoticeController extends Controller
 
     public function update(NoticeCreateRequest $request, Notice $notice)
     {
+        $this->authorize('editNotice',User::class);
+
         $notice->update(
             $request->validated()
         );
@@ -69,6 +81,8 @@ class NoticeController extends Controller
 
     public function destroy(Notice $notice)
     {
+        $this->authorize('deleteNotice',User::class);
+
         $notice->delete();
 
         return to_route('notice.index');

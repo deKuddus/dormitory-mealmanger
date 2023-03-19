@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\RoleRequest;
 use App\Http\Resources\RoleCollection;
+use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -14,26 +15,31 @@ class RoleController extends Controller
 
     public function index()
     {
-        return Inertia::render('Role/Index',[
-            'roles' => new RoleCollection(Role::query()->withCount('users','permissions')->paginate())
+        $this->authorize('showRole', User::class);
+
+        return Inertia::render('Role/Index', [
+            'roles' => new RoleCollection(Role::query()->withCount('users', 'permissions')->paginate())
         ]);
     }
 
 
     public function create()
     {
-        return Inertia::render('Role/Create',[
-           'permissions' => Permission::query()->get(['name','id'])
+        $this->authorize('createRole', User::class);
+
+        return Inertia::render('Role/Create', [
+            'permissions' => Permission::query()->get(['name', 'id'])
         ]);
     }
 
 
     public function store(RoleRequest $request)
     {
+        $this->authorize('createRole', User::class);
 
         $role = Role::create($request->validated());
         $role->syncPermissions($request->get('permissions'));
-        return to_route('role.index')->with('success','New role created');
+        return to_route('role.index')->with('success', 'New role created');
 
     }
 
@@ -45,25 +51,33 @@ class RoleController extends Controller
 
     public function edit(Role $role)
     {
-        return Inertia::render('Role/Edit',[
+        $this->authorize('editRole', User::class);
+
+
+        return Inertia::render('Role/Edit', [
             'role' => $role->load('permissions'),
-            'permissions' => Permission::query()->get(['name','id'])
+            'permissions' => Permission::query()->get(['name', 'id'])
         ]);
     }
 
 
     public function update(RoleRequest $request, Role $role)
     {
+        $this->authorize('editRole', User::class);
+
+
         $role->update($request->validated());
         $role->syncPermissions($request->get('permissions'));
-        return to_route('role.index')->with('success','New role created');
+        return to_route('role.index')->with('success', 'New role created');
     }
 
 
     public function destroy(Role $role)
     {
+        $this->authorize('deleteRole', User::class);
+
         $role->delete();
-        return to_route('role.index')->with('success','Role Deleted Success.');
+        return to_route('role.index')->with('success', 'Role Deleted Success.');
 
     }
 }

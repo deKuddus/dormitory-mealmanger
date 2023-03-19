@@ -14,6 +14,8 @@ class RoomController extends Controller
 {
     public function index()
     {
+        $this->authorize('showRoom',User::class);
+
         $requestParam = \request()->all('search', 'trashed');
         return Inertia::render('Room/Index', [
             'filters' => $requestParam,
@@ -28,6 +30,9 @@ class RoomController extends Controller
 
     public function create()
     {
+        $this->authorize('createRoom',User::class);
+
+
         return Inertia::render('Room/Create',[
             ...Helper::usersArray()
         ]);
@@ -35,6 +40,8 @@ class RoomController extends Controller
 
     public function store(RoomRequest $request)
     {
+        $this->authorize('createRoom',User::class);
+
         Room::create(
             $request->validated()
         );
@@ -50,6 +57,8 @@ class RoomController extends Controller
 
     public function edit(Room $room)
     {
+        $this->authorize('editRoom',User::class);
+
         return Inertia::render('Room/Edit',[
             'room' => $room,
             ...Helper::usersArray()
@@ -58,6 +67,8 @@ class RoomController extends Controller
 
     public function update(RoomRequest $request, Room $room)
     {
+        $this->authorize('editRoom',User::class);
+
         $room->update(
             $request->validated()
         );
@@ -67,6 +78,8 @@ class RoomController extends Controller
 
     public function destroy(Room $room)
     {
+        $this->authorize('deleteRoom',User::class);
+
         $room->delete();
 
         return to_route('room.index');

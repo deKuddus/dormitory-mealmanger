@@ -19,8 +19,11 @@ class ReportController extends Controller
     use Stats;
     public function index(Request $request)
     {
-        $messId = 1;
 
+        $this->authorize('showReport',User::class);
+
+
+        $messId = 1;
 
         try {
 

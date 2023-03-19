@@ -49,7 +49,16 @@ Route::group(['middleware' => 'auth'],function (){
     Route::get('bazar', [\App\Http\Controllers\Member\BazarController::class,'index'])->name('user.bazar.index');
     Route::get('bazar/create', [\App\Http\Controllers\Member\BazarController::class,'create'])->name('user.bazar.create');
     Route::post('bazar/store', [\App\Http\Controllers\Member\BazarController::class,'store'])->name('user.bazar.store');
+
+    Route::get('menus',[\App\Http\Controllers\Member\HomeController::class,'menus'])->name('user.menu.index');
+    Route::post('menu/update',[\App\Http\Controllers\Member\HomeController::class,'updateMenu'])->name('user.menu.update');
+
+    Route::get('schedule',[\App\Http\Controllers\Member\HomeController::class,'schedule'])->name('user.schedule.index');
 });
+
+
+
+
 
 Route::group(['middleware' => ['auth', 'remember','hasAccessInDashboard'],'prefix' => 'master'], function () {
     Route::get('/', DashboardController::class)->name('dashboard');
@@ -90,8 +99,6 @@ Route::group(['middleware' => ['auth', 'remember','hasAccessInDashboard'],'prefi
 
 
     Route::get('expenses',[\App\Http\Controllers\ExpenseController::class,'index'])->name('expense.index');
-    Route::get('settings',[\App\Http\Controllers\SettingController::class,'index'])->name('settings.index');
-    Route::post('settings/update',[\App\Http\Controllers\SettingController::class,'update'])->name('settings.update');
 
     Route::get('month/close',\App\Http\Controllers\MonthCloseController::class)->name('month.close');
     Route::get('permissions',[\App\Http\Controllers\PermissionController::class,'index'])->name('permissions.index');

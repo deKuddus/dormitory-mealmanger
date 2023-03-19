@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Http\Resources\MealDetailsResource;
+use App\Http\Resources\MemberMealShowCollection;
+use App\Http\Resources\MemberMealShowResource;
 use App\Models\AdditionalCost;
 use App\Models\Bazar;
 use App\Models\Deposit;
@@ -12,7 +14,8 @@ use Illuminate\Support\Facades\DB;
 
 class MealService
 {
-    public function userTotalMeal($userId,$mssId,$month){
+    public function userTotalMeal($userId, $mssId, $month)
+    {
         $totalMeal = Meal::whereUserId($userId)
             ->whereMessId($mssId)
             ->whereBetween(DB::raw('DATE(`created_at`)'), [$month->startOfMonth()->format('Y-m-d'), $month->lastOfMonth()->format('Y-m-d')])
@@ -22,11 +25,12 @@ class MealService
         return $totalMeal->total_meals;
     }
 
-    public function getUserAllMealForSelectedMonth($userId,$mssId,$month){
-        return Meal::whereUserId($userId)
+    public function getUserAllMealForSelectedMonth($userId, $mssId, $month)
+    {
+        return  Meal::whereUserId($userId)
             ->whereMessId($mssId)
             ->whereBetween(DB::raw('DATE(`created_at`)'), [$month->startOfMonth()->format('Y-m-d'), $month->lastOfMonth()->format('Y-m-d')])
-            ->get(['id','lunch', 'dinner', 'break_fast', 'created_at']);
+            ->get(['id', 'lunch', 'dinner', 'break_fast', 'created_at']);
     }
 
     public function getUserTotalDeposit($user, $messId)
@@ -48,11 +52,11 @@ class MealService
 
     public function getTotalMeal($messId, $month)
     {
-           $totalMeal =  Meal::whereMessId($messId)
-                ->whereBetween(DB::raw('DATE(`created_at`)'), [$month->startOfMonth()->format('Y-m-d'), $month->lastOfMonth()->format('Y-m-d')])
-                ->select(DB::raw("SUM(break_fast + lunch + dinner) as total_meals"))
-                ->first();
-           return $totalMeal->total_meals ? $totalMeal : collect(['total_meals'=>0]);
+        $totalMeal = Meal::whereMessId($messId)
+            ->whereBetween(DB::raw('DATE(`created_at`)'), [$month->startOfMonth()->format('Y-m-d'), $month->lastOfMonth()->format('Y-m-d')])
+            ->select(DB::raw("SUM(break_fast + lunch + dinner) as total_meals"))
+            ->first();
+        return $totalMeal->total_meals ? $totalMeal : collect(['total_meals' => 0]);
     }
 
 
@@ -61,7 +65,10 @@ class MealService
         return new MealDetailsResource(
             User::with([
                 'meals' => function ($query) use ($month, $messId) {
-                    $query->whereMessId($messId)->whereMonth('created_at', '=', $month->month)->whereYear('created_at', '=', $month->year);
+                    $query->whereMessId($messId)
+                        ->whereMonth('created_at', '=', $month->month)
+                        ->whereYear('created_at', '=', $month->year)
+                        ->with('mess');
                 }
             ])
                 ->select('id', 'first_name', 'last_name', 'email', 'status')

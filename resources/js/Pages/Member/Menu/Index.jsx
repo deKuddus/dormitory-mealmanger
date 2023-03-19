@@ -1,10 +1,9 @@
 import React, {useState} from "react";
-import {Link, router, usePage} from "@inertiajs/react";
-import Layout from "@/Shared/Layout";
+import { router, usePage} from "@inertiajs/react";
+import MemberLayout from "@/Shared/Member/MemberLayout";
 import Icon from "@/Shared/Icon";
-import Pagination from "@/Shared/Pagination";
 import MenuEditModal from "@/Pages/Member/Menu/Edit";
-import moment from "moment";
+import moment from "moment/moment";
 
 const Index = () => {
     const {menus} = usePage().props;
@@ -24,13 +23,12 @@ const Index = () => {
 
     const handleSubmitConfirm = () => {
         setOpen(false);
-        router.post(route('menu.update', menuData.id), {
-            ...menuData,
-            _method: 'PUT'
+        router.post(route('user.menu.update'), {
+            ...menuData
         })
     }
 
-    const handleModalClose = () => {
+    const handleModalClose = () =>{
         setMeuData(initialData);
         setOpen(false);
     }
@@ -47,11 +45,9 @@ const Index = () => {
 
     return (
         <div>
-            {open && <MenuEditModal handleModalClose={handleModalClose} setMenuData={setMeuData} menuData={menuData}
-                                    handleConfirm={handleSubmitConfirm}
+            {open && <MenuEditModal handleModalClose={handleModalClose} setMenuData={setMeuData} menuData={menuData} handleConfirm={handleSubmitConfirm}
                                     open={open} setOpen={setOpen}/>}
             <h1 className="mb-8 text-3xl font-bold">Menus</h1>
-
             <div className="overflow-x-auto bg-white rounded shadow p-3">
                 <table className="w-full whitespace-nowrap">
                     <thead>
@@ -65,12 +61,12 @@ const Index = () => {
                     </tr>
                     </thead>
                     <tbody>
-                    {menus ? menus.map(
+                    {menus && menus.map(
                         ({id, break_fast, lunch, dinner, menu_date}, key) => {
                             return (
                                 <tr
                                     key={id}
-                                    className={`${weekDay[moment().day()] === menu_date ? 'bg-green-500 text-white font-bold text-xl' : 'hover:bg-gray-100'} focus-within:bg-gray-100`}
+                                    className={`${weekDay[moment().day()] === menu_date ? 'bg-green-500 text-white':''} hover:bg-gray-100 focus-within:bg-gray-100`}
                                 >
                                     <td className="border">
                                         <p
@@ -118,15 +114,15 @@ const Index = () => {
                                                     className="w-6 h-4 text-gray-400 fill-current"
                                                 />
                                             </button>
-
                                         </div>
                                     </td>
                                 </tr>
                             );
                         }
-                    ) : (
+                    )}
+                    {!menus || menus.length === 0 && (
                         <tr>
-                            <td className="px-6 py-4 border" colSpan="5">
+                            <td className="px-6 py-4 border" colSpan="6">
                                 No Menu found.
                             </td>
                         </tr>
@@ -138,6 +134,6 @@ const Index = () => {
     );
 };
 
-Index.layout = (page) => <Layout title="Menu" children={page}/>;
+Index.layout = (page) => <MemberLayout title="Menu" children={page}/>;
 
 export default Index;

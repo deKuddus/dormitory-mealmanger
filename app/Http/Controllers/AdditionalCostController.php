@@ -7,6 +7,7 @@ use App\Helper\Helper;
 use App\Http\Requests\AdditionalCostRequest;
 use App\Http\Resources\AdditionalCostCollection;
 use App\Models\AdditionalCost;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -14,6 +15,8 @@ class AdditionalCostController extends Controller
 {
     public function index()
     {
+        $this->authorize('showAdditionalCost',User::class);
+
         $requestParam = \request()->all('search', 'trashed');
         return Inertia::render('AdditionalCost/Index', [
             'filters' => $requestParam,
@@ -28,6 +31,8 @@ class AdditionalCostController extends Controller
 
     public function create()
     {
+        $this->authorize('createAdditionalCost',User::class);
+
         return Inertia::render('AdditionalCost/Create',[
             ...Helper::messArray()
         ]);
@@ -35,6 +40,8 @@ class AdditionalCostController extends Controller
 
     public function store(AdditionalCostRequest $request)
     {
+        $this->authorize('createAdditionalCost',User::class);
+
         $additional = AdditionalCost::create(
             $request->validated()
         );
@@ -52,6 +59,8 @@ class AdditionalCostController extends Controller
 
     public function edit(AdditionalCost $additional)
     {
+        $this->authorize('editAdditionalCost',User::class);
+
         return Inertia::render('AdditionalCost/Edit', [
             'additional' => $additional
         ]);
@@ -59,6 +68,8 @@ class AdditionalCostController extends Controller
 
     public function update(AdditionalCostRequest $request, AdditionalCost $additional)
     {
+        $this->authorize('editAdditionalCost',User::class);
+
         $additional->mess()->increment('deposit',$additional->amount);
 
         $additional->update(
@@ -74,6 +85,8 @@ class AdditionalCostController extends Controller
 
     public function destroy(AdditionalCost $additional)
     {
+        $this->authorize('deleteAdditionalCost',User::class);
+
         $additional->mess()->increment('deposit',$additional->amount);
         $additional->delete();
 

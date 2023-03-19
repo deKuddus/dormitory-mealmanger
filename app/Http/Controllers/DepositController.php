@@ -17,6 +17,8 @@ class DepositController extends Controller
 {
     public function index()
     {
+        $this->authorize('showDeposit',Deposit::class);
+
         $requestParam = \request()->all('search', 'trashed');
         return Inertia::render('Deposit/Index', [
             'filters' => $requestParam,
@@ -42,6 +44,8 @@ class DepositController extends Controller
 
     public function create()
     {
+        $this->authorize('createDeposit',Deposit::class);
+
         return Inertia::render('Deposit/Create', [
             ...Helper::usersArray()
         ]);
@@ -49,6 +53,9 @@ class DepositController extends Controller
 
     public function store(DepositRequest $request)
     {
+        $this->authorize('createDeposit',Deposit::class);
+
+
         $deposit = Deposit::create(
             $request->validated()
         );
@@ -62,6 +69,9 @@ class DepositController extends Controller
 
     public function show($userId)
     {
+        $this->authorize('showDeposit',Deposit::class);
+
+
         return Inertia::render('Deposit/Show', [
             'user' => User::find($userId),
             'approvedDeposit' => Deposit::whereUserId($userId)->where('status', '!=', 0)->get(),
@@ -73,6 +83,9 @@ class DepositController extends Controller
 
     public function edit(Deposit $deposit)
     {
+        $this->authorize('editDeposit',Deposit::class);
+
+
         return Inertia::render('Deposit/Edit', [
             'deposit' => $deposit,
             ...Helper::usersArray()
@@ -81,6 +94,8 @@ class DepositController extends Controller
 
     public function update(DepositRequest $request, Deposit $deposit)
     {
+        $this->authorize('editDeposit',User::class);
+
         $deposit->update(
             $request->validated()
         );
@@ -90,6 +105,8 @@ class DepositController extends Controller
 
     public function destroy(Deposit $deposit)
     {
+        $this->authorize('deleteDeposit',Deposit::class);
+
         $deposit->user()->decrement('deposit', $deposit->amount);
         $deposit->mess()->decrement('deposit', $deposit->amount);
         $deposit->delete();
@@ -106,6 +123,9 @@ class DepositController extends Controller
 
     public function accept(Deposit $deposit)
     {
+        $this->authorize('approveDeposit',Deposit::class);
+
+
         $deposit->status = DepositStatus::APPROVED;
         $deposit->save();
         $deposit->user()->increment('deposit', $deposit->amount);
@@ -115,12 +135,17 @@ class DepositController extends Controller
 
     public function reject(Deposit $deposit)
     {
+        $this->authorize('rejectDeposit',Deposit::class);
+
+
         $deposit->forceDelete();
         return redirect()->back()->with('success', 'Deposit Deleted');
     }
 
     public function withdraw(WithDrawRequest $request)
     {
+        $this->authorize('withdrawDeposit',Deposit::class);
+
         $user = User::find($request->user_id);
 
         if($request->amount > $user->deposit){

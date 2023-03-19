@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Mess;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class MealDetailsResource extends JsonResource
@@ -17,7 +18,7 @@ class MealDetailsResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->first_name . ' ' . $this->last_name,
-            'meals' => $this->meals,
+            'meals' =>  MemberMealShowResource::collection($this->meals),
             'total_meals' => $this->countTotalMeal()
         ];
     }

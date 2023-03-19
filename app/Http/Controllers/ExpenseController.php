@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AdditionalCost;
 use App\Models\Bazar;
 use App\Models\Deposit;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -13,6 +14,8 @@ class ExpenseController extends Controller
 {
     public function index(Request $request)
     {
+        $this->authorize('showExpense',User::class);
+
         $messId = 1;
 
         try {
