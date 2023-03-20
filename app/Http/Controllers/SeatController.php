@@ -14,7 +14,7 @@ class SeatController extends Controller
 {
     public function index()
     {
-        $this->authorize('showSeat',User::class);
+        $this->authorize('showSeat',Seat::class);
 
         $requestParam = \request()->all('search', 'trashed');
         return Inertia::render('Seat/Index', [
@@ -30,7 +30,7 @@ class SeatController extends Controller
 
     public function create()
     {
-        $this->authorize('createSeat',User::class);
+        $this->authorize('createSeat',Seat::class);
 
         return Inertia::render('Seat/Create',[
             ...$this->getRoomAndUser()
@@ -39,7 +39,7 @@ class SeatController extends Controller
 
     public function store(SeatRequest $request)
     {
-        $this->authorize('createSeat',User::class);
+        $this->authorize('createSeat',Seat::class);
 
         Seat::create(
             $request->validated()
@@ -56,7 +56,7 @@ class SeatController extends Controller
 
     public function edit(Seat $seat)
     {
-        $this->authorize('editSeat',User::class);
+        $this->authorize('editSeat',Seat::class);
 
         return Inertia::render('Seat/Edit', [
             'seat' => $seat,
@@ -66,7 +66,7 @@ class SeatController extends Controller
 
     public function update(SeatRequest $request, Seat $seat)
     {
-        $this->authorize('editSeat',User::class);
+        $this->authorize('editSeat',Seat::class);
 
         $seat->update(
             $request->validated()
@@ -77,7 +77,7 @@ class SeatController extends Controller
 
     public function destroy(Seat $seat)
     {
-        $this->authorize('deleteSeat',User::class);
+        $this->authorize('deleteSeat',Seat::class);
 
         $seat->delete();
 

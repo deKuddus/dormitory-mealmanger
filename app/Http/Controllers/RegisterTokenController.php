@@ -12,7 +12,7 @@ class RegisterTokenController extends Controller
 {
     public function index()
     {
-        $this->authorize('showToken', User::class);
+        $this->authorize('showToken', RegisterToken::class);
 
         return inertia('RegisterToken', [
             'tokens' => new RegisterTokenCollection(
@@ -25,7 +25,7 @@ class RegisterTokenController extends Controller
 
     public function create()
     {
-        $this->authorize('createNotice', User::class);
+        $this->authorize('createNotice', RegisterToken::class);
 
         $uuid = Str::uuid();
         if (!RegisterToken::query()->where('uuid', $uuid)->exists()) {
@@ -41,7 +41,7 @@ class RegisterTokenController extends Controller
 
     public function destroy(Request $request)
     {
-        $this->authorize('deleteNotice', User::class);
+        $this->authorize('deleteNotice', RegisterToken::class);
 
         $request->validate(['id' => 'required']);
         RegisterToken::query()->whereId($request->id)->delete();

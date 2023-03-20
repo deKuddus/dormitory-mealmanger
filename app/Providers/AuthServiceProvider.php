@@ -22,6 +22,7 @@ use App\Policies\ChefPolicy;
 use App\Policies\DepositPolicy;
 use App\Policies\MealPolicy;
 use App\Policies\NoticePolicy;
+use App\Policies\PermissionPolicy;
 use App\Policies\RegisterTokenPolicy;
 use App\Policies\RolePolicy;
 use App\Policies\RoomPolicy;
@@ -30,6 +31,7 @@ use App\Policies\RulePolicy;
 use App\Policies\SeatPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Spatie\Permission\Models\Permission;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -51,7 +53,8 @@ class AuthServiceProvider extends ServiceProvider
         RegisterToken::class => RegisterTokenPolicy::class,
         Role::class => RolePolicy::class,
         Room::class => RoomPolicy::class,
-        Seat::class => SeatPolicy::class
+        Seat::class => SeatPolicy::class,
+        Permission::class => PermissionPolicy::class
 
     ];
 

@@ -11,6 +11,8 @@ class PermissionController extends Controller
 {
 
     public function index(){
+        $this->authorize('showPermission',Permission::class);
+
        return Inertia::render('Permission/Index',[
            'permissions' => new PermissionCollection(Permission::query()->paginate())
         ]);

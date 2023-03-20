@@ -29,14 +29,14 @@ class AssetController extends Controller
 
     public function create()
     {
-        $this->authorize('createAsset',User::class);
+        $this->authorize('createAsset',Asset::class);
 
         return Inertia::render('Asset/Create');
     }
 
     public function store(AssetRequest $request)
     {
-        $this->authorize('createAsset',User::class);
+        $this->authorize('createAsset',Asset::class);
 
         Asset::create(
             $request->validated()
@@ -53,7 +53,7 @@ class AssetController extends Controller
 
     public function edit(Asset $asset)
     {
-        $this->authorize('editAsset',User::class);
+        $this->authorize('editAsset',Asset::class);
 
         return Inertia::render('Asset/Edit',[
             'asset' => $asset
@@ -62,7 +62,7 @@ class AssetController extends Controller
 
     public function update(AssetRequest $request, Asset $asset)
     {
-        $this->authorize('editAsset',User::class);
+        $this->authorize('editAsset',Asset::class);
 
         $asset->update(
             $request->validated()
@@ -73,7 +73,7 @@ class AssetController extends Controller
 
     public function destroy(Asset $asset)
     {
-        $this->authorize('deleteAsset',User::class);
+        $this->authorize('deleteAsset',Asset::class);
 
         $asset->delete();
 

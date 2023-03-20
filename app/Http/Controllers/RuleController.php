@@ -14,7 +14,7 @@ class RuleController extends Controller
 {
     public function index()
     {
-        $this->authorize('showRule',User::class);
+        $this->authorize('showRule',Rule::class);
 
         $requestParam = \request()->all('search', 'trashed');
         return Inertia::render('Rule/Index', [
@@ -32,14 +32,14 @@ class RuleController extends Controller
 
     public function create()
     {
-        $this->authorize('createRule',User::class);
+        $this->authorize('createRule',Rule::class);
 
         return Inertia::render('Rule/Create');
     }
 
     public function store(RuleRequest $request)
     {
-        $this->authorize('createRule',User::class);
+        $this->authorize('createRule',Rule::class);
 
         Rule::create(
             $request->validated()
@@ -56,7 +56,7 @@ class RuleController extends Controller
 
     public function edit(Rule $rule)
     {
-        $this->authorize('editRule',User::class);
+        $this->authorize('editRule',Rule::class);
 
         return Inertia::render('Rule/Edit', [
             'rule' => $rule,
@@ -65,7 +65,7 @@ class RuleController extends Controller
 
     public function update(RuleRequest $request, Rule $rule)
     {
-        $this->authorize('editRule',User::class);
+        $this->authorize('editRule',Rule::class);
 
         $rule->update(
             $request->validated()
@@ -76,7 +76,7 @@ class RuleController extends Controller
 
     public function destroy(Rule $rule)
     {
-        $this->authorize('deleteRule',User::class);
+        $this->authorize('deleteRule',Rule::class);
 
         $rule->delete();
 

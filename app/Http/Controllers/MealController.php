@@ -19,7 +19,7 @@ class MealController extends Controller
 {
     public function index()
     {
-        $this->authorize('showMeal',User::class);
+        $this->authorize('showMeal',Meal::class);
 
 
         $messId = 1;
@@ -34,7 +34,7 @@ class MealController extends Controller
 
     public function show($user, Request $request,MealService $mealService)
     {
-        $this->authorize('detailsMeal',User::class);
+        $this->authorize('detailsMeal',Meal::class);
 
 
         $messId = 1;
@@ -65,7 +65,7 @@ class MealController extends Controller
 
     public function update(MealUpdateRequest $request)
     {
-        $this->authorize('editMeal',User::class);
+        $this->authorize('editMeal',Meal::class);
 
         $data = $request->validated();
         $meal = Meal::whereUserId($data['user_id'])->findOrFail($data['id']);

@@ -15,7 +15,7 @@ class ChefController extends Controller
 {
     public function index()
     {
-        $this->authorize('showChef', User::class);
+        $this->authorize('showChef', Chef::class);
 
         $requestParam = \request()->all('search', 'trashed');
         return Inertia::render('Chef/Index', [
@@ -31,7 +31,7 @@ class ChefController extends Controller
 
     public function create()
     {
-        $this->authorize('createChef', User::class);
+        $this->authorize('createChef', Chef::class);
 
         return Inertia::render('Chef/Create', [
             ...Helper::messArray()
@@ -40,7 +40,7 @@ class ChefController extends Controller
 
     public function store(ChefRequest $request)
     {
-        $this->authorize('createChef', User::class);
+        $this->authorize('createChef', Chef::class);
 
         Chef::create(
             $request->validated()
@@ -57,7 +57,7 @@ class ChefController extends Controller
 
     public function edit(Chef $chef)
     {
-        $this->authorize('editChef', User::class);
+        $this->authorize('editChef', Chef::class);
 
         return Inertia::render('Chef/Edit', [
             ...Helper::messArray(),
@@ -67,7 +67,7 @@ class ChefController extends Controller
 
     public function update(ChefRequest $request, Chef $chef)
     {
-        $this->authorize('editChef', User::class);
+        $this->authorize('editChef', Chef::class);
 
         $chef->update($request->validated());
 
@@ -76,7 +76,7 @@ class ChefController extends Controller
 
     public function destroy(Chef $chef)
     {
-        $this->authorize('deleteChef', User::class);
+        $this->authorize('deleteChef', Chef::class);
 
         $chef->delete();
 

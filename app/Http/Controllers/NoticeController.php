@@ -16,7 +16,7 @@ class NoticeController extends Controller
 
     public function index()
     {
-        $this->authorize('showNotice',User::class);
+        $this->authorize('showNotice',Notice::class);
 
         $requestParam = \request()->all('search', 'trashed');
         return Inertia::render('Notice/Index', [
@@ -33,7 +33,7 @@ class NoticeController extends Controller
 
     public function create()
     {
-        $this->authorize('createNotice',User::class);
+        $this->authorize('createNotice',Notice::class);
 
         return Inertia::render('Notice/Create', [
             ...Helper::messArray(),
@@ -42,7 +42,7 @@ class NoticeController extends Controller
 
     public function store(NoticeCreateRequest $request)
     {
-        $this->authorize('showNotice',User::class);
+        $this->authorize('showNotice',Notice::class);
 
 
         Notice::create(
@@ -60,7 +60,7 @@ class NoticeController extends Controller
 
     public function edit(Notice $notice)
     {
-        $this->authorize('editNotice',User::class);
+        $this->authorize('editNotice',Notice::class);
 
         return Inertia::render('Notice/Edit', [
             ...Helper::messArray(),
@@ -70,7 +70,7 @@ class NoticeController extends Controller
 
     public function update(NoticeCreateRequest $request, Notice $notice)
     {
-        $this->authorize('editNotice',User::class);
+        $this->authorize('editNotice',Notice::class);
 
         $notice->update(
             $request->validated()
@@ -81,7 +81,7 @@ class NoticeController extends Controller
 
     public function destroy(Notice $notice)
     {
-        $this->authorize('deleteNotice',User::class);
+        $this->authorize('deleteNotice',Notice::class);
 
         $notice->delete();
 
