@@ -19,7 +19,13 @@ export default () => {
 
     return (
         <div className="flex items-center justify-center min-h-screen p-6 bg-indigo-900">
-            <Head title="Login" />
+            <Head>
+                <title> Register</title>
+                <link rel="canonical" href={app_url} />
+                <meta name="title" content="Login-WPDeveloper Dormitory" />
+                <meta property="og:title" content="Login-WPDeveloper Dormitory" />
+                <meta property="og:image" content="/ogimage.png" />
+            </Head>
             <div className="w-full max-w-md">
                 <form
                     onSubmit={handleSubmit}

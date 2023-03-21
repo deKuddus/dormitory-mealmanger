@@ -3,7 +3,6 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\ImagesController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/test',function (){
+    dd(auth()->user()->can('access::role-show'));
   abort(404);
 });
 
@@ -31,8 +31,7 @@ Route::post('login', [LoginController::class, 'login'])->name('login.attempt')->
 Route::get('register/{uuid?}', [RegisterController::class, 'showRegistrationForm'])->name('register')->middleware('guest');
 Route::post('register/store', [RegisterController::class, 'register'])->name('register.attempt')->middleware('guest');
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
-// Images
-Route::get('/img/{path}', [ImagesController::class, 'show'])->where('path', '.*');
+
 
 
 
@@ -54,6 +53,10 @@ Route::group(['middleware' => 'auth'],function (){
     Route::post('menu/update',[\App\Http\Controllers\Member\HomeController::class,'updateMenu'])->name('user.menu.update');
 
     Route::get('schedule',[\App\Http\Controllers\Member\HomeController::class,'schedule'])->name('user.schedule.index');
+    Route::get('rules',[\App\Http\Controllers\Member\HomeController::class,'rules'])->name('user.rules.index');
+    Route::get('rules/{id}',[\App\Http\Controllers\Member\HomeController::class,'ruleDetails'])->name('user.rules.details');
+    Route::get('notice',[\App\Http\Controllers\Member\HomeController::class,'notices'])->name('user.notices.index');
+    Route::get('notice/{id}',[\App\Http\Controllers\Member\HomeController::class,'noticeDetails'])->name('user.notices.details');
 });
 
 
@@ -73,7 +76,6 @@ Route::group(['middleware' => ['auth', 'remember','hasAccessInDashboard'],'prefi
     Route::resource('user', \App\Http\Controllers\UsersController::class);
     Route::resource('mess', \App\Http\Controllers\MessController::class);
     Route::resource('rule', \App\Http\Controllers\RuleController::class);
-    Route::resource('ruleItem', \App\Http\Controllers\RuleItemController::class);
     Route::resource('asset', \App\Http\Controllers\AssetController::class);
     Route::resource('room', \App\Http\Controllers\RoomController::class);
     Route::resource('seat', \App\Http\Controllers\SeatController::class);
@@ -100,7 +102,7 @@ Route::group(['middleware' => ['auth', 'remember','hasAccessInDashboard'],'prefi
 
     Route::get('expenses',[\App\Http\Controllers\ExpenseController::class,'index'])->name('expense.index');
 
-    Route::get('month/close',\App\Http\Controllers\MonthCloseController::class)->name('month.close');
+    Route::post('month/close',\App\Http\Controllers\MonthCloseController::class)->name('month.close');
     Route::get('permissions',[\App\Http\Controllers\PermissionController::class,'index'])->name('permissions.index');
     Route::resource('role',\App\Http\Controllers\RoleController::class);
     Route::get('report',[\App\Http\Controllers\ReportController::class,'index'])->name('report.index');

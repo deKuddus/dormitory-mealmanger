@@ -16,9 +16,7 @@ class SeatController extends Controller
     {
         $this->authorize('showSeat',Seat::class);
 
-        $requestParam = \request()->all('search', 'trashed');
         return Inertia::render('Seat/Index', [
-            'filters' => $requestParam,
             'seats' => new SeatCollection(
                 Seat::query()
                     ->orderBy('created_at', 'desc')
@@ -33,7 +31,7 @@ class SeatController extends Controller
         $this->authorize('createSeat',Seat::class);
 
         return Inertia::render('Seat/Create',[
-            ...$this->getRoomAndUser()
+            ...$this->getRoom()
         ]);
     }
 
@@ -60,7 +58,7 @@ class SeatController extends Controller
 
         return Inertia::render('Seat/Edit', [
             'seat' => $seat,
-            ...$this->getRoomAndUser()
+            ...$this->getRoom()
         ]);
     }
 
@@ -90,10 +88,9 @@ class SeatController extends Controller
         return redirect()->back();
     }
 
-    private function getRoomAndUser(){
+    private function getRoom(){
         return [
             'rooms' => Room::get(['id', 'name'])->toArray(),
-            'users' => User::get(['id', 'first_name'])->toArray(),
         ];
     }
 }

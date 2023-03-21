@@ -35,7 +35,7 @@ class ExpenseController extends Controller
                 'deposit' => Deposit::query()->active()->sum('amount')
             ]);
         } catch (\Exception $exception) {
-            return redirect()->back()->with('error', $exception->getMessage());
+            return redirect()->back()->with('errors', $exception->getMessage());
         }
     }
 }

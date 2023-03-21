@@ -14,10 +14,10 @@ return new class () extends Migration {
     {
         Schema::create('seats', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
             $table->foreignId('room_id')->constrained();
             $table->string('seat_no')->nullable();
             $table->boolean('status')->default(0);
+            $table->integer('booking_status')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

@@ -67,4 +67,20 @@ class Helper
             }
         });
     }
+
+    public static function getUserPermission(){
+            $permissions = array_values(auth()->user()->roles->pluck('permissions')->map(function ($row,$key){
+                return $row->map(function ($l){
+                    return $l->name;
+                });
+            })->toArray())[0] ?? [];
+            $requiredPermission = [
+                'access::dashboard-show',
+                'access::meal-show',
+                'access::deposit-show',
+            ];
+        return [
+            'dashboard'=> auth()->user()->roles->pluck('permissions')->map->only('name'),
+        ];
+    }
 }

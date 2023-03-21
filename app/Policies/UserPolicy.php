@@ -32,4 +32,24 @@ class UserPolicy
     public function showReport(User $user){
         return $user->can('access::report-show');
     }
+
+    public function createRole(User $user){
+        return $user->can('access::role-create');
+    }
+
+    public function showRole(User $user){
+        return $user->can('access::role-show');
+    }
+
+    public function editRole(User $user){
+        return $user->can('access::role-edit');
+    }
+
+    public function deleteRole(User $user){
+        return $user->can('access::role-delete');
+    }
+    public function showPermission(User $user){
+        return $user->can('access::show-permission');
+    }
+
 }

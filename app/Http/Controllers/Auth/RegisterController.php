@@ -103,9 +103,9 @@ class RegisterController extends Controller
 
     public function showRegistrationForm($token = null)
     {
-        if (!$token) {
-            return redirect()->to('/');
-        }
+//        if (!$token) {
+//            return redirect()->to('/');
+//        }
 
         return inertia('Auth/Register', [
             'validToken' => $this->isValidRegisterToken($token)

@@ -16,9 +16,7 @@ class RoomController extends Controller
     {
         $this->authorize('showRoom',Room::class);
 
-        $requestParam = \request()->all('search', 'trashed');
         return Inertia::render('Room/Index', [
-            'filters' => $requestParam,
             'rooms' => new RoomCollection(
                 Room::query()
                     ->orderBy('created_at', 'desc')
@@ -33,9 +31,7 @@ class RoomController extends Controller
         $this->authorize('createRoom',Room::class);
 
 
-        return Inertia::render('Room/Create',[
-            ...Helper::usersArray()
-        ]);
+        return Inertia::render('Room/Create');
     }
 
     public function store(RoomRequest $request)
@@ -60,8 +56,7 @@ class RoomController extends Controller
         $this->authorize('editRoom',Room::class);
 
         return Inertia::render('Room/Edit',[
-            'room' => $room,
-            ...Helper::usersArray()
+            'room' => $room
         ]);
     }
 

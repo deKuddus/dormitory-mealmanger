@@ -33,6 +33,18 @@ export default ({className}) => {
             uri_root: "schedule",
             icon: "FaRegClock",
         },
+        {
+            name: "Notice",
+            link: "user.notices.index",
+            uri_root: "notice",
+            icon: "FaRegClock",
+        },
+        {
+            name: "Rule",
+            link: "user.rules.index",
+            uri_root: "rule",
+            icon: "FaRegClock",
+        },
     ];
     return (
         <div className={className}>

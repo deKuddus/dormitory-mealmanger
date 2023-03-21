@@ -27,7 +27,11 @@ class MealController extends Controller
         return Inertia::render('Meal/Index', [
             'users' => User::query()->with('mess', function ($q) use ($messId) {
                 $q->where('mess_id', $messId);
-            })->select('id', 'first_name', 'last_name', 'email', 'status')->withCount('meals')->orderBy('created_at', 'desc')->get()
+            })
+                ->select('id', 'first_name', 'last_name', 'email', 'status')
+                ->withCount('meals')
+                ->orderBy('created_at', 'desc')
+                ->get()
         ]);
 
     }
@@ -57,7 +61,7 @@ class MealController extends Controller
             ]);
 
         } catch (\Exception $exception) {
-            return redirect()->back()->with('error', $exception->getMessage());
+            return redirect()->back()->with('errors', $exception->getMessage());
         }
     }
 

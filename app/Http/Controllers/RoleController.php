@@ -15,8 +15,7 @@ class RoleController extends Controller
 
     public function index()
     {
-        $this->authorize('showRole', Role::class);
-
+        $this->authorize('showRole', User::class);
         return Inertia::render('Role/Index', [
             'roles' => new RoleCollection(Role::query()->withCount('users', 'permissions')->paginate())
         ]);
@@ -25,7 +24,7 @@ class RoleController extends Controller
 
     public function create()
     {
-        $this->authorize('createRole', Role::class);
+        $this->authorize('createRole', User::class);
 
         return Inertia::render('Role/Create', [
             'permissions' => Permission::query()->get(['name', 'id'])
@@ -35,7 +34,7 @@ class RoleController extends Controller
 
     public function store(RoleRequest $request)
     {
-        $this->authorize('createRole', Role::class);
+        $this->authorize('createRole', User::class);
 
         $role = Role::create($request->validated());
         $role->syncPermissions($request->get('permissions'));
@@ -51,7 +50,7 @@ class RoleController extends Controller
 
     public function edit(Role $role)
     {
-        $this->authorize('editRole', Role::class);
+        $this->authorize('editRole', User::class);
 
 
         return Inertia::render('Role/Edit', [
@@ -63,7 +62,7 @@ class RoleController extends Controller
 
     public function update(RoleRequest $request, Role $role)
     {
-        $this->authorize('editRole', Role::class);
+        $this->authorize('editRole', User::class);
 
 
         $role->update($request->validated());
@@ -74,7 +73,7 @@ class RoleController extends Controller
 
     public function destroy(Role $role)
     {
-        $this->authorize('deleteRole', Role::class);
+        $this->authorize('deleteRole', User::class);
 
         $role->delete();
         return to_route('role.index')->with('success', 'Role Deleted Success.');

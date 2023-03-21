@@ -2,7 +2,6 @@ import React from "react";
 import {Link, router, usePage} from "@inertiajs/react";
 import Layout from "@/Shared/Layout";
 import Icon from "@/Shared/Icon";
-import SearchFilter from "@/Shared/SearchFilter";
 import Pagination from "@/Shared/Pagination";
 
 const Index = () => {
@@ -22,8 +21,7 @@ const Index = () => {
     return (
         <div>
             <h1 className="mb-8 text-3xl font-bold">Rooms</h1>
-            <div className="flex items-center justify-between mb-6">
-                <SearchFilter/>
+            <div className="flex items-center justify-end mb-6">
                 <Link
                     className="btn-indigo focus:outline-none"
                     href={route("room.create")}

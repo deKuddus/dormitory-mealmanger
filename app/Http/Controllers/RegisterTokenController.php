@@ -25,7 +25,7 @@ class RegisterTokenController extends Controller
 
     public function create()
     {
-        $this->authorize('createNotice', RegisterToken::class);
+        $this->authorize('createToken', RegisterToken::class);
 
         $uuid = Str::uuid();
         if (!RegisterToken::query()->where('uuid', $uuid)->exists()) {

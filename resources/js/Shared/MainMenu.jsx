@@ -76,12 +76,6 @@ export default ({className}) => {
             icon: "FaListAlt",
         },
         {
-            name: "RuleItems",
-            link: "ruleItem.index",
-            uri_root: "ruleItem",
-            icon: "FaListAlt",
-        },
-        {
             name: "Asset",
             link: "asset.index",
             uri_root: "asset",

@@ -43,7 +43,7 @@ class ReportController extends Controller
                 'bazar' => $this->totalBazar($messId, $month),
             ]);
         } catch (\Exception $exception) {
-            return redirect()->back()->with('error', $exception->getMessage());
+            return redirect()->back()->with('errors', $exception->getMessage());
         }
     }
 

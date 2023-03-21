@@ -7,11 +7,14 @@ use App\Http\Requests\UserDepositCreateRequest;
 use App\Http\Requests\UserMealUpdateRequest;
 use App\Http\Requests\UserProfileUpdateRequest;
 use App\Http\Resources\BazarScheduleCollection;
+use App\Http\Resources\NoticeCollection;
 use App\Models\BazarSchedule;
 use App\Models\Deposit;
 use App\Models\Meal;
 use App\Models\Menu;
 use App\Models\Mess;
+use App\Models\Notice;
+use App\Models\Rule;
 use App\Models\User;
 use App\Services\MealService;
 use Carbon\Carbon;
@@ -49,7 +52,7 @@ class HomeController extends Controller
         $userId = $request->input('user_id');
 
         if ($userId !== auth()->id()) {
-            return back()->with('error', 'Unauthorized action.');
+            return back()->with('errors', 'Unauthorized action.');
         }
 
 
@@ -65,7 +68,6 @@ class HomeController extends Controller
 
         $lunchOff = Carbon::parse(date('Y-m-d H:i', $lunchOffStrToTime))->format('Y-m-d H:i');
         $dinnerOff = Carbon::parse(date('Y-m-d H:i', $dinnerOffStrToTime))->format('Y-m-d H:i');
-
 
 
         $startOfMonth = now()->format('Y-m-d');
@@ -93,11 +95,11 @@ class HomeController extends Controller
 
         if (now()->gte($lunchOff) && !now()->gte($dinnerOff)) {
 
-           Meal::whereIn('id', $mealIds)
-               ->whereDate('created_at', now()->format('Y-m-d'))
-               ->update([
+            Meal::whereIn('id', $mealIds)
+                ->whereDate('created_at', now()->format('Y-m-d'))
+                ->update([
                     'dinner' => $status,
-               ]);
+                ]);
 
             Meal::whereIn('id', $mealIds)->whereBetween('created_at', [now()->addDay()->format('Y-m-d 09:00'), now()->lastOfMonth()->format('Y-m-d 09:00')])->update([
                 'break_fast' => $status,
@@ -170,7 +172,7 @@ class HomeController extends Controller
             ]);
 
         } catch (\Exception $exception) {
-            return redirect()->back()->with('error', $exception->getMessage());
+            return redirect()->back()->with('errors', $exception->getMessage());
         }
     }
 
@@ -187,11 +189,10 @@ class HomeController extends Controller
 
 
         if ($this->isPast($request->created_at)) {
-            return back()->with('error', 'Can not update previous meal');
-        }
-        else if (Carbon::parse($request->created_at)->isToday()) {
+            return back()->with('errors', 'Can not update previous meal');
+        } else if (Carbon::parse($request->created_at)->isToday()) {
             if (now()->gte($lunchOff) && now()->gte($dinnerOff)) {
-                return back()->with('error', 'Can not update Meal for today, time is over.');
+                return back()->with('errors', 'Can not update Meal for today, time is over.');
             }
 
             if (now()->gte($lunchOff) && !now()->gte($dinnerOff)) {
@@ -202,7 +203,7 @@ class HomeController extends Controller
                 return back()->with('success', 'Lunch Time over, only dinner Updated');
             }
 
-            if (now()->gte($lunchOff) ) {
+            if (now()->gte($lunchOff)) {
                 Meal::whereUserId(auth()->id())->whereId($request->id)->update([
                     'break_fast' => $request->break_fast,
                     'lunch' => $request->lunch,
@@ -221,33 +222,77 @@ class HomeController extends Controller
         }
     }
 
-    private function isPast($date){
+    private function isPast($date)
+    {
 
         return strtotime(Carbon::parse($date)->endOfDay()->format('Y-m-d H:i:s')) < strtotime(now()->format('Y-m-d H:i:s'));
 
     }
 
 
-    public function menus(){
-        return Inertia::render('Member/Menu/Index',[
-            'menus' =>  Menu::query()->get()
+    public function menus()
+    {
+        return Inertia::render('Member/Menu/Index', [
+            'menus' => Menu::query()->get()
         ]);
     }
 
-    public function updateMenu(Request $request){
+    public function updateMenu(Request $request)
+    {
         Menu::whereId($request->id)->update($request->all());
-        return back()->with('success','menu updated');
+        return back()->with('success', 'menu updated');
     }
 
 
-    public function schedule(){
-        return Inertia::render('Member/Schedule',[
+    public function schedule()
+    {
+        return Inertia::render('Member/Schedule', [
             'bazarSchedules' => new BazarScheduleCollection(
                 BazarSchedule::query()
                     ->with('users:id,first_name,last_name')
-                    ->orderBy('status','asc')
+                    ->orderBy('status', 'asc')
                     ->paginate()
             )
+        ]);
+    }
+
+    public function notices()
+    {
+        return Inertia::render('Member/Notice/Index', [
+            'notices' => new NoticeCollection(
+                Notice::query()
+                    ->orderBy('created_at', 'desc')
+                    ->whereStatus(1)
+                    ->paginate()
+            ),
+        ]);
+    }
+
+    public function noticeDetails($id)
+    {
+        $notice = Notice::query()->findOrFail($id);
+        return Inertia::render('Member/Notice/Show', [
+            'notice' => $notice
+        ]);
+    }
+
+    public function rules()
+    {
+        return Inertia::render('Member/Rule/Index', [
+            'rules' => new NoticeCollection(
+                Rule::query()
+                    ->orderBy('created_at', 'desc')
+                    ->whereStatus(1)
+                    ->paginate()
+            ),
+        ]);
+    }
+
+    public function ruleDetails($id)
+    {
+        $notice = Rule::query()->findOrFail($id);
+        return Inertia::render('Member/Rule/Show', [
+            'rule' => $notice
         ]);
     }
 }

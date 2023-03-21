@@ -47,13 +47,6 @@ export default () => {
                                 >
                                     {routePrefix ?  'Switch to member' : 'Switch to Master'}
                                 </Link>
-                                <Link
-                                    href={route("user.index")}
-                                    className="block px-6 py-2 hover:bg-background-200 hover:text-white"
-                                    onClick={() => setMenuOpened(false)}
-                                >
-                                    Manage Users
-                                </Link>
                             </>
                         )}
                         <Link

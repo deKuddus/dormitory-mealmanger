@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Helper\Helper;
 use App\Models\Deposit;
 use App\Models\Mess;
 use App\Models\User;
@@ -51,7 +52,7 @@ class HandleInertiaRequests extends Middleware
             'flash' => function () use ($request) {
                 return [
                     'success' => $request->session()->get('success'),
-                    'error' => $request->session()->get('error'),
+                    'errors' => $request->session()->get('errors'),
                     'registration_success' => $request->session()->get('registration_success')
                 ];
             },

@@ -22,11 +22,8 @@ use App\Policies\ChefPolicy;
 use App\Policies\DepositPolicy;
 use App\Policies\MealPolicy;
 use App\Policies\NoticePolicy;
-use App\Policies\PermissionPolicy;
 use App\Policies\RegisterTokenPolicy;
-use App\Policies\RolePolicy;
 use App\Policies\RoomPolicy;
-use App\Policies\RuleItemPolicy;
 use App\Policies\RulePolicy;
 use App\Policies\SeatPolicy;
 use App\Policies\UserPolicy;
@@ -48,13 +45,10 @@ class AuthServiceProvider extends ServiceProvider
         Deposit::class => DepositPolicy::class,
         Meal::class => MealPolicy::class,
         Rule::class => RulePolicy::class,
-        RuleItem::class => RuleItemPolicy::class,
         Notice::class => NoticePolicy::class,
         RegisterToken::class => RegisterTokenPolicy::class,
-        Role::class => RolePolicy::class,
         Room::class => RoomPolicy::class,
         Seat::class => SeatPolicy::class,
-        Permission::class => PermissionPolicy::class
 
     ];
 

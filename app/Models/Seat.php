@@ -12,7 +12,6 @@ class Seat extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'user_id',
         'room_id',
         'seat_no',
         'status'

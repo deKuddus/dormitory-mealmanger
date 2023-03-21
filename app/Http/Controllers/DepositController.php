@@ -149,7 +149,7 @@ class DepositController extends Controller
         $user = User::find($request->user_id);
 
         if($request->amount > $user->deposit){
-            return back()->with('error','Withdraw amount is greater than deposit amount');
+            return back()->with('errors','Withdraw amount is greater than deposit amount');
         }
         $deposit = Deposit::create(
             $request->validated()

@@ -3,7 +3,6 @@ import {Link, useForm, usePage} from "@inertiajs/react";
 import Layout from "@/Shared/Layout";
 import LoadingButton from "@/Shared/LoadingButton";
 import TextInput from "@/Shared/TextInput";
-import Select from 'react-select'
 import {value} from "lodash/seq";
 
 
@@ -111,7 +110,7 @@ const Create = () => {
                             type="submit"
                             className="btn-indigo"
                         >
-                            Create Role
+                            Update Role
                         </LoadingButton>
                     </div>
                 </form>

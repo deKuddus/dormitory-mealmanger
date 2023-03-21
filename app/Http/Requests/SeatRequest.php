@@ -24,7 +24,6 @@ class SeatRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_id' => 'required|integer',
             'room_id' => 'required|integer',
             'seat_no' => 'nullable|string',
             'status'  => 'required|boolean'

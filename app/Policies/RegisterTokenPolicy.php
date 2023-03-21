@@ -11,16 +11,16 @@ class RegisterTokenPolicy
 
     public function createToken(User $user)
     {
-        return $user->can('access::token-create');
+        return $user->can('access::create-token');
     }
 
     public function showToken(User $user)
     {
-        return $user->can('access::token-show');
+        return $user->can('access::show-token');
     }
 
     public function deleteToken(User $user)
     {
-        return $user->can('access::token-delete');
+        return $user->can('access::delete-token');
     }
 }

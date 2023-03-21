@@ -10,6 +10,7 @@ export default function Home() {
                 <link rel="icon" href="/logo.png" />
                 <meta name="description" content="WPDev Dormitory is the accommodation facilities for employee of WPDeveloper. The dormitory has a total of three floors, each with an area of 2500 square feet. The dormitory provides comfortable living spaces, dining areas, and recreational facilities. It also equipped with all the necessary amenities to ensure a comfortable stay for its residents, such as high-speed internet, internal chef, food, and 24-hour security."/>
                 <meta name="og:title" content="WPDev Dormitory" />
+                <meta property="og:image" content="/ogimage.png" />
                 <meta name="og:description" content="WPDev Dormitory is the accommodation facilities for employee of WPDeveloper. The dormitory has a total of three floors, each with an area of 2500 square feet. The dormitory provides comfortable living spaces, dining areas, and recreational facilities. It also equipped with all the necessary amenities to ensure a comfortable stay for its residents, such as high-speed internet, internal chef, food, and 24-hour security." />
             </Head>
             <div className="bg-white dark:bg-black">

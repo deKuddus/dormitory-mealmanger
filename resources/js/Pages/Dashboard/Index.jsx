@@ -1,13 +1,13 @@
 import React, {useState} from "react";
 import Layout from "@/Shared/Layout";
-import {usePage} from "@inertiajs/react";
+import {router, usePage} from "@inertiajs/react";
 
 
 const Dashboard = () => {
     const {data} = usePage().props;
 
     const handleMonthCloseRequest = () => {
-        alert(4)
+        return router.post(route("month.close"))
     }
 
     return (

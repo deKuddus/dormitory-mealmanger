@@ -15,7 +15,7 @@ export default () => {
     }
 
     if(errors && errors.length){
-         toast.error('There was an error!');
+         toast.error('There was an errors!');
     }
     return <></>
 };
