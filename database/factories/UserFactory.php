@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
 class UserFactory extends Factory
 {
     protected $model = User::class;
+
     /**
      * Define the model's default state.
      *
@@ -20,7 +21,7 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
-            'first_name'=> fake()->firstName(),
+            'first_name' => fake()->firstName(),
             'last_name' => fake()->lastName(),
             'email' => fake()->unique()->safeEmail(),
             'password' => 123456789, // password
@@ -28,8 +29,8 @@ class UserFactory extends Factory
             'phone' => Str::random(10),
             'present_address' => fake()->address(),
             'permanent_address' => fake()->address(),
-            'nid' => fake()->randomDigitNotNull(),
-            'nid_type' => fake()->name(),
+            'nid' => fake()->name(),
+            'nid_type' => fake()->randomDigitNotNull(),
             'institution' => fake()->name(),
             'company' => fake()->name(),
             'status' => fake()->numberBetween(0, 1),
@@ -43,7 +44,7 @@ class UserFactory extends Factory
      */
     public function unverified()
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'email_verified_at' => null,
         ]);
     }

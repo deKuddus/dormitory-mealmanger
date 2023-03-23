@@ -4,6 +4,7 @@ import Layout from "@/Shared/Layout";
 import Icon from "@/Shared/Icon";
 import SearchFilter from "@/Shared/SearchFilter";
 import Pagination from "@/Shared/Pagination";
+import {APPROVED, PENDING} from "@/Shared/const/additionalCostStatus";
 
 const Index = () => {
     const {additionals} = usePage().props;
@@ -27,8 +28,8 @@ const Index = () => {
                     className="btn-indigo focus:outline-none"
                     href={route("additional.create")}
                 >
-                    <span>Create</span>
-                    <span className="hidden md:inline">AdditionalCost</span>
+                    <span>Add New</span>
+                    <span className="hidden md:inline"> Cost</span>
                 </Link>
             </div>
             <div className="overflow-x-auto bg-white rounded shadow p-3">
@@ -38,12 +39,13 @@ const Index = () => {
                         <th className="px-6 pt-5 pb-4">No</th>
                         <th className="px-6 pt-5 pb-4">Amount</th>
                         <th className="px-6 pt-5 pb-4">Description</th>
+                        <th className="px-6 pt-5 pb-4">Status</th>
                         <th className="px-6 pt-5 pb-4">Action</th>
                     </tr>
                     </thead>
                     <tbody>
                     {data.map(
-                        ({id, amount,description, status},key) => {
+                        ({id, amount, description, status}, key) => {
                             return (
                                 <tr
                                     key={id}
@@ -53,7 +55,7 @@ const Index = () => {
                                         <p
                                             className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
                                         >
-                                            {key+1}
+                                            {key + 1}
                                         </p>
                                     </td>
                                     <td className="border">
@@ -69,6 +71,13 @@ const Index = () => {
                                             className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
                                         >
                                             {description}
+                                        </p>
+                                    </td>
+                                    <td className="border">
+                                        <p
+                                            className={`flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none ${status === APPROVED ? 'text-green-500' : status === PENDING ? 'text-red-600' : ''}`}
+                                        >
+                                            {status === APPROVED ? 'Approved' : status === PENDING ? 'Pending' : 'Closed'}
                                         </p>
                                     </td>
                                     <td className="w-px border px-4 py-3 whitespace-nowrap">

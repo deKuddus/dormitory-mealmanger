@@ -1,35 +1,57 @@
-import React from "react";
+import React, {useState} from "react";
 import {Link, router, usePage} from "@inertiajs/react";
 import Layout from "@/Shared/Layout";
 import Icon from "@/Shared/Icon";
 import Pagination from "@/Shared/Pagination";
+import MenuEditModal from "@/Pages/Member/Menu/Edit";
+import moment from "moment";
 
 const Index = () => {
     const {menus} = usePage().props;
-    const {
-        data,
-        meta: {links},
-    } = menus;
+    const [open, setOpen] = useState(false);
+    const initialData = {
+        break_fast: '',
+        lunch: '',
+        dinner: '',
+        id: ''
+    };
+    const [menuData, setMeuData] = useState(initialData)
 
-    const deleteMenu = (id) => {
-        if (confirm("Are you sure you want to delete this menu?")) {
-            router.delete(route("menu.destroy", id));
-        }
-        return true;
+    const handleMenuUpdate = (break_fast, lunch, dinner, id) => {
+        setMeuData({...menuData, break_fast, lunch, dinner, id})
+        setOpen(true);
     }
+
+    const handleSubmitConfirm = () => {
+        setOpen(false);
+        router.post(route('menu.update', menuData.id), {
+            ...menuData,
+            _method: 'PUT'
+        })
+    }
+
+    const handleModalClose = () => {
+        setMeuData(initialData);
+        setOpen(false);
+    }
+
+    const weekDay = {
+        6: 'Saturday',
+        0: 'Sunday',
+        1: 'Monday',
+        2: 'Tuesday',
+        3: 'Wednesday',
+        4: 'Thursday',
+        5: 'Friday',
+    };
 
     return (
         <div>
+            {open && <MenuEditModal handleModalClose={handleModalClose} setMenuData={setMeuData} menuData={menuData}
+                                    handleConfirm={handleSubmitConfirm}
+                                    open={open} setOpen={setOpen}/>}
             <h1 className="mb-8 text-3xl font-bold">Menus</h1>
-            {/*<div className="flex items-center justify-end mb-6">*/}
-            {/*    <Link*/}
-            {/*        className="btn-indigo focus:outline-none"*/}
-            {/*        href={route("menu.create")}*/}
-            {/*    >*/}
-            {/*        <span>Create</span>*/}
-            {/*        <span className="hidden md:inline">Menu</span>*/}
-            {/*    </Link>*/}
-            {/*</div>*/}
+
             <div className="overflow-x-auto bg-white rounded shadow p-3">
                 <table className="w-full whitespace-nowrap">
                     <thead>
@@ -43,12 +65,12 @@ const Index = () => {
                     </tr>
                     </thead>
                     <tbody>
-                    {data.map(
+                    {menus ? menus.map(
                         ({id, break_fast, lunch, dinner, menu_date}, key) => {
                             return (
                                 <tr
                                     key={id}
-                                    className="hover:bg-gray-100 focus-within:bg-gray-100"
+                                    className={`${weekDay[moment().day()] === menu_date ? 'bg-green-500 text-white font-bold text-xl' : 'hover:bg-gray-100'} focus-within:bg-gray-100`}
                                 >
                                     <td className="border">
                                         <p
@@ -87,33 +109,24 @@ const Index = () => {
                                     </td>
                                     <td className="w-px border p-3 whitespace-nowrap">
                                         <div className="flex items-center gap-4 justify-center">
-                                            <Link
-                                                href={route("menu.edit", id)}
+                                            <button
+                                                onClick={() => handleMenuUpdate(break_fast, lunch, dinner, id)}
                                                 className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
                                             >
                                                 <Icon
                                                     name="FaEdit"
                                                     className="w-6 h-4 text-gray-400 fill-current"
                                                 />
-                                            </Link>
-                                            {/*<button*/}
-                                            {/*    onClick={() => deleteMenu(id)}*/}
-                                            {/*    className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"*/}
-                                            {/*>*/}
-                                            {/*    <Icon*/}
-                                            {/*        name="FaTrashAlt"*/}
-                                            {/*        className="w-6 h-4 text-gray-400 fill-current"*/}
-                                            {/*    />*/}
-                                            {/*</button>*/}
+                                            </button>
+
                                         </div>
                                     </td>
                                 </tr>
                             );
                         }
-                    )}
-                    {data.length === 0 && (
+                    ) : (
                         <tr>
-                            <td className="px-6 py-4 border" colSpan="6">
+                            <td className="px-6 py-4 border" colSpan="5">
                                 No Menu found.
                             </td>
                         </tr>
@@ -121,7 +134,6 @@ const Index = () => {
                     </tbody>
                 </table>
             </div>
-            <Pagination links={links}/>
         </div>
     );
 };

@@ -16,7 +16,8 @@ class PermissionCollection extends ResourceCollection
     {
         return $this->collection->map->only(
             'id',
-            'name'
+            'name',
+            'guard_name'
         );
     }
 }

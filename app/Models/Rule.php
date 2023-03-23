@@ -17,7 +17,7 @@ class Rule extends Model
         'mess_id',
         'title',
         'status',
-        'published_date'
+        'description'
     ];
 
     protected $casts = [
@@ -27,22 +27,10 @@ class Rule extends Model
     {
         return $query->where('status', 1);
     }
-    public function ruleItems()
-    {
-        return $this->hasMany(RuleItem::class);
-    }
 
     public function mess()
     {
         return $this->belongsTo(Mess::class);
-    }
-
-    protected function publishedDate(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => Carbon::parse($value)->format('Y-m-d'),
-            set: fn ($value) => Carbon::parse($value)->format('Y-m-d'),
-        );
     }
 
     public function scopeFilter($query, array $filters)

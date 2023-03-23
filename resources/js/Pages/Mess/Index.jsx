@@ -40,9 +40,9 @@ const Index = () => {
                         <th className="px-6 pt-5 pb-4">Name</th>
                         <th className="px-6 pt-5 pb-4">Address</th>
                         <th className="px-6 pt-5 pb-4">Status</th>
-                        <th className="px-6 pt-5 pb-4">
-                            Action
-                        </th>
+                        {/*<th className="px-6 pt-5 pb-4">*/}
+                        {/*    Action*/}
+                        {/*</th>*/}
                     </tr>
                     </thead>
                     <tbody>
@@ -81,28 +81,28 @@ const Index = () => {
                                             {status}
                                         </p>
                                     </td>
-                                    <td className="w-px border px-4 py-3 whitespace-nowrap">
-                                        <div className="flex items-center gap-4 justify-end">
-                                            <Link
-                                                href={route("mess.edit", id)}
-                                                className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
-                                            >
-                                                <Icon
-                                                    name="FaEdit"
-                                                    className="w-6 h-4 text-gray-500 fill-current"
-                                                />
-                                            </Link>
-                                            <button
-                                                onClick={() => deleteMess(id)}
-                                                className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
-                                            >
-                                                <Icon
-                                                    name="FaTrashAlt"
-                                                    className="w-6 h-4 text-gray-500 fill-current"
-                                                />
-                                            </button>
-                                        </div>
-                                    </td>
+                                    {/*<td className="w-px border px-4 py-3 whitespace-nowrap">*/}
+                                    {/*    <div className="flex items-center gap-4 justify-end">*/}
+                                    {/*        <Link*/}
+                                    {/*            href={route("mess.edit", id)}*/}
+                                    {/*            className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"*/}
+                                    {/*        >*/}
+                                    {/*            <Icon*/}
+                                    {/*                name="FaEdit"*/}
+                                    {/*                className="w-6 h-4 text-gray-500 fill-current"*/}
+                                    {/*            />*/}
+                                    {/*        </Link>*/}
+                                    {/*        <button*/}
+                                    {/*            onClick={() => deleteMess(id)}*/}
+                                    {/*            className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"*/}
+                                    {/*        >*/}
+                                    {/*            <Icon*/}
+                                    {/*                name="FaTrashAlt"*/}
+                                    {/*                className="w-6 h-4 text-gray-500 fill-current"*/}
+                                    {/*            />*/}
+                                    {/*        </button>*/}
+                                    {/*    </div>*/}
+                                    {/*</td>*/}
                                 </tr>
                             );
                         }

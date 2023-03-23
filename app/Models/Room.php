@@ -13,7 +13,6 @@ class Room extends Model
 
     protected $fillable = [
         'mess_id',
-        'user_id',
         'name',
         'location',
         'status',

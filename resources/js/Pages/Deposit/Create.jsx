@@ -24,7 +24,7 @@ const Create = () => {
         setData("deposit_date", date)
     }
 
-    console.log(data)
+
 
     return (
         <div>

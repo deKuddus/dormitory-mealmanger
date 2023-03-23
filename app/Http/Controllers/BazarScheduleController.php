@@ -21,7 +21,6 @@ class BazarScheduleController extends Controller
                     ->with('users:id,first_name,last_name')
                     ->orderBy('status','asc')
                     ->paginate()
-                    ->appends(request()->all())
             ),
         ]);
     }

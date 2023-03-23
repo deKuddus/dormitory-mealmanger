@@ -34,4 +34,8 @@ class BazarSchedule extends Model
     public function mess(){
         return $this->belongsTo(Mess::class);
     }
+
+    public function bazar(){
+        return $this->hasMany(Bazar::class);
+    }
 }

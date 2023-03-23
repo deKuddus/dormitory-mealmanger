@@ -26,7 +26,9 @@ class BazarRequest extends FormRequest
         return [
             'description' => 'nullable|string',
             'amount' => 'numeric|required',
-            'mess_id' => 'required|integer'
+            'mess_id' => 'required|integer',
+            'bazar_schedule_id' => 'required|numeric',
+            'status' => 'required'
         ];
     }
 
@@ -34,7 +36,7 @@ class BazarRequest extends FormRequest
     {
         $this->merge([
             'mess_id' => 1,
-            'status' => 1
+            'status' => auth()->user()->isAdmin() ? 1 : 0
         ]);
     }
 }

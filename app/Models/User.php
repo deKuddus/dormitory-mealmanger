@@ -36,7 +36,8 @@ class User extends Authenticatable
         'nid_type',
         'institution',
         'company',
-        'status'
+        'status',
+        'is_admin'
     ];
     protected $perPage = 10;
 
@@ -121,5 +122,13 @@ class User extends Authenticatable
 
     public function meals(){
         return $this->hasMany(Meal::class);
+    }
+
+    public function isAbleToAccessDashboard(){
+        return $this->is_admin === 1;
+    }
+
+    public function isAdmin(){
+        return $this->isAbleToAccessDashboard();
     }
 }

@@ -6,6 +6,7 @@ use App\Http\Requests\RuleRequest;
 use App\Http\Resources\MessCollection;
 use App\Http\Resources\RuleCollection;
 use App\Models\Rule;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -13,27 +14,28 @@ class RuleController extends Controller
 {
     public function index()
     {
-        $requestParam = \request()->all('search', 'trashed');
+        $this->authorize('showRule', Rule::class);
+
         return Inertia::render('Rule/Index', [
-            'filters' => $requestParam,
             'rules' => new RuleCollection(
                 Rule::query()
-                    ->withCount('ruleItems')
                     ->orderBy('created_at', 'desc')
-                    ->filter($requestParam)
                     ->paginate()
-                    ->appends(request()->all())
             ),
         ]);
     }
 
     public function create()
     {
+        $this->authorize('createRule', Rule::class);
+
         return Inertia::render('Rule/Create');
     }
 
     public function store(RuleRequest $request)
     {
+        $this->authorize('createRule', Rule::class);
+
         Rule::create(
             $request->validated()
         );
@@ -41,14 +43,18 @@ class RuleController extends Controller
         return to_route('rule.index');
     }
 
-    public function show($id)
+    public function show(Rule $rule)
     {
-
+        return Inertia::render('Rule/Show', [
+            'rule' => $rule
+        ]);
     }
 
 
     public function edit(Rule $rule)
     {
+        $this->authorize('editRule', Rule::class);
+
         return Inertia::render('Rule/Edit', [
             'rule' => $rule,
         ]);
@@ -56,6 +62,8 @@ class RuleController extends Controller
 
     public function update(RuleRequest $request, Rule $rule)
     {
+        $this->authorize('editRule', Rule::class);
+
         $rule->update(
             $request->validated()
         );
@@ -65,6 +73,8 @@ class RuleController extends Controller
 
     public function destroy(Rule $rule)
     {
+        $this->authorize('deleteRule', Rule::class);
+
         $rule->delete();
 
         return to_route('rule.index');

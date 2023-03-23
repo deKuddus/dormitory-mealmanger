@@ -25,7 +25,18 @@ const Create = () => {
         label: row.name
     })) : [];
 
-
+    const handlePermissionChange = (isChecked, permissionId) => {
+        if (isChecked) {
+            let _pemission =[...data.permissions, permissionId];
+            setData('permissions',_pemission)
+        } else {
+            const updatedRolePermission = data.permissions.filter(
+                (id) => id !== permissionId
+            );
+            setData('permissions',updatedRolePermission)
+        }
+    }
+console.log(errors)
     return (
         <div>
             <div>
@@ -54,21 +65,30 @@ const Create = () => {
                             onChange={(e) => setData("name", e.target.value)}
                         />
 
-                        <div className="w-full pb-8 pr-6">
-                            <label className="form-label">Users</label>
-                            <Select
-                                isMulti
-                                isClearable
-                                classNamePrefix={"react-select"}
-                                options={options}
-                                onChange={(selected) =>
-                                    setData('permissions',
-                                        (selected && selected.map((select) => select.value)) || []
-                                    )
-                                }
-                            />
-                        </div>
+                    </div>
 
+                    <div className="flex flex-wrap p-8 -mb-8 -mr-6">
+
+                        {options.map((row,key) => (
+                            <div className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/4" key={key}>
+                                <label
+                                    className={`flex items-center mt-6 select-none  ${errors.permissions ? 'form-error':''}`}
+                                    htmlFor={`permission-${row.value}`}
+                                >
+                                    <input
+                                        name="permission"
+                                        id={`permission-${row.value}`}
+                                        type="checkbox"
+                                        className={`mr-1 ${errors.permissions ? 'error':''}`}
+                                        checked={data.permissions.includes(row.value)}
+                                        onChange={(e) =>
+                                            handlePermissionChange(e.target.checked, row.value)
+                                        }
+                                    />
+                                    <span className="text-sm">{row.label}</span>
+                                </label>
+                            </div>
+                        ))}
                     </div>
                     <div className="flex items-center justify-end px-8 py-4 bg-gray-100 border-t border-gray-200">
                         <LoadingButton

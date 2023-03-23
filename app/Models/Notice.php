@@ -18,16 +18,7 @@ class Notice extends Model
         'description',
         'mess_id',
         'status',
-        'published_date',
     ];
-
-    protected function publishedDate(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => Carbon::parse($value)->format('Y-m-d'),
-            set: fn ($value) => Carbon::parse($value)->format('Y-m-d'),
-        );
-    }
 
     public function scopeFilter($query, array $filters)
     {

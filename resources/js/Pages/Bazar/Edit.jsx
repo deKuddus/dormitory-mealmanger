@@ -64,7 +64,7 @@ const Edit = () => {
                             type="submit"
                             className="btn-indigo"
                         >
-                            Edit Bazar
+                            Update Bazar
                         </LoadingButton>
                     </div>
                 </form>

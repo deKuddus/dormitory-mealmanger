@@ -24,10 +24,17 @@ class RuleRequest extends FormRequest
     public function rules()
     {
         return [
-            'mess_id'        => 'required|exists:messes,id',
-            'title'          => 'required|string',
-            'status'         => 'required|boolean',
-            'published_date' => 'required|date',
+            'mess_id' => 'required',
+            'title' => 'required|string',
+            'status' => 'required|boolean',
+            'description' => 'required|string'
         ];
+    }
+
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'mess_id' => 1
+        ]);
     }
 }

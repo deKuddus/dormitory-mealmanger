@@ -18,10 +18,10 @@ trait LockedDemoUser
 
     public function failedAuthorization()
     {
-        $this->session()->flash('error', 'Updating or deleting the demo user is not allowed.');
+        $this->session()->flash('errors', 'Updating or deleting the demo user is not allowed.');
 
         // Note: This is required, otherwise demo user will update
-        // and both, success and error messages will be returned.
+        // and both, success and errors messages will be returned.
         throw ValidationException::withMessages([]);
     }
 }

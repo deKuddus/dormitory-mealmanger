@@ -16,8 +16,13 @@ class Mess extends Model
         'status',
         'address',
         'user_id',
-        'deposit',
-        'is_fixed_meal_rate'
+        'is_fixed_meal_rate',
+        'break_fast_close',
+        'lunch_close',
+        'dinner_close',
+        'has_breakfast',
+        'has_lunch',
+        'has_dinner',
     ];
 
     public function owner()
@@ -27,7 +32,7 @@ class Mess extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class,'mess_users','mess_id','user_id');
+        return $this->belongsToMany(User::class, 'mess_users', 'mess_id', 'user_id');
     }
 
     public function scopeFilter($query, array $filters)

@@ -4,16 +4,16 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class RuleItemCollection extends ResourceCollection
+class RegisterTokenCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Support\HigherOrderCollectionProxy
+     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
     {
-        return $this->collection->map->only('id', 'rule', 'description', 'status');
+        return $this->collection->map->only('id','uuid','expire_at');
     }
 }

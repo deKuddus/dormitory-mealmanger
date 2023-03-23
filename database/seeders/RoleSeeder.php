@@ -17,7 +17,7 @@ class RoleSeeder extends Seeder
     public function run()
     {
         $permissions = Permission::query()->pluck('id');
-        $role = Role::create([
+        $role = Role::query()->firstOrCreate([
             'name' => 'Admin'
         ]);
 

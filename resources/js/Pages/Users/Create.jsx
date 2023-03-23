@@ -1,13 +1,16 @@
 import React from "react";
-import { Link, useForm } from "@inertiajs/react";
+import {Link, useForm, usePage} from "@inertiajs/react";
 import Layout from "@/Shared/Layout";
 import LoadingButton from "@/Shared/LoadingButton";
 import TextInput from "@/Shared/TextInput";
 import SelectInput from "@/Shared/SelectInput";
+import Select from "react-select";
 // import FileInput from "@/Shared/FileInput";
 
 const Create = () => {
-    const { data, setData, errors, post, processing } = useForm({
+
+    const {roles} = usePage().props;
+    const {data, setData, errors, post, processing} = useForm({
         first_name: "",
         last_name: "",
         email: "",
@@ -21,12 +24,20 @@ const Create = () => {
         institution: "",
         company: "",
         status: "0",
+        roles: [],
+        is_admin: 0,
     });
 
-    const handleSubmit = (e) =>  {
+    const handleSubmit = (e) => {
         e.preventDefault();
         post(route("user.store"));
     }
+
+
+    const options = roles && roles.length ? roles.map((row) => ({
+        value: row.id,
+        label: `${row.name}`
+    })) : [];
 
     return (
         <div>
@@ -167,15 +178,31 @@ const Create = () => {
                             <option value="1">Active</option>
                             <option value="0">InActive</option>
                         </SelectInput>
-                        {/*<FileInput*/}
-                        {/*    className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"*/}
-                        {/*    label="Photo"*/}
-                        {/*    name="photo"*/}
-                        {/*    accept="image/*"*/}
-                        {/*    errors={errors.photo}*/}
-                        {/*    value={data.photo}*/}
-                        {/*    onChange={(photo) => setData("photo", photo)}*/}
-                        {/*/>*/}
+                        <SelectInput
+                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
+                            label="Is Admin"
+                            name="is_admin"
+                            errors={errors.is_admin}
+                            value={data.is_admin}
+                            onChange={(e) => setData("is_admin", e.target.value)}
+                        >
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </SelectInput>
+                        <div className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3">
+                            <label className="form-label">Roles</label>
+                            <Select
+                                isMulti
+                                isClearable
+                                classNamePrefix={"react-select"}
+                                options={options}
+                                onChange={(selected) =>
+                                    setData('roles',
+                                        (selected && selected.map((select) => select.value)) || []
+                                    )
+                                }
+                            />
+                        </div>
                     </div>
                     <div className="flex items-center justify-end px-8 py-4 bg-gray-100 border-t border-gray-200">
                         <LoadingButton
@@ -192,6 +219,6 @@ const Create = () => {
     );
 };
 
-Create.layout = (page) => <Layout title="Create User" children={page} />;
+Create.layout = (page) => <Layout title="Create User" children={page}/>;
 
 export default Create;

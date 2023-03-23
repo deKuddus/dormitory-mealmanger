@@ -29,6 +29,7 @@ class MessController extends Controller
 
     public function create()
     {
+        return back();
         return Inertia::render('Mess/Create', [
             'users' => User::get(['id', 'first_name'])->toArray(),
         ]);
@@ -36,6 +37,8 @@ class MessController extends Controller
 
     public function store(MessCreateRequest $request)
     {
+        return back();
+
         Mess::create(
             $request->validated()
         );
@@ -51,7 +54,9 @@ class MessController extends Controller
 
     public function edit(Mess $mess)
     {
-        return Inertia::render('Mess/Create', [
+        return back();
+
+        return Inertia::render('Mess/Edit', [
             'users' => User::get(['id', 'first_name'])->toArray(),
             'mess' => $mess,
         ]);
@@ -59,6 +64,9 @@ class MessController extends Controller
 
     public function update(MessCreateRequest $request, Mess $mess)
     {
+
+        return back();
+
         $mess->update(
             $request->validated()
         );
@@ -68,6 +76,8 @@ class MessController extends Controller
 
     public function destroy(Mess $mess)
     {
+        return back();
+
         $mess->delete();
 
         return to_route('mess.index');

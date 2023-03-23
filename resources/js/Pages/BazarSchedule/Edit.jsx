@@ -37,8 +37,8 @@ const Edit = () => {
         prevId.push(id);
         setData("users_id", prevId)
     }
-console.log(data.users_id)
-console.log(options.filter((option)=>data.users_id.includes(option.value)))
+
+
     return (
         <div>
             <div>

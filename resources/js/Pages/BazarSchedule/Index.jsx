@@ -2,7 +2,6 @@ import React from "react";
 import {Link, router, usePage} from "@inertiajs/react";
 import Layout from "@/Shared/Layout";
 import Icon from "@/Shared/Icon";
-import SearchFilter from "@/Shared/SearchFilter";
 import Pagination from "@/Shared/Pagination";
 import moment from "moment";
 

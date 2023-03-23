@@ -12,7 +12,6 @@ export default function Example({meal, setMeal, open, setOpen}) {
 
     const handleFormSubmit = () => {
         //handle it later
-        console.log(meal)
     }
 
     return (

@@ -25,16 +25,17 @@ class AdditionalCostRequest extends FormRequest
     {
         return [
             'description' => 'nullable|string|max:255',
-            'amount'      => 'numeric|required',
-            'mess_id'     => 'required|integer',
-            'status'      => 'integer|required',
+            'amount' => 'numeric|required|gt:0',
+            'mess_id' => 'required|integer',
+            'status' => 'integer|required',
         ];
     }
 
     protected function prepareForValidation()
     {
         $this->merge([
-            'mess_id' => 1
+            'mess_id' => 1,
+            'status' => (int)$this->status
         ]);
     }
 }

@@ -17,7 +17,6 @@ return new class () extends Migration {
             $table->foreignId('mess_id')->constrained();
             $table->string('title');
             $table->text('description')->nullable();
-            $table->dateTime('published_date')->nullable();
             $table->integer('status')->default(1);
             $table->timestamps();
             $table->softDeletes();

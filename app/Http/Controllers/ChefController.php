@@ -7,6 +7,7 @@ use App\Http\Requests\ChefRequest;
 use App\Http\Resources\ChefCollection;
 use App\Models\Chef;
 use App\Models\Mess;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -14,6 +15,8 @@ class ChefController extends Controller
 {
     public function index()
     {
+        $this->authorize('showChef', Chef::class);
+
         $requestParam = \request()->all('search', 'trashed');
         return Inertia::render('Chef/Index', [
             'filters' => $requestParam,
@@ -28,6 +31,8 @@ class ChefController extends Controller
 
     public function create()
     {
+        $this->authorize('createChef', Chef::class);
+
         return Inertia::render('Chef/Create', [
             ...Helper::messArray()
         ]);
@@ -35,6 +40,8 @@ class ChefController extends Controller
 
     public function store(ChefRequest $request)
     {
+        $this->authorize('createChef', Chef::class);
+
         Chef::create(
             $request->validated()
         );
@@ -50,6 +57,8 @@ class ChefController extends Controller
 
     public function edit(Chef $chef)
     {
+        $this->authorize('editChef', Chef::class);
+
         return Inertia::render('Chef/Edit', [
             ...Helper::messArray(),
             'chef' => $chef,
@@ -58,15 +67,19 @@ class ChefController extends Controller
 
     public function update(ChefRequest $request, Chef $chef)
     {
-        $chef->update(
-            $request->validated()
-        );
+        $this->authorize('editChef', Chef::class);
+
+        $chef->update($request->validated());
+
         return to_route('chef.index');
     }
 
     public function destroy(Chef $chef)
     {
+        $this->authorize('deleteChef', Chef::class);
+
         $chef->delete();
+
         return to_route('chef.index');
     }
 

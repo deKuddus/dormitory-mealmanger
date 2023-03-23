@@ -6,12 +6,10 @@ import TextInput from "@/Shared/TextInput";
 import SelectInput from "@/Shared/SelectInput";
 
 const Create = () => {
-    const{users} = usePage().props;
     const { data, setData, errors, post, processing } = useForm({
         name: "",
-        status: "",
+        status: 1,
         location: "",
-        user_id: "",
     });
 
     const handleSubmit = (e) =>{
@@ -36,17 +34,6 @@ const Create = () => {
             <div className="w-full overflow-hidden bg-white rounded shadow">
                 <form name="createForm" onSubmit={handleSubmit}>
                     <div className="flex flex-wrap p-8 -mb-8 -mr-6">
-
-                        <SelectInput
-                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
-                            label="User"
-                            name="user_id"
-                            errors={errors.user_id}
-                            value={data.user_id}
-                            onChange={(e) => setData("user_id", e.target.value)}
-                        >
-                            {users && users.map(({id,first_name})=>( <option key={id} value={id}>{first_name}</option>))}
-                        </SelectInput>
 
                         <TextInput
                             className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"

@@ -23,6 +23,18 @@ class LoginController extends Controller
     | to conveniently provide its functionality to your applications.
     |
     */
+    public function __construct()
+    {
+        $this->middleware('guest')->except('logout');
+    }
+
+    protected function redirectTo()
+    {
+        if (auth()->user()->is_admin == 1) {
+            return '/master';
+        }
+        return '/dashboard';
+    }
 
     use AuthenticatesUsers;
 
@@ -31,7 +43,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/';
+//    protected $redirectTo = '/';
 
     public function showLoginForm()
     {

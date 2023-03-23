@@ -82,7 +82,6 @@ const Index = () => {
         )
     }
 
-    console.log(meal)
 
     return (
         <>

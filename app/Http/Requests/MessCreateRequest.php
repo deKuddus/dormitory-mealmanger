@@ -25,10 +25,24 @@ class MessCreateRequest extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'status' => 'required|boolean',
+            'status' => 'required|integer',
             'address' => 'required|string',
             'user_id' => 'required|integer',
             'is_fixed_meal_rate' => 'required|boolean',
+            'break_fast_close' => 'nullable|string',
+            'lunch_close' => 'nullable|string',
+            'dinner_close' => 'nullable|string',
+            'is_automeal' => 'nullable|integer',
+            'has_breakfast' => 'nullable|integer',
+            'has_lunch' => 'nullable|integer',
+            'has_dinner' => 'nullable|integer'
         ];
+    }
+
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'user_id' => 1
+        ]);
     }
 }

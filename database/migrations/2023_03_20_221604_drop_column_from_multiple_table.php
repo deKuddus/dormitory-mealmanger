@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class () extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      *
@@ -12,13 +13,13 @@ return new class () extends Migration {
      */
     public function up()
     {
-        Schema::create('rule_items', function (Blueprint $table) {
-            $table->id();
+        Schema::table('notices', function (Blueprint $table) {
+            $table->dropColumn('published_date');
+        });
+
+        Schema::table('rules', function (Blueprint $table) {
             $table->text('description');
-            $table->boolean('status');
-            $table->foreignId('rule_id')->constrained();
-            $table->timestamps();
-            $table->softDeletes();
+            $table->dropColumn('published_date');
         });
     }
 
@@ -29,6 +30,8 @@ return new class () extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('rule_items');
+        Schema::table('rules', function (Blueprint $table) {
+            $table->dropColumn('description');
+        });
     }
 };

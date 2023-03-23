@@ -25,7 +25,6 @@ class RoomRequest extends FormRequest
     {
         return [
         'mess_id' => 'required|integer',
-        'user_id' => 'required|integer',
         'name' => 'required|string',
         'location' => 'nullable|string',
         'status' => 'required|integer',

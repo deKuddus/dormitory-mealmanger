@@ -7,6 +7,7 @@ use App\Http\Requests\NoticeCreateRequest;
 use App\Http\Resources\NoticeCollection;
 use App\Models\Mess;
 use App\Models\Notice;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -15,13 +16,12 @@ class NoticeController extends Controller
 
     public function index()
     {
-        $requestParam = \request()->all('search', 'trashed');
+        $this->authorize('showNotice', Notice::class);
+
         return Inertia::render('Notice/Index', [
-            'filters' => $requestParam,
             'notices' => new NoticeCollection(
                 Notice::query()
                     ->orderBy('created_at', 'desc')
-                    ->filter($requestParam)
                     ->paginate()
                     ->appends(request()->all())
             ),
@@ -30,13 +30,16 @@ class NoticeController extends Controller
 
     public function create()
     {
-        return Inertia::render('Notice/Create', [
-            ...Helper::messArray(),
-        ]);
+        $this->authorize('createNotice', Notice::class);
+
+        return Inertia::render('Notice/Create');
     }
 
     public function store(NoticeCreateRequest $request)
     {
+        $this->authorize('showNotice', Notice::class);
+
+
         Notice::create(
             $request->validated()
         );
@@ -44,22 +47,29 @@ class NoticeController extends Controller
         return to_route('notice.index');
     }
 
-    public function show($id)
+    public function show(Notice $notice)
     {
+
+        return Inertia::render('Notice/Show', [
+            'notice' => $notice
+        ]);
 
     }
 
 
     public function edit(Notice $notice)
     {
+        $this->authorize('editNotice', Notice::class);
+
         return Inertia::render('Notice/Edit', [
-            ...Helper::messArray(),
             'notice' => $notice,
         ]);
     }
 
     public function update(NoticeCreateRequest $request, Notice $notice)
     {
+        $this->authorize('editNotice', Notice::class);
+
         $notice->update(
             $request->validated()
         );
@@ -69,6 +79,8 @@ class NoticeController extends Controller
 
     public function destroy(Notice $notice)
     {
+        $this->authorize('deleteNotice', Notice::class);
+
         $notice->delete();
 
         return to_route('notice.index');
