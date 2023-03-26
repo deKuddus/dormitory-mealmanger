@@ -13,7 +13,7 @@ class AssetController extends Controller
 {
     public function index()
     {
-        $this->authorize('showAsset',User::class);
+        $this->authorize('showAsset',Asset::class);
 
         $requestParam = \request()->all('search', 'trashed');
         return Inertia::render('Asset/Index', [

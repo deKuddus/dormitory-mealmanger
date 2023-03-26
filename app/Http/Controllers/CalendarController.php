@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\MealStatus;
 use App\Http\Resources\MealCollection;
 use App\Models\Meal;
 use Carbon\Carbon;
@@ -30,7 +31,7 @@ class CalendarController extends Controller
         }
         return new MealCollection(
             Meal::query()
-                ->where('status', 1)
+                ->where('status', MealStatus::PENDING)
                 ->whereMessId($messId)
                 ->whereMonth('created_at', '=', $month)
                 ->select(

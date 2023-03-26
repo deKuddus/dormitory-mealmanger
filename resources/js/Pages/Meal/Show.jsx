@@ -9,7 +9,7 @@ import MealEditModal from "@/Pages/Meal/MealEditModal";
 
 
 const Index = () => {
-    const {user, balance, member, additional, bazar, totalMeal} = usePage().props;
+    const {user, balance, bazar, mealCost, totalMealCost, fixedCost, due, totalMeal} = usePage().props;
     const [currentMonth, setCurrentMonth] = useState(moment().format('MMMM-YYYY'));
     const mealEditInitialObject = {
         id: undefined,
@@ -23,9 +23,7 @@ const Index = () => {
     const [mealData, setMealData] = useState(mealEditInitialObject);
     const [open, setOpen] = useState(false);
 
-    const mealCost = parseFloat(bazar / totalMeal.total_meals).toFixed(2);
-    const totalMealCost = parseFloat(user.total_meals * mealCost).toFixed(2);
-    const fixedCost = parseFloat(additional / member).toFixed(2);
+
     const dateOptions = currentYearMontList();
 
     const handleDateChange = (value) => {
@@ -105,7 +103,7 @@ const Index = () => {
                                     className="flex flex-col items-center space-x-2 rtl:space-x-reverse text-xl font-medium ">
                                     <span className="text-buttonColor-400">Meal Charge: {mealCost} BDT </span>
                                     <span
-                                        className="text-gray-900 text-xl font-bold ">Total Meal : {user.total_meals} </span>
+                                        className="text-gray-900 text-xl font-bold ">Total Meal : {totalMeal} </span>
                                     <span
                                         className="text-gray-900 text-xl font-bold">Fixed Cost : {fixedCost} BDT</span>
                                     <span
@@ -117,7 +115,7 @@ const Index = () => {
                             <div className="space-y-2 text-white">
                                 <div
                                     className="flex flex-col items-center space-x-2 rtl:space-x-reverse text-xl font-medium ">
-                                    <span className="text-red-600 text-xl font-bold ">Total Due: 50 BDT </span>
+                                    <span className="text-red-600 text-xl font-bold ">Total Due: {due} BDT </span>
                                     <span
                                         className="text-gray-900 text-xl font-bold ">Total Cost : {totalMealCost} </span>
                                     <span
@@ -181,7 +179,7 @@ const Index = () => {
                         </tr>
                     )) : (
                         <tr>
-                            <td className="px-6 py-4 border-t" colSpan="6">
+                            <td className="px-6 py-4 border" colSpan="6">
                                 No Meal found.
                             </td>
                         </tr>

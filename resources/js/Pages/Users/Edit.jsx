@@ -221,7 +221,9 @@ const Edit = () => {
                                     )
                                 }
                             />
+                            {errors && errors.roles && <div className="form-error">{errors.roles}</div>}
                         </div>
+
                     </div>
                     <div className="flex items-center justify-end px-8 py-4 bg-gray-100 border-t border-gray-200">
                         <LoadingButton

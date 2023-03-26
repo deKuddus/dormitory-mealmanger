@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\RuleStatus;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -25,7 +26,7 @@ class Rule extends Model
     ];
     public function scopeActive($query)
     {
-        return $query->where('status', 1);
+        return $query->where('status', RuleStatus::ACTIVE);
     }
 
     public function mess()

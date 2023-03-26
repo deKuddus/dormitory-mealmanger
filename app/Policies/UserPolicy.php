@@ -49,7 +49,11 @@ class UserPolicy
         return $user->can('access::role-delete');
     }
     public function showPermission(User $user){
-        return $user->can('access::show-permission');
+        return $user->can('access::permission-show');
+    }
+
+    public function showClosing(User $user){
+        return $user->can('access::closing-show');
     }
 
 }

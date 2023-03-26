@@ -96,7 +96,7 @@ const Show = () => {
                                                     setData('amount', e.target.value)
                                                 }
                                             }}
-                                            errors={errors}
+                                            errors={errors.amount}
                                         />
                                         <LoadingButton
                                             loading={false}

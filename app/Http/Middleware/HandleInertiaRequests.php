@@ -56,6 +56,7 @@ class HandleInertiaRequests extends Middleware
                     'registration_success' => $request->session()->get('registration_success')
                 ];
             },
+            'permissions' =>  Helper::getUserPermission(),
             'app_url' => env('APP_URL'),
             'routePrefix' => $request->route()->getPrefix(),
             'deposit' => Auth::check() ? auth()->user()->isAdmin() ? Mess::query()->value('deposit') : auth()->user()->deposit : 0

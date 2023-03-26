@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\DepositStatus;
+use App\Enums\MessIdStatic;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UserDepositCreateRequest extends FormRequest
@@ -34,10 +36,10 @@ class UserDepositCreateRequest extends FormRequest
 
     protected function prepareForValidation()
     {
-        $messId = 1;
+        $messId = MessIdStatic::MESSID;
         $this->merge([
             'user_id' => auth()->id(),
-            'status' => 0,
+            'status' => DepositStatus::PENDING,
             'mess_id' => $messId,
             'deposit_date' => now()->format('Y-m-d 09:00:00')
         ]);

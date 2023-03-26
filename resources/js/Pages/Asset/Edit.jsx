@@ -43,7 +43,7 @@ const Edit = () => {
                 <form name="createForm" onSubmit={handleSubmit}>
                     <div className="flex flex-wrap p-8 -mb-8 -mr-6">
                         <TextInput
-                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
+                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/2"
                             label="Title"
                             name="title"
                             type="text"
@@ -55,7 +55,7 @@ const Edit = () => {
                         />
 
                         <TextInput
-                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
+                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/2"
                             label="Description"
                             name="description"
                             type="text"
@@ -67,7 +67,7 @@ const Edit = () => {
                         />
 
                         <Datepicker
-                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
+                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/2"
                             label="Published Date"
                             errors={errors.purchase_date}
                             value={data.purchase_date}
@@ -76,7 +76,7 @@ const Edit = () => {
                         />
 
                         <SelectInput
-                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
+                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/2"
                             label="Status"
                             name="status"
                             errors={errors.status}

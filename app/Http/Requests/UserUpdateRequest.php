@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\MessIdStatic;
 use App\Trait\LockedDemoUser;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Redirect;
@@ -43,14 +44,15 @@ class UserUpdateRequest extends FormRequest
             'status' => ['required', 'boolean'],
             'photo' => ['nullable', 'image'],
             'mess_id' => ['required', 'integer'],
-            'roles' => ['required', 'array']
+            'roles' => ['required', 'array'],
+            'is_admin' => ['nullable','integer']
         ];
     }
 
     public function prepareForValidation()
     {
         return $this->merge([
-            'mess_id' => 1,
+            'mess_id' => MessIdStatic::MESSID,
         ]);
     }
 }

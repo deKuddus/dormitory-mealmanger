@@ -15,7 +15,7 @@ class AdditionalCostController extends Controller
 {
     public function index()
     {
-        $this->authorize('showAdditionalCost',User::class);
+        $this->authorize('showAdditionalCost',AdditionalCost::class);
 
         $requestParam = \request()->all('search', 'trashed');
         return Inertia::render('AdditionalCost/Index', [
@@ -31,7 +31,7 @@ class AdditionalCostController extends Controller
 
     public function create()
     {
-        $this->authorize('createAdditionalCost',User::class);
+        $this->authorize('createAdditionalCost',AdditionalCost::class);
 
         return Inertia::render('AdditionalCost/Create',[
             ...Helper::messArray()
@@ -40,7 +40,7 @@ class AdditionalCostController extends Controller
 
     public function store(AdditionalCostRequest $request)
     {
-        $this->authorize('createAdditionalCost',User::class);
+        $this->authorize('createAdditionalCost',AdditionalCost::class);
 
         $additional = AdditionalCost::create(
             $request->validated()
@@ -59,7 +59,7 @@ class AdditionalCostController extends Controller
 
     public function edit(AdditionalCost $additional)
     {
-        $this->authorize('editAdditionalCost',User::class);
+        $this->authorize('editAdditionalCost',AdditionalCost::class);
 
         return Inertia::render('AdditionalCost/Edit', [
             'additional' => $additional
@@ -68,26 +68,43 @@ class AdditionalCostController extends Controller
 
     public function update(AdditionalCostRequest $request, AdditionalCost $additional)
     {
-        $this->authorize('editAdditionalCost',User::class);
 
-        $additional->mess()->increment('deposit',$additional->amount);
+        $this->authorize('editAdditionalCost',AdditionalCost::class);
+
+        if($additional->status === AdditionalCostType::APPROVED && $request->status === AdditionalCostType::APPROVED){
+            if($additional->amount !== $request->amount){
+                $additional->mess()->increment('deposit',$additional->amount);
+                $additional->mess()->decrement('deposit',$request->amount);
+            }
+        }
+
+        if($additional->status === AdditionalCostType::APPROVED && $request->status === AdditionalCostType::PENDING){
+            if($additional->amount !== $request->amount){
+                $additional->mess()->increment('deposit',$additional->amount);
+            }
+        }
+
+        if($additional->status === AdditionalCostType::PENDING && $request->status === AdditionalCostType::APPROVED){
+            if($additional->amount !== $request->amount){
+                $additional->mess()->decrement('deposit',$request->amount);
+            }
+        }
 
         $additional->update(
             $request->validated()
         );
-
-        if($request->status === AdditionalCostType::APPROVED){
-            $additional->mess()->decrement('deposit',$additional->amount);
-        }
 
         return to_route('additional.index');
     }
 
     public function destroy(AdditionalCost $additional)
     {
-        $this->authorize('deleteAdditionalCost',User::class);
+        $this->authorize('deleteAdditionalCost',AdditionalCost::class);
 
-        $additional->mess()->increment('deposit',$additional->amount);
+        if($additional->status === AdditionalCostType::APPROVED){
+            $additional->mess()->increment('deposit',$additional->amount);
+        }
+
         $additional->delete();
 
         return to_route('additional.index');

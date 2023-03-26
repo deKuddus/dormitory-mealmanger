@@ -28,7 +28,7 @@ const Index = () => {
                     className="btn-indigo focus:outline-none"
                     href={route("chef.create")}
                 >
-                    <span>Create</span>
+                    <span>Add New </span>
                     <span className="hidden md:inline">Chef</span>
                 </Link>
             </div>

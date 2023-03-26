@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\MessIdStatic;
 use App\Models\Menu;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -22,7 +23,7 @@ class MenuSeeder extends Seeder
                 'dinner' => 'Chicken, Rice, Vegetables',
                 'created_at' => '2023-03-04 10:30:00',
                 'updated_at' => '2023-03-04 14:45:00',
-                'mess_id' => 1,
+                'mess_id' => MessIdStatic::MESSID,
             ),
             array('menu_date' => 'Tuesday',
                 'break_fast' => 'Oatmeal, Berries, Yogurt',
@@ -30,7 +31,7 @@ class MenuSeeder extends Seeder
                 'dinner' => 'Pasta, Tomato Sauce, Meatballs',
                 'created_at' => '2023-03-04 09:15:00',
                 'updated_at' => '2023-03-04 11:30:00',
-                'mess_id' => 1,
+                'mess_id' => MessIdStatic::MESSID,
             ),
             array('menu_date' => 'Wednesday',
                 'break_fast' => 'Eggs, Toast, Bacon',
@@ -38,7 +39,7 @@ class MenuSeeder extends Seeder
                 'dinner' => 'Fish, Potatoes, Green Beans',
                 'created_at' => '2023-03-04 11:00:00',
                 'updated_at' => '2023-03-04 15:15:00',
-                'mess_id' => 1,
+                'mess_id' => MessIdStatic::MESSID,
             ),
             array('menu_date' => 'Thursday',
                 'break_fast' => 'Pancakes, Syrup, Fruit',
@@ -46,7 +47,7 @@ class MenuSeeder extends Seeder
                 'dinner' => 'Beef, Noodles, Broccoli',
                 'created_at' => '2023-03-04 08:45:00',
                 'updated_at' => '2023-03-04 13:00:00',
-                'mess_id' => 1,
+                'mess_id' => MessIdStatic::MESSID,
             ),
             array('menu_date' => 'Friday',
                 'break_fast' => 'French Toast, Fruit, Yogurt',
@@ -54,7 +55,7 @@ class MenuSeeder extends Seeder
                 'dinner' => 'Pork, Rice, Stir-Fry Vegetables',
                 'created_at' => '2023-03-04 07:30:00',
                 'updated_at' => '2023-03-04 10:45:00',
-                'mess_id' => 1,
+                'mess_id' => MessIdStatic::MESSID,
             ),
             array('menu_date' => 'Saturday',
                 'break_fast' => 'Bagel, Cream Cheese, Smoked Salmon',
@@ -62,7 +63,7 @@ class MenuSeeder extends Seeder
                 'dinner' => 'Beef, Potatoes, Carrots',
                 'created_at' => '2023-03-04 12:00:00',
                 'updated_at' => '2023-03-04 16:15:00',
-                'mess_id' => 1,
+                'mess_id' => MessIdStatic::MESSID,
             ),
             array('menu_date' => 'Sunday',
                 'break_fast' => 'Waffles, Syrup, Fruit',
@@ -70,7 +71,7 @@ class MenuSeeder extends Seeder
                 'dinner' => 'Roast Chicken, Mashed Potatoes, Green Beans',
                 'created_at' => '2023-03-04 06:15:00',
                 'updated_at' => '2023-03-04 09:30:00',
-                'mess_id' => 1,
+                'mess_id' => MessIdStatic::MESSID,
             )
         );
 

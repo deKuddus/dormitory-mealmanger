@@ -28,7 +28,7 @@ const Index = () => {
                     className="btn-indigo focus:outline-none"
                     href={route("asset.create")}
                 >
-                    <span>Create</span>
+                    <span>Add New </span>
                     <span className="hidden md:inline">Asset</span>
                 </Link>
             </div>
@@ -47,7 +47,7 @@ const Index = () => {
                     </tr>
                     </thead>
                     <tbody>
-                    {data.map(
+                    {data && data.length ? data.map(
                         ({id, title, description, purchase_date, status},key) => {
                             return (
                                 <tr
@@ -114,10 +114,9 @@ const Index = () => {
                                 </tr>
                             );
                         }
-                    )}
-                    {data.length === 0 && (
+                    ) : (
                         <tr>
-                            <td className="px-6 py-4 border" colSpan="4">
+                            <td className="px-6 py-4 border" colSpan="6">
                                 No Asset found.
                             </td>
                         </tr>

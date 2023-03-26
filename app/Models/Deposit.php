@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\DepositStatus;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -41,6 +42,6 @@ class Deposit extends Model
 
 
     public function scopeActive($query){
-        $query->whereStatus(1);
+        $query->whereStatus(DepositStatus::APPROVED);
     }
 }

@@ -75,31 +75,33 @@ const Index = () => {
                                     </td>
                                     <td className="border">
                                         <p
-                                            className={`flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none ${status === APPROVED ? 'text-green-500' : status === PENDING ? 'text-red-600' : ''}`}
+                                            className={`flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none ${status === APPROVED ? 'text-green-500' : status === PENDING ? 'text-red-600' : 'text-blue-400'}`}
                                         >
                                             {status === APPROVED ? 'Approved' : status === PENDING ? 'Pending' : 'Closed'}
                                         </p>
                                     </td>
                                     <td className="w-px border px-4 py-3 whitespace-nowrap">
                                         <div className="flex items-center gap-4 justify-end">
-                                            <Link
-                                                href={route("additional.edit", id)}
-                                                className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
-                                            >
-                                                <Icon
-                                                    name="FaEdit"
-                                                    className="w-6 h-4 text-gray-400 fill-current"
-                                                />
-                                            </Link>
-                                            <button
-                                                onClick={() => deleteAdditionalCost(id)}
-                                                className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
-                                            >
-                                                <Icon
-                                                    name="FaTrashAlt"
-                                                    className="w-6 h-4 text-gray-400 fill-current"
-                                                />
-                                            </button>
+                                            {/*<Link*/}
+                                            {/*    href={route("additional.edit", id)}*/}
+                                            {/*    className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"*/}
+                                            {/*>*/}
+                                            {/*    <Icon*/}
+                                            {/*        name="FaEdit"*/}
+                                            {/*        className="w-6 h-4 text-gray-400 fill-current"*/}
+                                            {/*    />*/}
+                                            {/*</Link>*/}
+                                            {status !== 2 ? (
+                                                <button
+                                                    onClick={() => deleteAdditionalCost(id)}
+                                                    className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
+                                                >
+                                                    <Icon
+                                                        name="FaTrashAlt"
+                                                        className="w-6 h-4 text-gray-400 fill-current"
+                                                    />
+                                                </button>
+                                            ):(<span className="text-3xl">🫣</span>)}
                                         </div>
                                     </td>
                                 </tr>
@@ -108,7 +110,7 @@ const Index = () => {
                     )}
                     {data.length === 0 && (
                         <tr>
-                            <td className="px-6 py-4 border" colSpan="4">
+                            <td className="px-6 py-4 border" colSpan="5">
                                 No AdditionalCost found.
                             </td>
                         </tr>

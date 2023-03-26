@@ -18,17 +18,21 @@ class MealDetailsResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->first_name . ' ' . $this->last_name,
-            'meals' =>  MemberMealShowResource::collection($this->meals),
-            'total_meals' => $this->countTotalMeal()
+            'meals' => MemberMealShowResource::collection($this->meals) ?? 0,
+            'total_meals' => $this->countTotalMeal() ?? 0
         ];
     }
 
     private function countTotalMeal()
     {
-        return array_sum([
-            $this->meals->sum('break_fast'),
-            $this->meals->sum('lunch'),
-            $this->meals->sum('dinner'),
-        ]);
+        if ($this->meals) {
+            return array_sum([
+                $this->meals->sum('break_fast'),
+                $this->meals->sum('lunch'),
+                $this->meals->sum('dinner'),
+            ]);
+        }else{
+            return 0;
+        }
     }
 }

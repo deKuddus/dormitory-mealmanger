@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\MessIdStatic;
 use App\Models\AdditionalCost;
 use App\Models\Bazar;
 use App\Models\Deposit;
@@ -16,7 +17,7 @@ class ExpenseController extends Controller
     {
         $this->authorize('showExpense',User::class);
 
-        $messId = 1;
+        $messId = MessIdStatic::MESSID;
 
         try {
 

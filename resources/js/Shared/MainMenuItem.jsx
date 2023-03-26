@@ -3,15 +3,22 @@ import {Link} from "@inertiajs/react";
 import classNames from "classnames";
 import Icon from "./Icon";
 import {usePage} from '@inertiajs/react'
+import {isUserPermittedToPerformAction} from "@/utils";
 
 
-export default ({icon, link, name, uri_root}) => {
+export default ({icon, link, name, uri_root,canShow}) => {
+    const {permissions} = usePage().props;
+
     const {url} = usePage()
     const isActive = url.startsWith('/' + uri_root.toLowerCase());
     const itemClass = classNames({
         "bg-background-300": isActive,
     });
     const iconClasses = classNames("w-4 h-4 mr-2");
+
+    if(!isUserPermittedToPerformAction(canShow,permissions)){
+        return <></>
+    }
 
     return (
         <div

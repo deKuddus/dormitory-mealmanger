@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\MealStatus;
 use App\Http\Resources\MealDetailsResource;
 use App\Http\Resources\MemberMealShowCollection;
 use App\Http\Resources\MemberMealShowResource;
@@ -22,12 +23,23 @@ class MealService
             ->select(DB::raw("SUM(break_fast + lunch + dinner) as total_meals"))
             ->first();
 
-        return $totalMeal->total_meals;
+        return $totalMeal->total_meals ?? 0;
+    }
+
+    public function allUserTotalMeal($mssId, $month)
+    {
+        $totalMeal = Meal::query()
+            ->whereMessId($mssId)
+            ->whereBetween(DB::raw('DATE(`created_at`)'), [$month->startOfMonth()->format('Y-m-d'), $month->lastOfMonth()->format('Y-m-d')])
+            ->select(DB::raw("SUM(break_fast + lunch + dinner) as total_meals"))
+            ->first();
+
+        return $totalMeal->total_meals ?? 0;
     }
 
     public function getUserAllMealForSelectedMonth($userId, $mssId, $month)
     {
-        return  Meal::whereUserId($userId)
+        return Meal::whereUserId($userId)
             ->whereMessId($mssId)
             ->whereBetween(DB::raw('DATE(`created_at`)'), [$month->startOfMonth()->format('Y-m-d'), $month->lastOfMonth()->format('Y-m-d')])
             ->get(['id', 'lunch', 'dinner', 'break_fast', 'created_at']);
@@ -56,7 +68,7 @@ class MealService
             ->whereBetween(DB::raw('DATE(`created_at`)'), [$month->startOfMonth()->format('Y-m-d'), $month->lastOfMonth()->format('Y-m-d')])
             ->select(DB::raw("SUM(break_fast + lunch + dinner) as total_meals"))
             ->first();
-        return $totalMeal->total_meals ? $totalMeal : collect(['total_meals' => 0]);
+        return $totalMeal->total_meals ?? 0;
     }
 
 
@@ -66,9 +78,11 @@ class MealService
             User::with([
                 'meals' => function ($query) use ($month, $messId) {
                     $query->whereMessId($messId)
+                        ->with('mess')
+                        ->whereStatus(MealStatus::PENDING)
                         ->whereMonth('created_at', '=', $month->month)
-                        ->whereYear('created_at', '=', $month->year)
-                        ->with('mess');
+                        ->whereYear('created_at', '=', $month->year);
+
                 }
             ])
                 ->select('id', 'first_name', 'last_name', 'email', 'status')

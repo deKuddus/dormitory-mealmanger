@@ -22,7 +22,8 @@ class UserCollection extends ResourceCollection
             'photo',
             'deleted_at',
             'phone',
-            'status'
+            'status',
+            'is_admin'
         );
     }
 }

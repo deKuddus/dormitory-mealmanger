@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Enums\MessIdStatic;
 use App\Models\RegisterToken;
 use App\User;
 use App\Http\Controllers\Controller;
@@ -64,7 +65,7 @@ class RegisterController extends Controller
 
     protected function create(array $data)
     {
-        $messId = 1;
+        $messId = MessIdStatic::MESSID;
 
         $user = \App\Models\User::create([
             'first_name' => $data['first_name'],

@@ -4,8 +4,8 @@ import LoadingButton from "@/Shared/LoadingButton";
 import TextInput from "@/Shared/TextInput";
 
 export default () => {
-    const {flash} = usePage().props;
-    const { data, setData, errors, post, processing } = useForm({
+    const {flash, app_url} = usePage().props;
+    const {data, setData, errors, post, processing} = useForm({
         email: "",
         password: "",
         remember: false,
@@ -21,10 +21,10 @@ export default () => {
         <div className="flex items-center justify-center min-h-screen p-6 bg-indigo-900">
             <Head>
                 <title> Register</title>
-                <link rel="canonical" href={app_url} />
-                <meta name="title" content="Login-WPDeveloper Dormitory" />
-                <meta property="og:title" content="Login-WPDeveloper Dormitory" />
-                <meta property="og:image" content="/ogimage.png" />
+                <link rel="canonical" href={app_url}/>
+                <meta name="title" content="Login-WPDeveloper Dormitory"/>
+                <meta property="og:title" content="Login-WPDeveloper Dormitory"/>
+                <meta property="og:image" content="/ogimage.png"/>
             </Head>
             <div className="w-full max-w-md">
                 <form
@@ -41,7 +41,7 @@ export default () => {
                                 <span className="text-xl text-green-500">{flash.registration_success}</span>
                             </div>
                         )}
-                        <div className="w-24 mx-auto mt-6 border-b-2" />
+                        <div className="w-24 mx-auto mt-6 border-b-2"/>
                         <TextInput
                             className="mt-10"
                             label="Email"

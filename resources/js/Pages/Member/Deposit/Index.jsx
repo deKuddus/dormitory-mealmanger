@@ -65,7 +65,7 @@ const Index = () => {
 
                                 <td className="border">
                                     <p
-                                        className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
+                                        className={`flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none ${row.status === 0 ? 'text-red-600' : row.status === 1 ? 'text-green-500':'text-blue-400'}`}
                                     >
                                         {row.status === 0 ? 'Pending' : row.status === 1 ? 'Approved':'Withdrawn'}
                                     </p>

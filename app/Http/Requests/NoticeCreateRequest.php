@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\MessIdStatic;
 use Illuminate\Foundation\Http\FormRequest;
 
 class NoticeCreateRequest extends FormRequest
@@ -34,7 +35,7 @@ class NoticeCreateRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'mess_id' => 1
+            'mess_id' => MessIdStatic::MESSID
         ]);
     }
 }

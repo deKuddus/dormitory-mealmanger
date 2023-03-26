@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class BazarScheduleForBazarResource extends JsonResource
+class UserMealShowResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,17 +16,11 @@ class BazarScheduleForBazarResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'pair' => $this->getFormatedUserPair()
+            'first_name' => $this->first_name,
+            'last_name' => $this->last_name,
+            'email' => $this->email,
+            'meals' => $this->meals->pluck('total_meals'),
+            'status' => $this->status
         ];
-    }
-
-    private function getFormatedUserPair()
-    {
-        $name = '';
-        if($this->users->count()){
-            $name = implode('&',$this->users->pluck('first_name')->all());
-        }
-
-        return $name ?? 'N/A';
     }
 }

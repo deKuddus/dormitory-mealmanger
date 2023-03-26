@@ -6,7 +6,7 @@ import moment from "moment";
 
 
 const Index = () => {
-    const {auth, meals, totalMeal, balance, additional, member,bazar} = usePage().props;
+    const {auth, meals, mealCharge, due,totalCost, fixedCost,totalMeal} = usePage().props;
     const [isCheck, setIsCheck] = useState(auth.user.meal_status === 1)
 
     const handleMealStatusUpdate = (value) => {
@@ -64,25 +64,25 @@ const Index = () => {
                     <div className="relative p-4 lg:p-6 rounded-xl bg-boxColor-200 ">
                         <div
                             className="flex items-center space-y-2 text-gray-900 space-x-2 text-sm md:text-md lg:text-xl font-medium ">
-                            <span>Meal Charge : {parseFloat(bazar/totalMeal).toFixed(2)} BDT</span>
+                            <span>Meal Charge : {mealCharge} BDT</span>
                         </div>
                     </div>
                     <div className="relative p-4 lg:p-6 rounded-xl bg-boxColor-300 ">
                         <div
                             className="flex items-center space-y-2 text-gray-900 space-x-2 text-sm md:text-md lg:text-xl font-medium ">
-                            <span>Total Cost : {parseFloat((bazar/totalMeal) * totalMeal ).toFixed(2)} BDT</span>
+                            <span>Total Cost : {totalCost} BDT</span>
                         </div>
                     </div>
                     <div className="relative p-4 lg:p-6 rounded-xl bg-boxColor-400 ">
                         <div
                             className="flex space-y-2 text-gray-900 items-center space-x-2  text-sm md:text-md lg:text-xl font-medium ">
-                            <span>Fixed Cost : {parseFloat(additional/member).toFixed(2)} BDT</span>
+                            <span>Fixed Cost : {fixedCost} BDT</span>
                         </div>
                     </div>
                     <div className="relative p-4 lg:p-6 rounded-xl bg-boxColor-100 ">
                         <div
                             className="flex space-y-2 text-red-600 items-center space-x-2 text-sm md:text-md lg:text-xl font-medium ">
-                            <span>Total Due : {parseFloat(balance - ((bazar/totalMeal) * totalMeal)).toFixed(2)} BDT</span>
+                            <span>Total Due : {due} BDT</span>
                         </div>
                     </div>
                 </div>

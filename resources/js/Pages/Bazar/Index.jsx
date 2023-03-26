@@ -2,10 +2,8 @@ import React from "react";
 import {Link, router, usePage} from "@inertiajs/react";
 import Layout from "@/Shared/Layout";
 import Icon from "@/Shared/Icon";
-import SearchFilter from "@/Shared/SearchFilter";
 import Pagination from "@/Shared/Pagination";
 import moment from "moment";
-import {FaCheck} from "react-icons/fa";
 
 const Index = () => {
     const {bazars} = usePage().props;
@@ -22,11 +20,37 @@ const Index = () => {
     }
     const approvBazar = (id) => {
         if (confirm("Are you sure you want to approve this bazar?")) {
-            router.post(route("bazar.approve"),{
+            router.post(route("bazar.approve"), {
                 id
             });
         }
         return true;
+    }
+
+    const getStatus = (status) => {
+        if (status === 0) {
+            return <p
+                className={`flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none text-red-600 `}
+            >
+                Pending
+            </p>
+        }
+
+        if (status === 1) {
+            return <p
+                className={`flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none text-success-400`}
+            >
+                Approved
+            </p>
+        }
+        if (status === 2) {
+            return <p
+                className={`flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none text-blue-400`}
+            >
+                Closed
+            </p>
+        }
+
     }
 
 
@@ -93,18 +117,14 @@ const Index = () => {
                                     </td>
 
                                     <td className="border">
-                                        <p
-                                            className={`flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none ${status ? 'text-green-500' : 'text-red-600'}`}
-                                        >
-                                            {status ? 'Approved' : 'Pending'}
-                                        </p>
+                                        {getStatus(status)}
                                     </td>
                                     <td className="border">
                                         <BazarScheduleUSer users={bazarSchedule && bazarSchedule.users}/>
                                     </td>
                                     <td className="w-px border px-4 py-3 whitespace-nowrap">
                                         <div className="flex items-center gap-4 justify-end">
-                                            {!status && (<button
+                                            {status === 0 && (<button
                                                 onClick={() => approvBazar(id)}
                                                 className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
                                             >
@@ -113,25 +133,29 @@ const Index = () => {
                                                     className="w-6 h-4 text-gray-400 fill-current"
                                                 />
                                             </button>)}
-                                            <Link
-                                                href={route("bazar.edit", id)}
-                                                className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
-                                            >
-                                                <Icon
-                                                    name="FaEdit"
-                                                    className="w-6 h-4 text-gray-400 fill-current"
-                                                />
-                                            </Link>
-                                            <button
-                                                onClick={() => deleteBazar(id)}
-                                                className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
-                                            >
-                                                <Icon
-                                                    name="FaTrashAlt"
-                                                    className="w-6 h-4 text-gray-400 fill-current"
-                                                />
-                                            </button>
 
+                                            {status !== 2 ? (
+                                                <>
+                                                    <Link
+                                                        href={route("bazar.edit", id)}
+                                                        className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
+                                                    >
+                                                        <Icon
+                                                            name="FaEdit"
+                                                            className="w-6 h-4 text-gray-400 fill-current"
+                                                        />
+                                                    </Link>
+                                                    <button
+                                                        onClick={() => deleteBazar(id)}
+                                                        className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
+                                                    >
+                                                        <Icon
+                                                            name="FaTrashAlt"
+                                                            className="w-6 h-4 text-gray-400 fill-current"
+                                                        />
+                                                    </button>
+                                                </>
+                                            ):(<span className="text-3xl">🫣</span>)}
                                         </div>
                                     </td>
                                 </tr>
@@ -140,7 +164,7 @@ const Index = () => {
                     )}
                     {data.length === 0 && (
                         <tr>
-                            <td className="px-6 py-4 border" colSpan="4">
+                            <td className="px-6 py-4 border" colSpan="7">
                                 No Bazar found.
                             </td>
                         </tr>
@@ -151,20 +175,21 @@ const Index = () => {
             <Pagination links={links}/>
         </div>
     );
-};
-
-const BazarScheduleUSer = ({users}) => {
-    return <p
-        className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
-    >
-        {users && users.length > 0 ? users.map(
-            ({first_name, last_name}, index) => <span key={index}
-                                                      className={`bg-green-200 text-gray-800  mr-2 px-2.5 py-0.5 rounded`}>{`${first_name} ${last_name}`}</span>
-        ) : 'N/A'}
-    </p>
 }
+    ;
+
+    const BazarScheduleUSer = ({users}) => {
+        return <p
+            className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
+        >
+            {users && users.length > 0 ? users.map(
+                ({first_name, last_name}, index) => <span key={index}
+                                                          className={`bg-green-200 text-gray-800  mr-2 px-2.5 py-0.5 rounded`}>{`${first_name} ${last_name}`}</span>
+            ) : 'N/A'}
+        </p>
+    }
 
 
-Index.layout = (page) => <Layout title="Bazar" children={page}/>;
+    Index.layout = (page) => <Layout title="Bazar" children={page}/>;
 
-export default Index;
+    export default Index;

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\MessIdStatic;
 use App\Trait\Stats;
 use Inertia\Inertia;
 
@@ -11,7 +12,7 @@ class DashboardController extends Controller
 
     public function __invoke()
     {
-        $messId = 1;
+        $messId = MessIdStatic::MESSID;
         $month = now();
 
         $data = [

@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\DepositStatus;
+use App\Enums\MealStatus;
+use App\Enums\MessIdStatic;
+use App\Http\Resources\ClosedCalculationCollection;
 use App\Http\Resources\ReportCollection;
 use App\Models\AdditionalCost;
 use App\Models\Bazar;
+use App\Models\Calculation;
 use App\Models\Deposit;
 use App\Models\Meal;
 use App\Models\User;
@@ -17,13 +22,14 @@ use Inertia\Inertia;
 class ReportController extends Controller
 {
     use Stats;
+
     public function index(Request $request)
     {
 
-        $this->authorize('showReport',User::class);
+        $this->authorize('showReport', User::class);
 
 
-        $messId = 1;
+        $messId = MessIdStatic::MESSID;
 
         try {
 
@@ -33,14 +39,21 @@ class ReportController extends Controller
                 $month = Carbon::parse(now());
             }
 
+            $bazar = $this->totalBazar($messId, $month);
+            $totalMeal = $this->getTotalMeal($messId, $month);
+            $additional = $this->getTotalAdditionalCost($messId, $month);
+            $members = $this->totalMember($messId);
+
 
             return Inertia::render('Report/Index', [
                 'users' => $this->getUsersAndDepositWithMeal($messId, $month),
                 'balance' => $this->getTotalDeposit($messId),
-                'additional' => $this->getTotalAdditionalCost($messId, $month),
-                'member' => $this->totalMember($messId),
-                'totalMeal' => $this->getTotalMeal($messId, $month),
-                'bazar' => $this->totalBazar($messId, $month),
+                'additional' => $additional,
+                'member' => $members,
+                'totalMeal' => $totalMeal,
+                'bazar' => $bazar,
+                'fixedCost' => $additional <= 0 ? 0 : round($additional / $members, 2),
+                'mealCost' => $bazar === 0 ? 0 : round($bazar / $totalMeal, 2),
             ]);
         } catch (\Exception $exception) {
             return redirect()->back()->with('errors', $exception->getMessage());
@@ -49,6 +62,7 @@ class ReportController extends Controller
 
     public function getUsersAndDepositWithMeal($messId, $month)
     {
+
         return new ReportCollection(
             User::query()
                 ->with([
@@ -56,6 +70,7 @@ class ReportController extends Controller
                     'meals' => function ($query) use ($month) {
                         $query->whereMonth('created_at', '=', $month->month)
                             ->whereYear('created_at', '=', $month->year)
+                            ->whereStatus(MealStatus::PENDING)
                             ->select(
                                 'user_id',
                                 DB::raw("SUM(CASE WHEN break_fast = 1 THEN break_fast ELSE 0 END) AS break_fast_total"),
@@ -64,10 +79,24 @@ class ReportController extends Controller
                             )
                             ->groupBy('user_id');
                     },
-                    'deposits' => fn($q) => $q->whereStatus(1),
+                    'deposits' => fn($q) => $q->whereStatus(DepositStatus::APPROVED),
                 ])
                 ->select('id', 'first_name', 'last_name', 'email', 'status')
                 ->get(),
         );
+    }
+
+    public function closedCalculation()
+    {
+        $this->authorize('showClosing', User::class);
+
+        return Inertia::render('Report/Calculation', [
+            'calculations' => new ClosedCalculationCollection(
+                Calculation::query()
+                    ->with('user')
+                    ->orderBy('calculate_date', 'desc')
+                    ->paginate()
+            )
+        ]);
     }
 }

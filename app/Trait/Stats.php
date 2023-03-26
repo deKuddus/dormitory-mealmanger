@@ -2,10 +2,12 @@
 
 namespace App\Trait;
 
+use App\Enums\MessIdStatic;
 use App\Models\AdditionalCost;
 use App\Models\Bazar;
 use App\Models\Deposit;
 use App\Models\Meal;
+use App\Models\Mess;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
@@ -20,7 +22,7 @@ trait Stats
                 DB::raw("SUM(break_fast + lunch + dinner) as total_meals")
             )->first();
 
-        return $meals->total_meals;
+        return $meals->total_meals ?? 0;
     }
 
     private function totalBazar($messId, $month)
@@ -55,7 +57,7 @@ trait Stats
 
     private function getTotalDeposit($messId)
     {
-        return Deposit::query()->whereMessId($messId)->active()->sum('amount');
+        return Mess::query()->whereId(MessIdStatic::MESSID)->value('deposit');
     }
 
     private function totdaysMeal($messId)

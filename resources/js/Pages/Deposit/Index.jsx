@@ -23,7 +23,8 @@ const Index = () => {
                     <tr className="font-bold text-left">
                         <th className="px-6 pt-5 pb-4">No</th>
                         <th className="px-6 pt-5 pb-4">Name</th>
-                        <th className="px-6 pt-5 pb-4">Amount</th>
+                        <th className="px-6 pt-5 pb-4">Amount(Current)</th>
+                        <th className="px-6 pt-5 pb-4">Amount(All time)</th>
                         <th className="px-6 pt-5 pb-4">Withdraw</th>
                         <th className="px-6 pt-5 pb-4">Pending</th>
                         <th className="px-6 pt-5 pb-4">Action</th>
@@ -31,7 +32,7 @@ const Index = () => {
                     </thead>
                     <tbody>
                     {data.map(
-                        ({id, first_name, last_name, deposits}, key) => {
+                        ({id, first_name,deposit, last_name, deposits}, key) => {
                             return (
                                 <tr
                                     key={key}
@@ -50,6 +51,13 @@ const Index = () => {
                                             className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
                                         >
                                             {first_name} {last_name}
+                                        </p>
+                                    </td>
+                                    <td className="border">
+                                        <p
+                                            className={`flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none ${deposit < 0 ? 'text-red-600':''}`}
+                                        >
+                                            {deposit < 0 ? `Due ${deposit}` : deposit} BDT
                                         </p>
                                     </td>
 

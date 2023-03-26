@@ -38,7 +38,7 @@ export default () => {
                             My Profile
                         </Link>
 
-                        {auth.user.is_admin && (
+                        {auth.user.is_admin ? (
                             <>
                                 <Link
                                     href={routePrefix ?  route("user.dashboard") : route('dashboard')}
@@ -48,7 +48,7 @@ export default () => {
                                     {routePrefix ?  'Switch to member' : 'Switch to Master'}
                                 </Link>
                             </>
-                        )}
+                        ):(<></>)}
                         <Link
                             as="button"
                             href={route("logout")}

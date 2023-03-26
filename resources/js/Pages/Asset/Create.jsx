@@ -9,7 +9,7 @@ import Datepicker from "@/Shared/Datepicker";
 const Create = () => {
     const { data, setData, errors, post, processing } = useForm({
         title: "",
-        status: "",
+        status: 0,
         purchase_date: "",
         description: "",
     });
@@ -34,15 +34,15 @@ const Create = () => {
                         Asset
                     </Link>
                     <span className="font-medium text-indigo-600"> /</span>{" "}
-                    Create
+                    Add
                 </h1>
             </div>
             <div className="w-full overflow-hidden bg-white rounded shadow">
                 <form name="createForm" onSubmit={handleSubmit}>
                     <div className="flex flex-wrap p-8 -mb-8 -mr-6">
                         <TextInput
-                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
-                            label="Title"
+                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/2"
+                            label="Name"
                             name="title"
                             type="text"
                             errors={errors.title}
@@ -53,7 +53,7 @@ const Create = () => {
                         />
 
                         <TextInput
-                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
+                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/2"
                             label="Description"
                             name="description"
                             type="text"
@@ -65,8 +65,8 @@ const Create = () => {
                         />
 
                         <Datepicker
-                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
-                            label="Published Date"
+                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/2"
+                            label="Purchase Date"
                             errors={errors.purchase_date}
                             value={data.purchase_date}
                             handleDateChange={setPurchaseDate}
@@ -74,7 +74,7 @@ const Create = () => {
                         />
 
                         <SelectInput
-                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
+                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/2"
                             label="Status"
                             name="status"
                             errors={errors.status}

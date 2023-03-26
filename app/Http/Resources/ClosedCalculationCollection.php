@@ -4,22 +4,26 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class DepositCollection extends ResourceCollection
+class ClosedCalculationCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.
      *
      * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Support\HigherOrderCollectionProxy
+     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
     {
         return $this->collection->map->only(
             'id',
-            'first_name',
-            'last_name',
-            'deposit',
-            'deposits',
+            'mess_id',
+            'user_id',
+            'amount',
+            'description',
+            'total_meal',
+            'calculate_date',
+            'carry',
+            'user'
         );
     }
 }

@@ -21,6 +21,6 @@ class MealPolicy
 
     public function detailsMeal(User $user)
     {
-        return $user->can('access::meal-edit');
+        return $user->can('access::meal-details');
     }
 }

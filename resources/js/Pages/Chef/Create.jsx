@@ -11,8 +11,7 @@ const Create = () => {
     const { data, setData, errors, post, processing } = useForm({
         name: "",
         phone: "",
-        status: "",
-        mess_id: "",
+        status: 0,
         address: "",
     });
 
@@ -32,14 +31,14 @@ const Create = () => {
                         Chef
                     </Link>
                     <span className="font-medium text-indigo-600"> /</span>{" "}
-                    Create
+                    Add
                 </h1>
             </div>
             <div className="w-full overflow-hidden bg-white rounded shadow">
                 <form name="createForm" onSubmit={handleSubmit}>
                     <div className="flex flex-wrap p-8 -mb-8 -mr-6">
                         <TextInput
-                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
+                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/2"
                             label="Name"
                             name="name"
                             type="text"
@@ -50,7 +49,7 @@ const Create = () => {
                             }
                         />
                         <TextInput
-                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
+                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/2"
                             label="Phone"
                             name="phone"
                             type="text"
@@ -62,7 +61,7 @@ const Create = () => {
                         />
 
                         <TextInput
-                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
+                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/2"
                             label="Address"
                             name="address"
                             type="text"
@@ -74,7 +73,7 @@ const Create = () => {
                         />
 
                         <SelectInput
-                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
+                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/2"
                             label="Status"
                             name="status"
                             errors={errors.status}
@@ -83,17 +82,6 @@ const Create = () => {
                         >
                             <option value="1">Active</option>
                             <option value="0">InActive</option>
-                        </SelectInput>
-
-                        <SelectInput
-                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
-                            label="Mess"
-                            name="mess_id"
-                            errors={errors.mess_id}
-                            value={data.mess_id}
-                            onChange={(e) => setData("mess_id", e.target.value)}
-                        >
-                            {messes?.length > 0 && messes.map((mess) => (<option key={mess.id} value={mess.id}>{mess.name}</option>))}
                         </SelectInput>
                     </div>
                     <div className="flex items-center justify-end px-8 py-4 bg-gray-100 border-t border-gray-200">

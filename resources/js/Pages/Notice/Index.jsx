@@ -3,6 +3,7 @@ import {Link, router, usePage} from "@inertiajs/react";
 import Layout from "@/Shared/Layout";
 import Icon from "@/Shared/Icon";
 import Pagination from "@/Shared/Pagination";
+import {ACTIVE} from "@/Shared/const/noticeStatus";
 
 const Index = () => {
     const {notices} = usePage().props;
@@ -66,9 +67,9 @@ const Index = () => {
                                     </td>
                                     <td className="border">
                                         <p
-                                            className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
+                                            className={`flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none ${status === ACTIVE ? 'text-green-500':'text-red-600'}`}
                                         >
-                                            {status}
+                                            {status === ACTIVE ? 'Active' : 'Inactive'}
                                         </p>
                                     </td>
                                     <td className="w-px border px-4 py-3 whitespace-nowrap">

@@ -6,7 +6,7 @@ import SearchFilter from "@/Shared/SearchFilter";
 import Pagination from "@/Shared/Pagination";
 
 const Index = () => {
-    const {users} = usePage().props;
+    const {users,totalMemberActive,totalMemberInActive} = usePage().props;
     const {
         data,
         meta: {links},
@@ -42,17 +42,17 @@ const Index = () => {
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
                 <div className="flex items-center">
                     <span className="text-xl p-3">
-                        Total Member: <span className="font-bold">50</span>
+                        Total Member: <span className="font-bold">{totalMemberActive + totalMemberInActive}</span>
                     </span>
                     <span className="text-xl p-3">
                         Active :{" "}
                         <span className="font-bold text-buttonColor-400">
-                            50
+                            {totalMemberActive}
                         </span>
                     </span>
                     <span className="text-xl p-3">
                         Inactive :{" "}
-                        <span className="font-bold text-red-600">50</span>
+                        <span className="font-bold text-red-600">{totalMemberInActive}</span>
                     </span>
                 </div>
                 <div className="flex items-center">
@@ -74,7 +74,7 @@ const Index = () => {
                         <th className="px-6 pt-5 pb-4 border">Mobile</th>
                         <th className="px-6 pt-5 pb-4 border">Email</th>
                         <th className="px-6 pt-5 pb-4 border">Status</th>
-                        <th className="px-6 pt-5 pb-4 border">Access Dashboard</th>
+                        <th className="px-6 pt-5 pb-4 border">Is Admin</th>
                         <th className="px-6 pt-5 pb-4 border">Action</th>
                     </tr>
                     </thead>
@@ -124,15 +124,15 @@ const Index = () => {
                                                 className="w-6 h-4 text-gray-400 hover:text-buttonColor-400 fill-current"
                                             />
                                         </Link>
-                                        <Link
-                                            href={route("user.show", id)}
-                                            className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
-                                        >
-                                            <Icon
-                                                name="FaEye"
-                                                className="w-6 h-4 text-gray-400 hover:text-blue-400 fill-current"
-                                            />
-                                        </Link>
+                                        {/*<Link*/}
+                                        {/*    href={route("user.show", id)}*/}
+                                        {/*    className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"*/}
+                                        {/*>*/}
+                                        {/*    <Icon*/}
+                                        {/*        name="FaEye"*/}
+                                        {/*        className="w-6 h-4 text-gray-400 hover:text-blue-400 fill-current"*/}
+                                        {/*    />*/}
+                                        {/*</Link>*/}
                                         <button
                                             onClick={() => deleteUser(id)}
                                             className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"

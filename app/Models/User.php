@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\UserStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -112,7 +113,11 @@ class User extends Authenticatable
 
     public function scopeActive($query)
     {
-        return $query->where('status', 1);
+        return $query->where('status', UserStatus::ACTIVE);
+    }
+    public function scopeInActive($query)
+    {
+        return $query->where('status', UserStatus::INACTIVE);
     }
 
     public function deposits(){
@@ -130,5 +135,9 @@ class User extends Authenticatable
 
     public function isAdmin(){
         return $this->isAbleToAccessDashboard();
+    }
+
+    public function isActive(){
+        return $this->status === UserStatus::ACTIVE;
     }
 }

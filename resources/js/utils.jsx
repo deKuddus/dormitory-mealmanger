@@ -25,14 +25,19 @@ export function getMonth(month = dayjs().month()) {
 }
 
 
-export const currentYearMontList = () =>{
+export const currentYearMontList = () => {
     const today = moment();
     const currentYear = today.year();
     const dateOptions = [];
 
-    for(let month = 0; month < 12; month++){
+    for (let month = 0; month < 12; month++) {
         let monthDate = moment([currentYear, month, 1]);
         dateOptions.push(monthDate.format('MMMM-YYYY'));
     }
     return dateOptions;
+}
+
+
+export const isUserPermittedToPerformAction = (permission, permissions) => {
+    return permissions.includes(permission)
 }

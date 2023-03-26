@@ -3,6 +3,7 @@ import {Link, router, usePage} from "@inertiajs/react";
 import Layout from "@/Shared/Layout";
 import Icon from "@/Shared/Icon";
 import Pagination from "@/Shared/Pagination";
+import {ACTIVE} from "@/Shared/const/noticeStatus";
 
 const Index = () => {
     const {rules} = usePage().props;
@@ -44,7 +45,7 @@ const Index = () => {
                     </thead>
                     <tbody>
                     {data.map(
-                        ({id, title, status},key) => {
+                        ({id, title, status}, key) => {
                             return (
                                 <tr
                                     key={id}
@@ -54,7 +55,7 @@ const Index = () => {
                                         <p
                                             className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
                                         >
-                                            {key+1}
+                                            {key + 1}
                                         </p>
                                     </td>
                                     <td className="border">
@@ -66,9 +67,9 @@ const Index = () => {
                                     </td>
                                     <td className="border">
                                         <p
-                                            className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
+                                            className={`flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none ${status === Boolean(ACTIVE) ? 'text-green-500' : 'text-red-600'}`}
                                         >
-                                            {status ? 'Active' : 'Inactive'}
+                                            {status === Boolean(ACTIVE) ? 'Active' : 'Inactive'}
                                         </p>
                                     </td>
                                     <td className="w-px border px-4 py-3 whitespace-nowrap">

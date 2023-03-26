@@ -41,7 +41,7 @@ class RegisterTokenController extends Controller
 
     public function destroy(Request $request)
     {
-        $this->authorize('deleteNotice', RegisterToken::class);
+        $this->authorize('deleteToken', RegisterToken::class);
 
         $request->validate(['id' => 'required']);
         RegisterToken::query()->whereId($request->id)->delete();

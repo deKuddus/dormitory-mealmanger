@@ -30,6 +30,8 @@ class UsersController extends Controller
                     ->paginate()
                     ->appends(Request::all())
             ),
+            'totalMemberActive' => User::query()->active()->count(),
+            'totalMemberInActive' => User::query()->inActive()->count()
         ]);
     }
 

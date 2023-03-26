@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\MessIdStatic;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ChefRequest extends FormRequest
@@ -30,5 +31,12 @@ class ChefRequest extends FormRequest
             'address' => 'nullable|string|max:300',
             'status'  => 'required|boolean'
         ];
+    }
+
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'mess_id' => MessIdStatic::MESSID
+        ]);
     }
 }

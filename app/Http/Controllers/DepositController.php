@@ -34,7 +34,7 @@ class DepositController extends Controller
                             DB::raw('SUM(CASE WHEN status = 0 THEN amount ELSE 0 END) as pending_amount'),
                         )->groupBy('user_id');
                     })
-                    ->select('id', 'first_name', 'last_name')
+                    ->select('id', 'first_name', 'deposit','last_name')
                     ->orderBy('created_at', 'desc')
                     ->paginate()
                     ->appends(request()->all())
@@ -70,7 +70,6 @@ class DepositController extends Controller
     public function show($userId)
     {
         $this->authorize('showDeposit',Deposit::class);
-
 
         return Inertia::render('Deposit/Show', [
             'user' => User::find($userId),

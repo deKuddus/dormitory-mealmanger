@@ -17,7 +17,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/test',function (){
-    dd(auth()->user()->can('access::role-show'));
   abort(404);
 });
 
@@ -98,6 +97,7 @@ Route::group(['middleware' => ['auth', 'remember','hasAccessInDashboard'],'prefi
     Route::get('meals',[\App\Http\Controllers\MealController::class,'index'])->name('meals.index');
     Route::get('meals/show/{user}',[\App\Http\Controllers\MealController::class,'show'])->name('meals.show');
     Route::post('meal/update',[\App\Http\Controllers\MealController::class,'update'])->name('meal.update');
+    Route::post('meal/add',[\App\Http\Controllers\MealController::class,'addNewMeal'])->name('meal.add');
 
 
     Route::get('expenses',[\App\Http\Controllers\ExpenseController::class,'index'])->name('expense.index');
@@ -106,6 +106,7 @@ Route::group(['middleware' => ['auth', 'remember','hasAccessInDashboard'],'prefi
     Route::get('permissions',[\App\Http\Controllers\PermissionController::class,'index'])->name('permissions.index');
     Route::resource('role',\App\Http\Controllers\RoleController::class);
     Route::get('report',[\App\Http\Controllers\ReportController::class,'index'])->name('report.index');
+    Route::get('report/closed',[\App\Http\Controllers\ReportController::class,'closedCalculation'])->name('report.closed.index');
 
 
 });
