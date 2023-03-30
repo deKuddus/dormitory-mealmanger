@@ -1,0 +1,1 @@
+import{j as r,a as c}from"./app-b424552e.js";const m=({label:s,name:e,className:t,children:a,errors:l=[],...o})=>r("div",{className:t,children:[s&&r("label",{className:"form-label",htmlFor:e,children:[s,":"]}),c("select",{id:e,name:e,...o,className:`form-select ${l.length?"error":""}`,children:a}),l&&c("div",{className:"form-error",children:l})]});export{m as S};
