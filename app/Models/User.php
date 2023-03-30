@@ -38,7 +38,8 @@ class User extends Authenticatable
         'institution',
         'company',
         'status',
-        'is_admin'
+        'is_admin',
+        'note'
     ];
     protected $perPage = 10;
 
@@ -49,9 +50,9 @@ class User extends Authenticatable
             : parent::resolveRouteBinding($value);
     }
 
-    public function mess()
+    public function dormitory()
     {
-        return $this->belongsToMany(Mess::class, 'mess_users', 'user_id','mess_id');
+        return $this->belongsToMany(Dormitory::class, 'mess_users', 'user_id', 'dormitory_id');
     }
 
     public function getNameAttribute()
@@ -120,24 +121,29 @@ class User extends Authenticatable
         return $query->where('status', UserStatus::INACTIVE);
     }
 
-    public function deposits(){
+    public function deposits()
+    {
         return $this->hasMany(Deposit::class);
     }
 
 
-    public function meals(){
+    public function meals()
+    {
         return $this->hasMany(Meal::class);
     }
 
-    public function isAbleToAccessDashboard(){
+    public function isAbleToAccessDashboard()
+    {
         return $this->is_admin === 1;
     }
 
-    public function isAdmin(){
+    public function isAdmin()
+    {
         return $this->isAbleToAccessDashboard();
     }
 
-    public function isActive(){
+    public function isActive()
+    {
         return $this->status === UserStatus::ACTIVE;
     }
 }

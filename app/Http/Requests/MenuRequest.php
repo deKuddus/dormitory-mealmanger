@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\MessIdStatic;
+use App\Enums\DormitoryIdStatic;
 use Illuminate\Foundation\Http\FormRequest;
 
 class MenuRequest extends FormRequest
@@ -25,7 +25,7 @@ class MenuRequest extends FormRequest
     public function rules()
     {
         return [
-            'mess_id'    => 'required|integer',
+            'dormitory_id'    => 'required|integer',
             'break_fast' => 'nullable|string|max:255',
             'lunch'      => 'nullable|string|max:255',
             'dinner'     => 'nullable|string|max:255',
@@ -35,7 +35,7 @@ class MenuRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'mess_id' => MessIdStatic::MESSID
+            'dormitory_id' => DormitoryIdStatic::DORMITORYID
         ]);
     }
 }

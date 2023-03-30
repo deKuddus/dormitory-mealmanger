@@ -61,7 +61,7 @@ class DepositController extends Controller
         );
 
         $deposit->user()->increment('deposit', $deposit->amount);
-        $deposit->mess()->increment('deposit', $deposit->amount);
+        $deposit->dormitory()->increment('deposit', $deposit->amount);
 
 
         return redirect()->back()->with('success', 'New Deposit Added');
@@ -107,7 +107,7 @@ class DepositController extends Controller
         $this->authorize('deleteDeposit',Deposit::class);
 
         $deposit->user()->decrement('deposit', $deposit->amount);
-        $deposit->mess()->decrement('deposit', $deposit->amount);
+        $deposit->dormitory()->decrement('deposit', $deposit->amount);
         $deposit->delete();
 
         return redirect()->back()->with('success', 'Deposit deleted successfully');
@@ -128,7 +128,7 @@ class DepositController extends Controller
         $deposit->status = DepositStatus::APPROVED;
         $deposit->save();
         $deposit->user()->increment('deposit', $deposit->amount);
-        $deposit->mess()->increment('deposit', $deposit->amount);
+        $deposit->dormitory()->increment('deposit', $deposit->amount);
         return redirect()->back()->with('success', 'Deposit approved');
     }
 
@@ -155,7 +155,7 @@ class DepositController extends Controller
         );
 
         $user->decrement('deposit', $deposit->amount);
-        $deposit->mess()->decrement('deposit', $deposit->amount);
+        $deposit->dormitory()->decrement('deposit', $deposit->amount);
 
         return redirect()->back()->with('success', 'New Withdrawal added');
     }

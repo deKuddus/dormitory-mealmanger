@@ -4,9 +4,10 @@ import Layout from "@/Shared/Layout";
 import Icon from "@/Shared/Icon";
 import Pagination from "@/Shared/Pagination";
 import moment from "moment";
+import {isUserPermittedToPerformAction} from "@/utils";
 
 const Index = () => {
-    const {bazarSchedules} = usePage().props;
+    const {bazarSchedules, user_permissions} = usePage().props;
     const {
         data,
         meta: {links},
@@ -39,15 +40,17 @@ const Index = () => {
     return (
         <div>
             <h1 className="mb-8 text-3xl font-bold">Bazar Schedules</h1>
-            <div className="flex items-center justify-end mb-6">
-                <Link
-                    className="btn-indigo focus:outline-none"
-                    href={route("bazar-schedule.create")}
-                >
-                    <span>Create</span>
-                    <span className="hidden md:inline"> Bazar Schedule</span>
-                </Link>
-            </div>
+            {isUserPermittedToPerformAction('access::bazarschedule-create', user_permissions) &&
+                <div className="flex items-center justify-end mb-6">
+                    <Link
+                        className="btn-indigo focus:outline-none"
+                        href={route("bazar-schedule.create")}
+                    >
+                        <span>Create</span>
+                        <span className="hidden md:inline"> Bazar Schedule</span>
+                    </Link>
+                </div>
+            }
             <div className="overflow-x-auto bg-white rounded shadow p-3">
                 <table className="w-full whitespace-nowrap">
                     <thead>
@@ -86,8 +89,8 @@ const Index = () => {
                                             className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
                                         >
                                             {users && users.length > 0 ? users.map(
-                                                ({first_name, last_name},index) => <span key={index}
-                                                    className={`bg-${status === 1 ? 'green':'red'}-200 text-gray-800  mr-2 px-2.5 py-0.5 rounded`}>{`${first_name} ${last_name}`}</span>
+                                                ({first_name, last_name}, index) => <span key={index}
+                                                                                          className={`bg-${status === 1 ? 'green' : 'red'}-200 text-gray-800  mr-2 px-2.5 py-0.5 rounded`}>{`${first_name} ${last_name}`}</span>
                                             ) : 'N/A'}
                                         </p>
                                     </td>
@@ -96,24 +99,28 @@ const Index = () => {
                                     </td>
                                     <td className="w-px border px-4 py-3 whitespace-nowrap">
                                         <div className="flex items-center gap-4 justify-end">
-                                            <Link
-                                                href={route("bazar-schedule.edit", id)}
-                                                className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
-                                            >
-                                                <Icon
-                                                    name="FaEdit"
-                                                    className="w-6 h-4 text-gray-400 fill-current"
-                                                />
-                                            </Link>
-                                            <button
-                                                onClick={() => deleteBazarSchedule(id)}
-                                                className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
-                                            >
-                                                <Icon
-                                                    name="FaTrashAlt"
-                                                    className="w-6 h-4 text-gray-400 fill-current"
-                                                />
-                                            </button>
+                                            {isUserPermittedToPerformAction('access::bazarschedule-edit', user_permissions) &&
+                                                <Link
+                                                    href={route("bazar-schedule.edit", id)}
+                                                    className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
+                                                >
+                                                    <Icon
+                                                        name="FaEdit"
+                                                        className="w-6 h-4 text-gray-400 fill-current"
+                                                    />
+                                                </Link>
+                                            }
+                                            {isUserPermittedToPerformAction('access::bazarschedule-delete', user_permissions) &&
+                                                <button
+                                                    onClick={() => deleteBazarSchedule(id)}
+                                                    className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
+                                                >
+                                                    <Icon
+                                                        name="FaTrashAlt"
+                                                        className="w-6 h-4 text-gray-400 fill-current"
+                                                    />
+                                                </button>
+                                            }
                                         </div>
                                     </td>
                                 </tr>

@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Helper\Helper;
 use App\Models\Deposit;
-use App\Models\Mess;
+use App\Models\Dormitory;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -56,10 +56,10 @@ class HandleInertiaRequests extends Middleware
                     'registration_success' => $request->session()->get('registration_success')
                 ];
             },
-            'permissions' =>  Helper::getUserPermission(),
+            'user_permissions' =>  Helper::getUserPermission(),
             'app_url' => env('APP_URL'),
             'routePrefix' => $request->route()->getPrefix(),
-            'deposit' => Auth::check() ? auth()->user()->isAdmin() ? Mess::query()->value('deposit') : auth()->user()->deposit : 0
+            'deposit' => Auth::check() ? auth()->user()->isAdmin() ? Dormitory::query()->value('deposit') : auth()->user()->deposit : 0
         ]);
     }
 }

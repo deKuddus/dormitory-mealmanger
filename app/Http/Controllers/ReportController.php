@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\DepositStatus;
 use App\Enums\MealStatus;
-use App\Enums\MessIdStatic;
+use App\Enums\DormitoryIdStatic;
 use App\Http\Resources\ClosedCalculationCollection;
 use App\Http\Resources\ReportCollection;
 use App\Models\AdditionalCost;
@@ -25,14 +25,12 @@ class ReportController extends Controller
 
     public function index(Request $request)
     {
-
         $this->authorize('showReport', User::class);
 
 
-        $messId = MessIdStatic::MESSID;
+        $messId = DormitoryIdStatic::DORMITORYID;
 
         try {
-
             if ($request->has('month')) {
                 $month = Carbon::parse($request->get('month'));
             } else {
@@ -62,11 +60,10 @@ class ReportController extends Controller
 
     public function getUsersAndDepositWithMeal($messId, $month)
     {
-
         return new ReportCollection(
             User::query()
                 ->with([
-                    'mess' => fn($q) => $q->where('mess_id', $messId),
+                    'dormitory' => fn ($q) => $q->where('dormitory_id', $messId),
                     'meals' => function ($query) use ($month) {
                         $query->whereMonth('created_at', '=', $month->month)
                             ->whereYear('created_at', '=', $month->year)
@@ -79,7 +76,7 @@ class ReportController extends Controller
                             )
                             ->groupBy('user_id');
                     },
-                    'deposits' => fn($q) => $q->whereStatus(DepositStatus::APPROVED),
+                    'deposits' => fn ($q) => $q->whereStatus(DepositStatus::APPROVED),
                 ])
                 ->select('id', 'first_name', 'last_name', 'email', 'status')
                 ->get(),

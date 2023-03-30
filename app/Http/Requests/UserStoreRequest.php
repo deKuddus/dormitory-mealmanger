@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\MessIdStatic;
+use App\Enums\DormitoryIdStatic;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -39,7 +39,7 @@ class UserStoreRequest extends FormRequest
             'company' => ['nullable', 'max:50'],
             'status' => ['required', 'boolean'],
             'photo' => ['nullable', 'image'],
-            'mess_id' => ['required', 'integer'],
+            'dormitory_id' => ['required', 'integer'],
             'roles' => ['required', 'array'],
             'is_admin' => ['required', 'boolean']
         ];
@@ -48,7 +48,7 @@ class UserStoreRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'mess_id' => MessIdStatic::MESSID,
+            'dormitory_id' => DormitoryIdStatic::DORMITORYID,
         ]);
     }
 }

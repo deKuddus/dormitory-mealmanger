@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Member;
 
-use App\Enums\MessIdStatic;
+use App\Enums\DormitoryIdStatic;
 use App\Enums\NoticeStatus;
 use App\Enums\RuleStatus;
 use App\Http\Controllers\Controller;
@@ -15,7 +15,7 @@ use App\Models\BazarSchedule;
 use App\Models\Deposit;
 use App\Models\Meal;
 use App\Models\Menu;
-use App\Models\Mess;
+use App\Models\Dormitory;
 use App\Models\Notice;
 use App\Models\Rule;
 use App\Models\User;
@@ -28,13 +28,11 @@ use Inertia\Inertia;
 
 class HomeController extends Controller
 {
-
     public function index(MealService $mealService)
     {
-        $messId = MessIdStatic::MESSID;
+        $messId = DormitoryIdStatic::DORMITORYID;
         $month = now();
         $userId = auth()->id();
-
 
         $totalMeal = $mealService->allUserTotalMeal($messId, $month);
         $balance = $mealService->getUserTotalDeposit($userId, $messId);
@@ -69,13 +67,13 @@ class HomeController extends Controller
 
         $status = $request->input('status') ? 1 : 0;
 
-        $mess = Mess::with(['users' => function ($query) use ($userId) {
+        $dormitory = Dormitory::with(['users' => function ($query) use ($userId) {
             $query->whereId($userId);
         }])->first();
 
 
-        $lunchOffStrToTime = strtotime($mess->lunch_close);
-        $dinnerOffStrToTime = strtotime($mess->dinner_close);
+        $lunchOffStrToTime = strtotime($dormitory->lunch_close);
+        $dinnerOffStrToTime = strtotime($dormitory->dinner_close);
 
         $lunchOff = Carbon::parse(date('Y-m-d H:i', $lunchOffStrToTime))->format('Y-m-d H:i');
         $dinnerOff = Carbon::parse(date('Y-m-d H:i', $dinnerOffStrToTime))->format('Y-m-d H:i');
@@ -105,7 +103,6 @@ class HomeController extends Controller
         }
 
         if (now()->gte($lunchOff) && !now()->gte($dinnerOff)) {
-
             Meal::whereIn('id', $mealIds)
                 ->whereDate('created_at', now()->format('Y-m-d'))
                 ->update([
@@ -126,10 +123,10 @@ class HomeController extends Controller
 
     public function deposits()
     {
-        $messId = MessIdStatic::MESSID;
+        $messId = DormitoryIdStatic::DORMITORYID;
         return Inertia::render('Member/Deposit/Index', [
             'deposits' => Deposit::whereUserId(auth()->id())
-                ->whereMessId($messId)
+                ->whereDormitoryId($messId)
                 ->orderBy('created_at', 'desc')
                 ->paginate()
         ]);
@@ -161,11 +158,10 @@ class HomeController extends Controller
 
     public function mealDetails(Request $request, MealService $mealService)
     {
-        $messId = MessIdStatic::MESSID;
+        $messId = DormitoryIdStatic::DORMITORYID;
 
         $user = auth()->id();
         try {
-
             if ($request->has('month')) {
                 $month = Carbon::parse($request->get('month'));
             } else {
@@ -173,7 +169,7 @@ class HomeController extends Controller
             }
 
             $meal = Meal::query()
-                ->where('mess_id', $messId)
+                ->where('dormitory_id', $messId)
                 ->whereUserId($user)
                 ->whereMonth('created_at', now()->month)
                 ->whereYear('created_at', now()->year)
@@ -210,11 +206,10 @@ class HomeController extends Controller
 
     public function mealUpdate(UserMealUpdateRequest $request)
     {
+        $dormitory = Dormitory::query()->select(['lunch_close', 'dinner_close', 'break_fast_close'])->first();
 
-        $mess = Mess::query()->select(['lunch_close', 'dinner_close', 'break_fast_close'])->first();
-
-        $lunchOffStrToTime = strtotime($mess->lunch_close);
-        $dinnerOffStrToTime = strtotime($mess->dinner_close);
+        $lunchOffStrToTime = strtotime($dormitory->lunch_close);
+        $dinnerOffStrToTime = strtotime($dormitory->dinner_close);
 
         $lunchOff = Carbon::parse(date('Y-m-d H:i', $lunchOffStrToTime))->format('Y-m-d H:i');
         $dinnerOff = Carbon::parse(date('Y-m-d H:i', $dinnerOffStrToTime))->format('Y-m-d H:i');
@@ -222,13 +217,12 @@ class HomeController extends Controller
 
         if ($this->isPast($request->created_at)) {
             return back()->with('errors', 'Can not update previous meal');
-        } else if (Carbon::parse($request->created_at)->isToday()) {
+        } elseif (Carbon::parse($request->created_at)->isToday()) {
             if (now()->gte($lunchOff) && now()->gte($dinnerOff)) {
                 return back()->with('errors', 'Can not update Meal for today, time is over.');
             }
 
             if (now()->gte($lunchOff) && !now()->gte($dinnerOff)) {
-
                 Meal::whereUserId(auth()->id())->whereId($request->id)->update([
                     'dinner' => $request->dinner,
                 ]);
@@ -243,7 +237,6 @@ class HomeController extends Controller
                 ]);
                 return back()->with('success', 'Meal Updated');
             }
-
         } else {
             Meal::whereUserId(auth()->id())->whereId($request->id)->update([
                 'break_fast' => $request->break_fast,

@@ -4,11 +4,11 @@ import Layout from "@/Shared/Layout";
 import Icon from "@/Shared/Icon";
 import SelectInput from "@/Shared/SelectInput";
 import moment from "moment/moment";
-import {currentYearMontList} from "@/utils";
+import {currentYearMontList, isUserPermittedToPerformAction} from "@/utils";
 
 
 const Index = () => {
-    const {users} = usePage().props;
+    const {users, user_permissions} = usePage().props;
     const [currentMonth, setCurrentMonth] = useState(moment().format('MMM-YYYY'));
     const dateOptions = currentYearMontList();
 
@@ -134,7 +134,7 @@ const Index = () => {
                                 </td>
                                 <td className="border w-px border-t p-3 whitespace-nowrap">
                                     <div className="flex items-center gap-2 justify-end">
-                                        {!meals[0] && (
+                                        {!meals[0] && isUserPermittedToPerformAction('access::meal-add', user_permissions) && (
                                             <button
                                                 onClick={() => addMealForTheUser(id)}
                                                 className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline">
@@ -144,15 +144,17 @@ const Index = () => {
                                                 />
                                             </button>
                                         )}
-                                        <Link
-                                            href={route("meals.show", id)}
-                                            className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
-                                        >
-                                            <Icon
-                                                name="FaEye"
-                                                className="w-6 h-4 text-gray-400 hover:text-buttonColor-400 fill-current"
-                                            />
-                                        </Link>
+                                        {isUserPermittedToPerformAction('access::meal-show', user_permissions) &&
+                                            <Link
+                                                href={route("meals.show", id)}
+                                                className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
+                                            >
+                                                <Icon
+                                                    name="FaEye"
+                                                    className="w-6 h-4 text-gray-400 hover:text-buttonColor-400 fill-current"
+                                                />
+                                            </Link>
+                                        }
                                     </div>
                                 </td>
                             </tr>

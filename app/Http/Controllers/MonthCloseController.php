@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\AdditionalCostType;
 use App\Enums\BazarStatus;
 use App\Enums\MealStatus;
-use App\Enums\MessIdStatic;
+use App\Enums\DormitoryIdStatic;
 use App\Models\AdditionalCost;
 use App\Models\Bazar;
 use App\Models\Calculation;
@@ -18,27 +18,27 @@ class MonthCloseController extends Controller
 {
     public function __invoke()
     {
-        $messId = MessIdStatic::MESSID;
+        $messId = DormitoryIdStatic::DORMITORYID;
         $bazar = Bazar::query()
-            ->where('mess_id', $messId)
+            ->where('dormitory_id', $messId)
             ->whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)
             ->sum('amount');
         $additional = AdditionalCost::query()
-            ->where('mess_id', $messId)
+            ->where('dormitory_id', $messId)
             ->whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)
             ->sum('amount');
 
         $meal = Meal::query()
-            ->where('mess_id', $messId)
+            ->where('dormitory_id', $messId)
             ->whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)
             ->select(DB::raw("SUM(break_fast + lunch + dinner) as total_meals"))
             ->first();
 
-        $member = User::query()->with('mess', function ($q) use ($messId) {
-            $q->where('mess_id', $messId);
+        $member = User::query()->with('dormitory', function ($q) use ($messId) {
+            $q->where('dormitory_id', $messId);
         })->active()->count();
 
         $mealCost = round($bazar / $meal->total_meals, 2);
@@ -49,7 +49,7 @@ class MonthCloseController extends Controller
             $cost = count($user->meals) ? round((($mealCost * (int)$user->meals[0]->total_meals) + $additionalCost), 2) : $additionalCost;
             $insert = [
                 'deposit_time_of_calculation' => $user->deposit ?? 0,
-                'mess_id' => $messId,
+                'dormitory_id' => $messId,
                 'user_id' => $user->id,
                 'amount' => $cost,
                 'description' => 'month closed for ' . now()->format('F, d Y') . '. Meal cost ' . $mealCost . ' and Additional cost ' . $additionalCost,
@@ -64,7 +64,7 @@ class MonthCloseController extends Controller
 
         // update all additional status to 2 , that means closed.
         AdditionalCost::query()
-            ->where('mess_id', $messId)
+            ->where('dormitory_id', $messId)
             ->whereStatus(AdditionalCostType::APPROVED)
             ->whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)
@@ -72,7 +72,7 @@ class MonthCloseController extends Controller
 
         // update all meal status to 2 , that means closed.
         Meal::query()
-            ->where('mess_id', $messId)
+            ->where('dormitory_id', $messId)
             ->whereStatus(MealStatus::PENDING)
             ->whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)
@@ -80,7 +80,7 @@ class MonthCloseController extends Controller
 
         // update all bazar status to 2 , that means closed.
         Bazar::query()
-            ->where('mess_id', $messId)
+            ->where('dormitory_id', $messId)
             ->whereStatus(BazarStatus::APPROVED)
             ->whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)
@@ -93,11 +93,11 @@ class MonthCloseController extends Controller
     private function getUserAndMeal($messId)
     {
         return User::query()->with([
-            'mess' => function ($q) use ($messId) {
-                $q->where('mess_id', $messId);
+            'dormitory' => function ($q) use ($messId) {
+                $q->where('dormitory_id', $messId);
             },
             'meals' => function ($query) use ($messId) {
-                $query->where('mess_id', $messId)
+                $query->where('dormitory_id', $messId)
                     ->whereStatus(MealStatus::PENDING)
                     ->whereMonth('created_at', now()->month)
                     ->whereYear('created_at', now()->year)

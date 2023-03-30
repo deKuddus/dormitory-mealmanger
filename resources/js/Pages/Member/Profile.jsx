@@ -1,13 +1,9 @@
 import React from "react";
-import {Link, usePage, useForm, router, Head} from "@inertiajs/react";
+import {Head, Link, useForm, usePage} from "@inertiajs/react";
 import MemberLayout from "@/Shared/Member/MemberLayout";
-import DeleteButton from "@/Shared/DeleteButton";
 import LoadingButton from "@/Shared/LoadingButton";
 import TextInput from "@/Shared/TextInput";
 import SelectInput from "@/Shared/SelectInput";
-import FileInput from "@/Shared/FileInput";
-import TrashedMessage from "@/Shared/TrashedMessage";
-import Select from "react-select";
 
 const Profile = () => {
     const {user} = usePage().props;
@@ -161,6 +157,12 @@ const Profile = () => {
                             value={data.company}
                             onChange={(e) => setData("company", e.target.value)}
                         />
+
+                        <div className="w-full pb-8 pr-6 mb-12">
+                            <label className="form-label border-b-2">Notes</label>
+
+                            <div className="pb-8 pr-6 w-full leading-6 text-xl h-40" disabled={true} dangerouslySetInnerHTML={{__html:user.note}}></div>
+                        </div>
 
 
                     </div>

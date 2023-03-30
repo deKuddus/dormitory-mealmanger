@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\MessIdStatic;
+use App\Enums\DormitoryIdStatic;
 use Illuminate\Foundation\Http\FormRequest;
 
 class RuleRequest extends FormRequest
@@ -25,7 +25,7 @@ class RuleRequest extends FormRequest
     public function rules()
     {
         return [
-            'mess_id' => 'required',
+            'dormitory_id' => 'required',
             'title' => 'required|string',
             'status' => 'required|boolean',
             'description' => 'required|string'
@@ -35,7 +35,7 @@ class RuleRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'mess_id' => MessIdStatic::MESSID
+            'dormitory_id' => DormitoryIdStatic::DORMITORYID
         ]);
     }
 }

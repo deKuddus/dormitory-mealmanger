@@ -49,7 +49,7 @@ const Index = () => {
                                     open={open} setOpen={setOpen}/>}
             <h1 className="mb-8 text-3xl font-bold">Menus</h1>
             <div className="overflow-x-auto bg-white rounded shadow p-3">
-                <table className="w-full whitespace-nowrap">
+                <table className="w-full whitespace-wrap">
                     <thead>
                     <tr className="font-bold text-left">
                         <th className="px-6 pt-5 pb-4">No</th>
@@ -66,7 +66,7 @@ const Index = () => {
                             return (
                                 <tr
                                     key={id}
-                                    className={`${weekDay[moment().day()] === menu_date ? 'bg-green-500 text-white shadow-2xl':''} hover:bg-gray-100 focus-within:bg-gray-100`}
+                                    className={`${weekDay[moment().day()] === menu_date ? 'bg-green-500 text-white font-bold text-xl shadow-2xl' : 'hover:bg-gray-100 opacity-40'} focus-within:bg-gray-100`}
                                 >
                                     <td className="border">
                                         <p

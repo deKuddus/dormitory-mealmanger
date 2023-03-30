@@ -1,15 +1,15 @@
-import React, {useEffect, useState} from "react";
-import {Link, router, usePage} from "@inertiajs/react";
+import React, {useState} from "react";
+import {router, usePage} from "@inertiajs/react";
 import Layout from "@/Shared/Layout";
 import SelectInput from "@/Shared/SelectInput";
 import moment from 'moment';
-import {currentYearMontList} from "@/utils";
+import {currentYearMontList, isUserPermittedToPerformAction} from "@/utils";
 import Icon from "@/Shared/Icon";
 import MealEditModal from "@/Pages/Meal/MealEditModal";
 
 
 const Index = () => {
-    const {user, balance, bazar, mealCost, totalMealCost, fixedCost, due, totalMeal} = usePage().props;
+    const {user, balance, bazar, mealCost, totalMealCost, fixedCost, due, totalMeal,user_permissions} = usePage().props;
     const [currentMonth, setCurrentMonth] = useState(moment().format('MMMM-YYYY'));
     const mealEditInitialObject = {
         id: undefined,
@@ -163,19 +163,21 @@ const Index = () => {
                                 </p>
                             </td>
 
-                            <td className="border w-px border-t p-3 whitespace-nowrap">
-                                <div className="flex items-center gap-2 justify-end">
-                                    <button
-                                        onClick={() => handleMealEdit(id, break_fast, lunch, dinner, created_at)}
-                                        className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
-                                    >
-                                        <Icon
-                                            name="FaEdit"
-                                            className="w-6 h-4 text-gray-400 hover:text-buttonColor-400 fill-current cursor-pointer"
-                                        />
-                                    </button>
-                                </div>
-                            </td>
+                            {isUserPermittedToPerformAction('access::meal-edit', user_permissions) &&
+                                <td className="border w-px border-t p-3 whitespace-nowrap">
+                                    <div className="flex items-center gap-2 justify-end">
+                                        <button
+                                            onClick={() => handleMealEdit(id, break_fast, lunch, dinner, created_at)}
+                                            className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
+                                        >
+                                            <Icon
+                                                name="FaEdit"
+                                                className="w-6 h-4 text-gray-400 hover:text-buttonColor-400 fill-current cursor-pointer"
+                                            />
+                                        </button>
+                                    </div>
+                                </td>
+                            }
                         </tr>
                     )) : (
                         <tr>

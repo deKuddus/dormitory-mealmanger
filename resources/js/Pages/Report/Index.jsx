@@ -5,9 +5,10 @@ import SelectInput from "@/Shared/SelectInput";
 import moment from 'moment';
 import {currentYearMontList} from "@/utils";
 import Icon from "@/Shared/Icon";
+import {isUserPermittedToPerformAction} from "@/utils";
 
 const Index = () => {
-    const {users, balance, member, additional, bazar, totalMeal, fixedCost, mealCost} = usePage().props;
+    const {users, balance, user_permissions, additional, bazar, totalMeal, fixedCost, mealCost} = usePage().props;
     const [currentMonth, setCurrentMonth] = useState(moment().format('MMMM-YYYY'));
 
 
@@ -96,7 +97,9 @@ const Index = () => {
                         <th className="px-6 pt-5 pb-4 border">Total Deposit</th>
                         <th className="px-6 pt-5 pb-4 border">Total Cost</th>
                         <th className="px-6 pt-5 pb-4 border">Due (BDT)</th>
-                        <th className="px-6 pt-5 pb-4 border">Action</th>
+                        {isUserPermittedToPerformAction('access::meal-show', user_permissions) &&
+                            <th className="px-6 pt-5 pb-4 border">Action</th>
+                        }
                     </tr>
                     </thead>
                     <tbody>
@@ -136,20 +139,22 @@ const Index = () => {
                                 <DueText deposit={deposits} cost={mealCost * meals_total}/>
                             </td>
 
+                            {isUserPermittedToPerformAction('access::meal-show', user_permissions) &&
+                                <td className="border w-px border-t p-3 whitespace-nowrap">
+                                    <div className="flex items-center gap-2 justify-end">
 
-                            <td className="border w-px border-t p-3 whitespace-nowrap">
-                                <div className="flex items-center gap-2 justify-end">
-                                    <Link
-                                        href={route('meals.show', id)}
-                                        className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
-                                    >
-                                        <Icon
-                                            name="FaEye"
-                                            className="w-6 h-4 text-gray-400 hover:text-buttonColor-400 fill-current cursor-pointer"
-                                        />
-                                    </Link>
-                                </div>
-                            </td>
+                                        <Link
+                                            href={route('meals.show', id)}
+                                            className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
+                                        >
+                                            <Icon
+                                                name="FaEye"
+                                                className="w-6 h-4 text-gray-400 hover:text-buttonColor-400 fill-current cursor-pointer"
+                                            />
+                                        </Link>
+                                    </div>
+                                </td>
+                            }
                         </tr>
                     )) : (
                         <tr>

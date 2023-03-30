@@ -32,7 +32,7 @@ class CalendarController extends Controller
         return new MealCollection(
             Meal::query()
                 ->where('status', MealStatus::PENDING)
-                ->whereMessId($messId)
+                ->whereDormitoryId($messId)
                 ->whereMonth('created_at', '=', $month)
                 ->select(
                     DB::raw("SUM(CASE WHEN break_fast = 1 THEN break_fast ELSE 0 END) AS break_fast_total"),

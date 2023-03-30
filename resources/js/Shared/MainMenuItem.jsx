@@ -7,7 +7,7 @@ import {isUserPermittedToPerformAction} from "@/utils";
 
 
 export default ({icon, link, name, uri_root,canShow}) => {
-    const {permissions} = usePage().props;
+    const {user_permissions} = usePage().props;
 
     const {url} = usePage()
     const isActive = url.startsWith('/' + uri_root.toLowerCase());
@@ -16,7 +16,7 @@ export default ({icon, link, name, uri_root,canShow}) => {
     });
     const iconClasses = classNames("w-4 h-4 mr-2");
 
-    if(!isUserPermittedToPerformAction(canShow,permissions)){
+    if(!isUserPermittedToPerformAction(canShow,user_permissions)){
         return <></>
     }
 

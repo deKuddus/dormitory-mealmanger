@@ -12,21 +12,20 @@ class Room extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'mess_id',
+        'dormitory_id',
         'name',
         'location',
         'status',
     ];
 
 
-    public function mess()
+    public function dormitory()
     {
-        return $this->belongsTo(Mess::class);
+        return $this->belongsTo(Dormitory::class);
     }
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
-
 }

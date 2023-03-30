@@ -16,7 +16,7 @@ class Notice extends Model
     protected $fillable = [
         'title',
         'description',
-        'mess_id',
+        'dormitory_id',
         'status',
     ];
 

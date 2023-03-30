@@ -41,7 +41,7 @@ class BazarController extends Controller
             $request->validated()
         );
 
-        $bazar->mess()->decrement('deposit', $bazar->amount);
+        $bazar->dormitory()->decrement('deposit', $bazar->amount);
 
         return to_route('user.bazar.index');
     }

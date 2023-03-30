@@ -46,7 +46,7 @@ class BazarController extends Controller
             $request->validated()
         );
 
-        $bazar->mess()->decrement('deposit', $bazar->amount);
+        $bazar->dormitory()->decrement('deposit', $bazar->amount);
 
         return to_route('bazar.index');
     }
@@ -74,20 +74,20 @@ class BazarController extends Controller
 
         if($bazar->status === BazarStatus::APPROVED && $request->status === BazarStatus::APPROVED){
             if($bazar->amount !== $request->amount){
-                $bazar->mess()->increment('deposit',$bazar->amount);
-                $bazar->mess()->decrement('deposit',$request->amount);
+                $bazar->dormitory()->increment('deposit',$bazar->amount);
+                $bazar->dormitory()->decrement('deposit',$request->amount);
             }
         }
 
         if($bazar->status === BazarStatus::APPROVED && $request->status === BazarStatus::PENDING){
             if($bazar->amount !== $request->amount){
-                $bazar->mess()->increment('deposit',$bazar->amount);
+                $bazar->dormitory()->increment('deposit',$bazar->amount);
             }
         }
 
         if($bazar->status === BazarStatus::PENDING && $request->status === BazarStatus::APPROVED){
             if($bazar->amount !== $request->amount){
-                $bazar->mess()->decrement('deposit',$request->amount);
+                $bazar->dormitory()->decrement('deposit',$request->amount);
             }
         }
 
@@ -119,7 +119,7 @@ class BazarController extends Controller
         $bazar = Bazar::find($request->id);
         $bazar->status = 1;
         $bazar->save();
-        $bazar->mess()->decrement('deposit', $bazar->amount);
+        $bazar->dormitory()->decrement('deposit', $bazar->amount);
         return back()->with('success', 'Bazar approved and deposit decreases');
     }
 }

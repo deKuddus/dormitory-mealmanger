@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\MessIdStatic;
+use App\Enums\DormitoryIdStatic;
 use Illuminate\Foundation\Http\FormRequest;
 
 class NoticeCreateRequest extends FormRequest
@@ -27,7 +27,7 @@ class NoticeCreateRequest extends FormRequest
         return [
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
-            'mess_id' => ['required', 'integer'],
+            'dormitory_id' => ['required', 'integer'],
             'status' => ['required', 'integer'],
         ];
     }
@@ -35,7 +35,7 @@ class NoticeCreateRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'mess_id' => MessIdStatic::MESSID
+            'dormitory_id' => DormitoryIdStatic::DORMITORYID
         ]);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\MessIdStatic;
+use App\Enums\DormitoryIdStatic;
 use Illuminate\Foundation\Http\FormRequest;
 
 class RoomRequest extends FormRequest
@@ -25,7 +25,7 @@ class RoomRequest extends FormRequest
     public function rules()
     {
         return [
-        'mess_id' => 'required|integer',
+        'dormitory_id' => 'required|integer',
         'name' => 'required|string',
         'location' => 'nullable|string',
         'status' => 'required|integer',
@@ -35,7 +35,7 @@ class RoomRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'mess_id' => MessIdStatic::MESSID,
+            'dormitory_id' => DormitoryIdStatic::DORMITORYID,
         ]);
     }
 }

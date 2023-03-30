@@ -10,7 +10,7 @@ class Calculation extends Model
     use HasFactory;
 
     protected $fillable = [
-        'mess_id',
+        'dormitory_id',
         'user_id',
         'amount',
         'description',

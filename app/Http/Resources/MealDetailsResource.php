@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Mess;
+use App\Models\Dormitory;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class MealDetailsResource extends JsonResource
@@ -31,7 +31,7 @@ class MealDetailsResource extends JsonResource
                 $this->meals->sum('lunch'),
                 $this->meals->sum('dinner'),
             ]);
-        }else{
+        } else {
             return 0;
         }
     }

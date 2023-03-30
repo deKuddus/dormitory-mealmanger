@@ -4,9 +4,10 @@ import Layout from "@/Shared/Layout";
 import Icon from "@/Shared/Icon";
 import Pagination from "@/Shared/Pagination";
 import {ACTIVE} from "@/Shared/const/noticeStatus";
+import {isUserPermittedToPerformAction} from "@/utils";
 
 const Index = () => {
-    const {rules} = usePage().props;
+    const {rules, user_permissions} = usePage().props;
     const {
         data,
         meta: {links},
@@ -23,13 +24,15 @@ const Index = () => {
         <div>
             <h1 className="mb-8 text-3xl font-bold">Rules</h1>
             <div className="flex items-center justify-end mb-6">
-                <Link
-                    className="btn-indigo focus:outline-none"
-                    href={route("rule.create")}
-                >
-                    <span>Create</span>
-                    <span className="hidden md:inline"> Rule</span>
-                </Link>
+                {isUserPermittedToPerformAction('access::rule-create', user_permissions) &&
+                    <Link
+                        className="btn-indigo focus:outline-none"
+                        href={route("rule.create")}
+                    >
+                        <span>Create</span>
+                        <span className="hidden md:inline"> Rule</span>
+                    </Link>
+                }
             </div>
             <div className="overflow-x-auto bg-white rounded shadow p-3">
                 <table className="w-full whitespace-nowrap">
@@ -74,33 +77,39 @@ const Index = () => {
                                     </td>
                                     <td className="w-px border px-4 py-3 whitespace-nowrap">
                                         <div className="flex items-center gap-4 justify-end">
-                                            <Link
-                                                href={route("rule.edit", id)}
-                                                className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
-                                            >
-                                                <Icon
-                                                    name="FaEdit"
-                                                    className="w-6 h-4 text-gray-400 fill-current"
-                                                />
-                                            </Link>
-                                            <Link
-                                                href={route("rule.show", id)}
-                                                className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
-                                            >
-                                                <Icon
-                                                    name="FaEye"
-                                                    className="w-6 h-4 text-gray-400 fill-current"
-                                                />
-                                            </Link>
-                                            <button
-                                                onClick={() => deleteRule(id)}
-                                                className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
-                                            >
-                                                <Icon
-                                                    name="FaTrashAlt"
-                                                    className="w-6 h-4 text-gray-400 fill-current"
-                                                />
-                                            </button>
+                                            {isUserPermittedToPerformAction('access::rule-edit', user_permissions) &&
+                                                <Link
+                                                    href={route("rule.edit", id)}
+                                                    className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
+                                                >
+                                                    <Icon
+                                                        name="FaEdit"
+                                                        className="w-6 h-4 text-gray-400 fill-current"
+                                                    />
+                                                </Link>
+                                            }
+                                            {isUserPermittedToPerformAction('access::rule-show', user_permissions) &&
+                                                <Link
+                                                    href={route("rule.show", id)}
+                                                    className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
+                                                >
+                                                    <Icon
+                                                        name="FaEye"
+                                                        className="w-6 h-4 text-gray-400 fill-current"
+                                                    />
+                                                </Link>
+                                            }
+                                            {isUserPermittedToPerformAction('access::rule-delete', user_permissions) &&
+                                                <button
+                                                    onClick={() => deleteRule(id)}
+                                                    className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
+                                                >
+                                                    <Icon
+                                                        name="FaTrashAlt"
+                                                        className="w-6 h-4 text-gray-400 fill-current"
+                                                    />
+                                                </button>
+                                            }
                                         </div>
                                     </td>
                                 </tr>

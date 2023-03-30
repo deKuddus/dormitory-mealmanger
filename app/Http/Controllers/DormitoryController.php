@@ -2,23 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\MessCreateRequest;
-use App\Http\Resources\MessCollection;
-use App\Models\Mess;
+use App\Http\Requests\DormitoryCreateRequest;
+use App\Http\Resources\DormitoryCollection;
+use App\Models\Dormitory;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class MessController extends Controller
+class DormitoryController extends Controller
 {
-
     public function index()
     {
         $requestParam = \request()->all('search', 'trashed');
-        return Inertia::render('Mess/Index', [
+        return Inertia::render('Dormitory/Index', [
             'filters' => $requestParam,
-            'messes' => new MessCollection(
-                Mess::query()
+            'messes' => new DormitoryCollection(
+                Dormitory::query()
                     ->orderBy('created_at', 'desc')
                     ->filter($requestParam)
                     ->paginate()
@@ -30,62 +29,59 @@ class MessController extends Controller
     public function create()
     {
         return back();
-        return Inertia::render('Mess/Create', [
+        return Inertia::render('Dormitory/Create', [
             'users' => User::get(['id', 'first_name'])->toArray(),
         ]);
     }
 
-    public function store(MessCreateRequest $request)
+    public function store(DormitoryCreateRequest $request)
     {
         return back();
 
-        Mess::create(
+        Dormitory::create(
             $request->validated()
         );
 
-        return to_route('mess.index');
+        return to_route('dormitory.index');
     }
 
     public function show($id)
     {
-
     }
 
 
-    public function edit(Mess $mess)
+    public function edit(Dormitory $dormitory)
     {
-        return back();
 
-        return Inertia::render('Mess/Edit', [
+        return Inertia::render('Dormitory/Edit', [
             'users' => User::get(['id', 'first_name'])->toArray(),
-            'mess' => $mess,
+            'dormitory' => $dormitory,
         ]);
     }
 
-    public function update(MessCreateRequest $request, Mess $mess)
+    public function update(DormitoryCreateRequest $request, Dormitory $dormitory)
     {
-
         return back();
 
-        $mess->update(
+        $dormitory->update(
             $request->validated()
         );
 
-        return to_route('mess.index');
+        return to_route('dormitory.index');
     }
 
-    public function destroy(Mess $mess)
+    public function destroy(Dormitory $dormitory)
     {
         return back();
 
-        $mess->delete();
+        $dormitory->delete();
 
-        return to_route('mess.index');
+        return to_route('dormitory.index');
     }
 
-    public function restore(Mess $mess)
+    public function restore(Dormitory $dormitory)
     {
-        $mess->restore();
+        $dormitory->restore();
         return redirect()->back();
     }
 }

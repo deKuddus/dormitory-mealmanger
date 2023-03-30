@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\MealStatus;
-use App\Enums\MessIdStatic;
+use App\Enums\DormitoryIdStatic;
 use App\Helper\Helper;
 use App\Http\Requests\MealUpdateRequest;
 use App\Http\Resources\MealDetailsResource;
@@ -12,7 +12,7 @@ use App\Models\AdditionalCost;
 use App\Models\Bazar;
 use App\Models\Deposit;
 use App\Models\Meal;
-use App\Models\Mess;
+use App\Models\Dormitory;
 use App\Models\User;
 use App\Services\MealService;
 use Carbon\Carbon;
@@ -27,15 +27,15 @@ class MealController extends Controller
         $this->authorize('showMeal', Meal::class);
 
 
-        $messId = MessIdStatic::MESSID;
+        $messId = DormitoryIdStatic::DORMITORYID;
 
         return Inertia::render('Meal/Index', [
             'users' => UserMealShowResource::collection(
-                User::query()->with(['mess' => function ($q) use ($messId) {
-                    $q->where('mess_id', $messId);
+                User::query()->with(['dormitory' => function ($q) use ($messId) {
+                    $q->where('dormitory_id', $messId);
                 },
                     'meals' => function ($query) use ($messId) {
-                        $query->where('mess_id', $messId)
+                        $query->where('dormitory_id', $messId)
                             ->whereStatus(MealStatus::PENDING)
                             ->whereMonth('created_at', now()->month)
                             ->whereYear('created_at', now()->year)
@@ -48,7 +48,6 @@ class MealController extends Controller
                     ->get()
             )
         ]);
-
     }
 
     public function show($user, Request $request, MealService $mealService)
@@ -56,10 +55,9 @@ class MealController extends Controller
         $this->authorize('detailsMeal', Meal::class);
 
 
-        $messId = MessIdStatic::MESSID;
+        $messId = DormitoryIdStatic::DORMITORYID;
 
         try {
-
             if ($request->has('month')) {
                 $month = Carbon::parse($request->get('month'));
             } else {
@@ -67,7 +65,7 @@ class MealController extends Controller
             }
 
             $meal = Meal::query()
-                ->where('mess_id', $messId)
+                ->where('dormitory_id', $messId)
                 ->whereUserId($user)
                 ->whereStatus(MealStatus::PENDING)
                 ->whereMonth('created_at', now()->month)
@@ -123,13 +121,12 @@ class MealController extends Controller
         try {
             $request->validate(['userId' => 'required']);
 
-            $mess = Mess::find(MessIdStatic::MESSID);
+            $dormitory = Dormitory::find(DormitoryIdStatic::DORMITORYID);
             $user = User::findOrFail($request->get('userId'));
-            Helper::insertMeal($user, $mess);
+            Helper::insertMeal($user, $dormitory);
             return back()->with('success', 'Meal Added');
         } catch (\Exception $exception) {
             return back()->with('error', $exception->getMessage());
         }
-
     }
 }

@@ -16,7 +16,7 @@ class RuleCollection extends ResourceCollection
     {
         return $this->collection->map->only(
             'id',
-            'mess_id',
+            'dormitory_id',
             'title',
             'status',
             'published_date',

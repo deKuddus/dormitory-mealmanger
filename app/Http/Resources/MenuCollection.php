@@ -16,7 +16,7 @@ class MenuCollection extends ResourceCollection
     {
         return $this->collection->map->only(
             'id',
-            'mess_id',
+            'dormitory_id',
             'break_fast',
             'lunch',
             'dinner',

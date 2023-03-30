@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\MessIdStatic;
+use App\Enums\DormitoryIdStatic;
 use Illuminate\Foundation\Http\FormRequest;
 
 class DepositRequest extends FormRequest
@@ -26,7 +26,7 @@ class DepositRequest extends FormRequest
     {
         return [
             'user_id' => 'required|integer',
-            'mess_id' => 'required|integer',
+            'dormitory_id' => 'required|integer',
             'amount' => 'required|numeric|min:1',
             'deposit_date' => 'required|date',
             'status' => 'required|boolean'
@@ -36,7 +36,7 @@ class DepositRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'mess_id' => MessIdStatic::MESSID,
+            'dormitory_id' => DormitoryIdStatic::DORMITORYID,
         ]);
     }
 

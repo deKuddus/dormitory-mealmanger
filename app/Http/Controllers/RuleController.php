@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RuleRequest;
-use App\Http\Resources\MessCollection;
+use App\Http\Resources\DormitoryCollection;
 use App\Http\Resources\RuleCollection;
 use App\Models\Rule;
 use App\Models\User;

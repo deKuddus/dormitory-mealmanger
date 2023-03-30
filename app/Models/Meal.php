@@ -15,26 +15,27 @@ class Meal extends Model
 
     protected $fillable = [
         'user_id',
-        'mess_id',
+        'dormitory_id',
         'break_fast',
         'lunch',
         'dinner',
         'status',
     ];
 
-    public function mess()
+    public function dormitory()
     {
-        return $this->belongsTo(Mess::class);
+        return $this->belongsTo(Dormitory::class);
     }
 
-    protected function createdAt():Attribute
+    protected function createdAt(): Attribute
     {
         return Attribute::make(
             get: fn ($value) => Carbon::parse($value)->format('Y-m-d'),
         );
     }
 
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 }

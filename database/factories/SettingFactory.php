@@ -27,7 +27,7 @@ class SettingFactory extends Factory
             'lunch_close' => $times[30],
             'dinner_close' => $times[19],
             'app_name' => 'Dormitory',
-            'mess_id' => 1
+            'dormitory_id' => 1
         ];
     }
 }

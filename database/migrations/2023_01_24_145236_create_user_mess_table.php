@@ -14,7 +14,7 @@ return new class () extends Migration {
     {
         Schema::create('user_messes', function (Blueprint $table) {
             $table->foreignId('user_id')->constrained();
-            $table->foreignId('mess_id')->constrained();
+            $table->foreignId('dormitory_id')->constrained();
         });
     }
 

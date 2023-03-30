@@ -12,14 +12,15 @@ class Chef extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'mess_id',
+        'dormitory_id',
         'name',
         'phone',
         'address',
         'status'
     ];
 
-    public function mess(){
-        return $this->belongsTo(Mess::class);
+    public function dormitory()
+    {
+        return $this->belongsTo(Dormitory::class);
     }
 }

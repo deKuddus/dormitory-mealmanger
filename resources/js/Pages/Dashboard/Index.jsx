@@ -5,7 +5,7 @@ import {isUserPermittedToPerformAction} from "@/utils";
 
 
 const Dashboard = () => {
-    const {data, permissions} = usePage().props;
+    const {data, user_permissions} = usePage().props;
 
     const handleMonthCloseRequest = () => {
         return router.post(route("month.close"))
@@ -18,20 +18,20 @@ const Dashboard = () => {
     return (
         <div>
             <div className="flex items-center gap-2 justify-end">
-                {isUserPermittedToPerformAction('access::month-close', permissions) && (
+                {isUserPermittedToPerformAction('access::month-close', user_permissions) && (
                     <div className="col-span-full mb-5">
                         <button className="btn-indigo" onClick={handleMonthCloseRequest}>
                             Close Month
                         </button>
                     </div>)}
-                {isUserPermittedToPerformAction('access::month-start', permissions) && (
+                {isUserPermittedToPerformAction('access::month-start', user_permissions) && (
                     <div className="col-span-full mb-5">
                         <button className="btn-indigo" onClick={handleMonthStart}>
                            Start New Month
                         </button>
                     </div>)}
             </div>
-            {isUserPermittedToPerformAction('access::dashboard-show', permissions) ?
+            {isUserPermittedToPerformAction('access::dashboard-show', user_permissions) ?
                 (<>
                     <div className="col-span-full mb-5">
                         <h6 className="mb-4 text-xl font-bold border-b">Meal</h6>

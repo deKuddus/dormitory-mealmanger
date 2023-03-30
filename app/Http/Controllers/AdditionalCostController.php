@@ -46,7 +46,7 @@ class AdditionalCostController extends Controller
             $request->validated()
         );
         if($request->status === AdditionalCostType::APPROVED){
-            $additional->mess()->decrement('deposit',$additional->amount);
+            $additional->dormitory()->decrement('deposit',$additional->amount);
         }
         return to_route('additional.index');
     }
@@ -73,20 +73,20 @@ class AdditionalCostController extends Controller
 
         if($additional->status === AdditionalCostType::APPROVED && $request->status === AdditionalCostType::APPROVED){
             if($additional->amount !== $request->amount){
-                $additional->mess()->increment('deposit',$additional->amount);
-                $additional->mess()->decrement('deposit',$request->amount);
+                $additional->dormitory()->increment('deposit',$additional->amount);
+                $additional->dormitory()->decrement('deposit',$request->amount);
             }
         }
 
         if($additional->status === AdditionalCostType::APPROVED && $request->status === AdditionalCostType::PENDING){
             if($additional->amount !== $request->amount){
-                $additional->mess()->increment('deposit',$additional->amount);
+                $additional->dormitory()->increment('deposit',$additional->amount);
             }
         }
 
         if($additional->status === AdditionalCostType::PENDING && $request->status === AdditionalCostType::APPROVED){
             if($additional->amount !== $request->amount){
-                $additional->mess()->decrement('deposit',$request->amount);
+                $additional->dormitory()->decrement('deposit',$request->amount);
             }
         }
 
@@ -102,7 +102,7 @@ class AdditionalCostController extends Controller
         $this->authorize('deleteAdditionalCost',AdditionalCost::class);
 
         if($additional->status === AdditionalCostType::APPROVED){
-            $additional->mess()->increment('deposit',$additional->amount);
+            $additional->dormitory()->increment('deposit',$additional->amount);
         }
 
         $additional->delete();

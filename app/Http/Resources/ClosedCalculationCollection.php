@@ -16,7 +16,7 @@ class ClosedCalculationCollection extends ResourceCollection
     {
         return $this->collection->map->only(
             'id',
-            'mess_id',
+            'dormitory_id',
             'user_id',
             'amount',
             'description',

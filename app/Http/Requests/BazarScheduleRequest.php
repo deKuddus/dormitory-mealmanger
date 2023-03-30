@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\MessIdStatic;
+use App\Enums\DormitoryIdStatic;
 use Illuminate\Foundation\Http\FormRequest;
 
 class BazarScheduleRequest extends FormRequest
@@ -25,7 +25,7 @@ class BazarScheduleRequest extends FormRequest
     public function rules()
     {
         return [
-            'mess_id'    => 'required|integer',
+            'dormitory_id'    => 'required|integer',
             'bazar_date' => 'required|date',
             'status'     => 'required|integer',
             'users_id'    => 'required|array'
@@ -35,7 +35,7 @@ class BazarScheduleRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-           'mess_id' => MessIdStatic::MESSID
+           'dormitory_id' => DormitoryIdStatic::DORMITORYID
         ]);
     }
 }

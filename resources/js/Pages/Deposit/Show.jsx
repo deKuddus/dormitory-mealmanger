@@ -1,14 +1,15 @@
 import React, {useEffect, useState} from "react";
-import {Link, router, useForm, usePage} from "@inertiajs/react";
+import {router, useForm, usePage} from "@inertiajs/react";
 import Layout from "@/Shared/Layout";
 import TextInput from "@/Shared/TextInput";
 import LoadingButton from "@/Shared/LoadingButton";
 import Icon from "@/Shared/Icon";
-import {Flip, toast} from "react-toastify";
+import {toast} from "react-toastify";
 import {APPROVED, WITHDRAWN} from "@/Shared/const/depostiStatus";
+import {isUserPermittedToPerformAction} from '@/utils'
 
 const Show = () => {
-    const {user, approvedDeposit, pendingDeposit, flash} = usePage().props;
+    const {user, approvedDeposit, pendingDeposit, flash,user_permissions} = usePage().props;
 
     const [withdraw, setWithdraw] = useState(0);
 
@@ -79,60 +80,64 @@ const Show = () => {
                 <div className="col-span-full mb-5">
                     <h6 className="mb-1 text-gray-900 text-xl font-bold">Total: {user.deposit} BDT</h6>
                     <div className="grid md:grid-cols-2">
-                        <div className="relative p-6 rounded-xl">
-                            <div className="space-y-2 text-white text-center">
-                                <form name="createForm" onSubmit={handleDepositSubmit}>
+                        {isUserPermittedToPerformAction('access::deposit-create', user_permissions) &&
+                            <div className="relative p-6 rounded-xl">
+                                <div className="space-y-2 text-white text-center">
+                                    <form name="createForm" onSubmit={handleDepositSubmit}>
+                                        <div className="flex w-full flex-row p-8 -mb-8 -mr-6">
+                                            <TextInput
+                                                className="w-full pr-6 md:w-1/2 lg:w-1/2"
+                                                label=""
+                                                name="amount"
+                                                type="number"
+                                                value={data.amount}
+                                                onChange={(e) => {
+                                                    if (e.target.value < 0) {
+                                                        setData('amount', 0)
+                                                    } else {
+                                                        setData('amount', e.target.value)
+                                                    }
+                                                }}
+                                                errors={errors.amount}
+                                            />
+                                            <LoadingButton
+                                                loading={false}
+                                                type="submit"
+                                                className="px-4 py-1 text-xs font-medium text-center text-white bg-buttonColor-400 rounded focus:outline-none"
+                                            >
+                                                Add Deposit
+                                            </LoadingButton>
+
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        }
+                        {isUserPermittedToPerformAction('access::deposit-withdraw', user_permissions) &&
+                            <div className="relative p-6 rounded-xl">
+                                <div className="space-y-2 text-white text-center">
                                     <div className="flex w-full flex-row p-8 -mb-8 -mr-6">
+
                                         <TextInput
                                             className="w-full pr-6 md:w-1/2 lg:w-1/2"
                                             label=""
-                                            name="amount"
+                                            name="withdraw"
                                             type="number"
-                                            value={data.amount}
-                                            onChange={(e) => {
-                                                if (e.target.value < 0) {
-                                                    setData('amount', 0)
-                                                } else {
-                                                    setData('amount', e.target.value)
-                                                }
-                                            }}
-                                            errors={errors.amount}
+                                            value={withdraw}
+                                            onChange={(e) => setWithdraw(e.target.value)}
                                         />
-                                        <LoadingButton
-                                            loading={false}
-                                            type="submit"
-                                            className="px-4 py-1 text-xs font-medium text-center text-white bg-buttonColor-400 rounded focus:outline-none"
+                                        <button
+                                            onClick={addWithdraw}
+                                            type="button"
+                                            className="px-4 py-1 text-xs font-medium text-center text-white bg-buttonColor-1000 rounded focus:outline-none"
                                         >
-                                            Add Deposit
-                                        </LoadingButton>
+                                            Add Withdraw
+                                        </button>
 
                                     </div>
-                                </form>
-                            </div>
-                        </div>
-                        <div className="relative p-6 rounded-xl">
-                            <div className="space-y-2 text-white text-center">
-                                <div className="flex w-full flex-row p-8 -mb-8 -mr-6">
-
-                                    <TextInput
-                                        className="w-full pr-6 md:w-1/2 lg:w-1/2"
-                                        label=""
-                                        name="withdraw"
-                                        type="number"
-                                        value={withdraw}
-                                        onChange={(e) => setWithdraw(e.target.value)}
-                                    />
-                                    <button
-                                        onClick={addWithdraw}
-                                        type="button"
-                                        className="px-4 py-1 text-xs font-medium text-center text-white bg-buttonColor-1000 rounded focus:outline-none"
-                                    >
-                                        Add Withdraw
-                                    </button>
-
                                 </div>
                             </div>
-                        </div>
+                        }
                     </div>
                 </div>
                 <div className="grid gap-4 lg:gap-8 md:grid-cols-2">
@@ -144,14 +149,17 @@ const Show = () => {
                                 <th className="px-6 pt-5 pb-4">No</th>
                                 <th className="px-6 pt-5 pb-4">Date</th>
                                 <th className="px-6 pt-5 pb-4">Amount</th>
-                                <th className="px-6 pt-5 pb-4">Action</th>
+                                {isUserPermittedToPerformAction('access::deposit-delete', user_permissions) &&
+                                    <th className="px-6 pt-5 pb-4">Action</th>
+                                }
                             </tr>
                             </thead>
                             <tbody>
                             {approvedDeposit.length ? approvedDeposit.map(({
                                                                                id,
                                                                                amount: _amount,
-                                                                               deposit_date, status
+                                                                               deposit_date,
+                                                                               status
                                                                            }, key) => (
                                 <tr
                                     key={key}
@@ -186,20 +194,22 @@ const Show = () => {
                                             {_amount} BDT
                                         </p>)}
                                     </td>
-                                    <td className="w-px border px-4 py-3 whitespace-nowrap">
-                                        <div className="flex items-center gap-4 justify-end">
-                                            <button
-                                                onClick={() => deleteDeposit(id)}
-                                                className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
-                                            >
-                                                <Icon
-                                                    name="FaTrashAlt"
-                                                    className="w-6 h-4 text-gray-400 fill-current"
-                                                />
-                                            </button>
+                                    {isUserPermittedToPerformAction('access::deposit-delete', user_permissions) &&
+                                        <td className="w-px border px-4 py-3 whitespace-nowrap">
+                                            <div className="flex items-center gap-4 justify-end">
+                                                <button
+                                                    onClick={() => deleteDeposit(id)}
+                                                    className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
+                                                >
+                                                    <Icon
+                                                        name="FaTrashAlt"
+                                                        className="w-6 h-4 text-gray-400 fill-current"
+                                                    />
+                                                </button>
 
-                                        </div>
-                                    </td>
+                                            </div>
+                                        </td>
+                                    }
                                 </tr>
                             )) : (
                                 <tr
@@ -226,7 +236,9 @@ const Show = () => {
                                 <th className="px-6 pt-5 pb-4">No</th>
                                 <th className="px-6 pt-5 pb-4">Date</th>
                                 <th className="px-6 pt-5 pb-4">Amount</th>
-                                <th className="px-6 pt-5 pb-4">Action</th>
+                                {isUserPermittedToPerformAction('access::deposit-approve', user_permissions) || isUserPermittedToPerformAction('access::deposit-reject', user_permissions) &&
+                                    <th className="px-6 pt-5 pb-4">Action</th>
+                                }
                             </tr>
                             </thead>
                             <tbody>
@@ -260,25 +272,28 @@ const Show = () => {
                                     </td>
                                     <td className="w-px border px-4 py-3 whitespace-nowrap">
                                         <div className="flex items-center gap-4 justify-end">
-                                            <button
-                                                onClick={() => approveDeposit(id)}
-                                                className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
-                                            >
-                                                <Icon
-                                                    name="FaCheck"
-                                                    className="w-6 h-4 text-buttonColor-400 fill-current"
-                                                />
-                                            </button>
-                                            <button
-                                                onClick={() => rejectDeposit(id)}
-                                                className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
-                                            >
-                                                <Icon
-                                                    name="FaTimes"
-                                                    className="w-6 h-4 text-red-400 fill-current"
-                                                />
-                                            </button>
-
+                                            {isUserPermittedToPerformAction('access::deposit-approve', user_permissions) &&
+                                                <button
+                                                    onClick={() => approveDeposit(id)}
+                                                    className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
+                                                >
+                                                    <Icon
+                                                        name="FaCheck"
+                                                        className="w-6 h-4 text-buttonColor-400 fill-current"
+                                                    />
+                                                </button>
+                                            }
+                                            {isUserPermittedToPerformAction('access::deposit-reject', user_permissions) &&
+                                                <button
+                                                    onClick={() => rejectDeposit(id)}
+                                                    className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
+                                                >
+                                                    <Icon
+                                                        name="FaTimes"
+                                                        className="w-6 h-4 text-red-400 fill-current"
+                                                    />
+                                                </button>
+                                            }
                                         </div>
                                     </td>
                                 </tr>

@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\MessIdStatic;
+use App\Enums\DormitoryIdStatic;
 use Illuminate\Foundation\Http\FormRequest;
 
 class BazarRequest extends FormRequest
@@ -27,7 +27,7 @@ class BazarRequest extends FormRequest
         return [
             'description' => 'nullable|string',
             'amount' => 'numeric|required',
-            'mess_id' => 'required|integer',
+            'dormitory_id' => 'required|integer',
             'bazar_schedule_id' => 'required|numeric',
             'status' => 'required'
         ];
@@ -36,7 +36,7 @@ class BazarRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'mess_id' => MessIdStatic::MESSID,
+            'dormitory_id' => DormitoryIdStatic::DORMITORYID,
             'status' => auth()->user()->isAdmin() ? 1 : 0
         ]);
     }

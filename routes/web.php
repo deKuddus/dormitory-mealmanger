@@ -65,7 +65,7 @@ Route::group(['middleware' => 'auth'],function (){
 Route::group(['middleware' => ['auth', 'remember','hasAccessInDashboard'],'prefix' => 'master'], function () {
     Route::get('/', DashboardController::class)->name('dashboard');
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
-//    Route::get('/calender/{mess_id?}', [\App\Http\Controllers\CalendarController::class, 'showCalender'])->name('dashboard');
+//    Route::get('/calender/{dormitory_id?}', [\App\Http\Controllers\CalendarController::class, 'showCalender'])->name('dashboard');
 
     Route::get('tokens',[\App\Http\Controllers\RegisterTokenController::class,'index'])->name('tokens.index');
     Route::post('tokens/create',[\App\Http\Controllers\RegisterTokenController::class,'create'])->name('tokens.create');
@@ -73,7 +73,7 @@ Route::group(['middleware' => ['auth', 'remember','hasAccessInDashboard'],'prefi
 
     Route::resource('notice', \App\Http\Controllers\NoticeController::class);
     Route::resource('user', \App\Http\Controllers\UsersController::class);
-    Route::resource('mess', \App\Http\Controllers\MessController::class);
+    Route::resource('dormitory', \App\Http\Controllers\DormitoryController::class);
     Route::resource('rule', \App\Http\Controllers\RuleController::class);
     Route::resource('asset', \App\Http\Controllers\AssetController::class);
     Route::resource('room', \App\Http\Controllers\RoomController::class);

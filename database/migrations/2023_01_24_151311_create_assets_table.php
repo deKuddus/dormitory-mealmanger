@@ -18,7 +18,7 @@ return new class () extends Migration {
             $table->text('description')->nullable();
             $table->dateTime('purchase_date')->nullable();
             $table->integer('status')->default(1);
-            $table->foreignId('mess_id')->constrained();
+            $table->foreignId('dormitory_id')->constrained();
             $table->timestamps();
             $table->softDeletes();
         });

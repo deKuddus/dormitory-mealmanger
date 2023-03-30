@@ -28,8 +28,8 @@ class MemberMealShowResource extends JsonResource
     private function canUpdateMeal()
     {
 
-        $lunchOffStrToTime = strtotime($this->mess->lunch_close);
-        $dinnerOffStrToTime = strtotime($this->mess->dinner_close);
+        $lunchOffStrToTime = strtotime($this->dormitory->lunch_close);
+        $dinnerOffStrToTime = strtotime($this->dormitory->dinner_close);
 
         $lunchOff = Carbon::parse(date('Y-m-d H:i', $lunchOffStrToTime))->format('Y-m-d H:i');
         $dinnerOff = Carbon::parse(date('Y-m-d H:i', $dinnerOffStrToTime))->format('Y-m-d H:i');

@@ -15,7 +15,7 @@ class Rule extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'mess_id',
+        'dormitory_id',
         'title',
         'status',
         'description'
@@ -29,9 +29,9 @@ class Rule extends Model
         return $query->where('status', RuleStatus::ACTIVE);
     }
 
-    public function mess()
+    public function dormitory()
     {
-        return $this->belongsTo(Mess::class);
+        return $this->belongsTo(Dormitory::class);
     }
 
     public function scopeFilter($query, array $filters)
@@ -49,5 +49,4 @@ class Rule extends Model
             }
         });
     }
-
 }

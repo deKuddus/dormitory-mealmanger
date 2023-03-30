@@ -4,7 +4,7 @@ namespace App\Helper;
 
 use App\Enums\MealStatus;
 use App\Models\Meal;
-use App\Models\Mess;
+use App\Models\Dormitory;
 use App\Models\Role;
 use App\Models\Rule;
 use App\Models\User;
@@ -16,7 +16,7 @@ class Helper
     public static function messArray()
     {
         return [
-            'messes' => Mess::get(['id', 'name'])->toArray(),
+            'messes' => Dormitory::get(['id', 'name'])->toArray(),
         ];
     }
 
@@ -43,19 +43,19 @@ class Helper
 
     public static function createMeal()
     {
-        $autoMealGenerationForMess = Mess::with('users:id,mess_id')->active()->get();
+        $autoMealGenerationForMess = Dormitory::with('users:id,dormitory_id')->active()->get();
 
 
-        $autoMealGenerationForMess->each(function ($mess) {
-            if ($mess->is_automeal == 1) {
-                $mess->users->each(function ($user) use ($mess) {
-                    self::insertMeal($user, $mess);
+        $autoMealGenerationForMess->each(function ($dormitory) {
+            if ($dormitory->is_automeal == 1) {
+                $dormitory->users->each(function ($user) use ($dormitory) {
+                    self::insertMeal($user, $dormitory);
                 });
             }
         });
     }
 
-    public static function insertMeal($user, $mess)
+    public static function insertMeal($user, $dormitory)
     {
         $today = (int)date('d');
         $lastDayOfMonth = (int)date('t');
@@ -63,10 +63,10 @@ class Helper
         for ($i = $today; $i <= $lastDayOfMonth; $i++) {
             $dataArray[] = [
                 'user_id' => $user->id,
-                'mess_id' => $mess->id,
-                'break_fast' => $mess->has_breakfast ? 1 : 0,
-                'lunch' => $mess->has_lunch ? 1 : 0,
-                'dinner' => $mess->has_dinner ? 1 : 0,
+                'dormitory_id' => $dormitory->id,
+                'break_fast' => $dormitory->has_breakfast ? 1 : 0,
+                'lunch' => $dormitory->has_lunch ? 1 : 0,
+                'dinner' => $dormitory->has_dinner ? 1 : 0,
                 'status' => MealStatus::PENDING,
                 'created_at' => Carbon::parse(date('Y-m-' . $i . ' 09:00'))->format('Y-m-d h:i'),
                 'updated_at' => Carbon::parse(date('Y-m-' . $i . ' 09:00'))->format('Y-m-d h:i'),
@@ -86,6 +86,5 @@ class Helper
         }
 
         return $permissions;
-
     }
 }
