@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('messes', function (Blueprint $table) {
+        Schema::table('dormitories', function (Blueprint $table) {
             $table->string('break_fast_close')->nullable();
             $table->string('lunch_close')->nullable();
             $table->string('dinner_close')->nullable();
@@ -27,7 +27,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('messes', function (Blueprint $table) {
+        Schema::table('dormitories', function (Blueprint $table) {
             $table->dropColumn('break_fast_close');
             $table->dropColumn('lunch_close');
             $table->dropColumn('dinner_close');

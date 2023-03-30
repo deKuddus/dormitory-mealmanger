@@ -14,12 +14,12 @@ return new class extends Migration
     public function up()
     {
         Schema::table('notices', function (Blueprint $table) {
-            $table->dropColumn('published_date');
+//            $table->dropColumn('published_date');
         });
 
         Schema::table('rules', function (Blueprint $table) {
-            $table->text('description');
-            $table->dropColumn('published_date');
+//            $table->text('description');
+//            $table->dropColumn('published_date');
         });
     }
 

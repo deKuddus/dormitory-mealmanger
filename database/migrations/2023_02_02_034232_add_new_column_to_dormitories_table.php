@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('messes', function (Blueprint $table) {
+        Schema::table('dormitories', function (Blueprint $table) {
             $table->boolean('is_automeal')->default(1);
             $table->boolean('has_breakfast')->default(0);
             $table->boolean('has_lunch')->default(1);
@@ -28,7 +28,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('messes', function (Blueprint $table) {
+        Schema::table('dormitories', function (Blueprint $table) {
             //
         });
     }

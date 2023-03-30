@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('dormitory_id')->constrained();
             $table->string('item')->nullable();
-            $table->date('menu_date')->nullable();
+            $table->string('menu_date')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
