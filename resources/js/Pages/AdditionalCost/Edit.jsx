@@ -4,10 +4,11 @@ import Layout from "@/Shared/Layout";
 import LoadingButton from "@/Shared/LoadingButton";
 import TextInput from "@/Shared/TextInput";
 import SelectInput from "@/Shared/SelectInput";
+import {APPROVED, APPROVED_TEXT, PENDING, PENDING_TEXT} from "@/Shared/const/additionalCostStatus";
 
 
 const Edit = () => {
-    const {messes, additional} = usePage().props;
+    const { additional} = usePage().props;
     const {data, setData, errors, post, processing} = useForm({
         amount: additional.amount || "",
         description: additional.description || "",
@@ -69,21 +70,10 @@ const Edit = () => {
                             value={data.status}
                             onChange={(e) => setData("status", e.target.value)}
                         >
-                            <option value="1">Active</option>
-                            <option value="0">InActive</option>
+                            <option defaultValue={data.status} value={APPROVED}>{APPROVED_TEXT}</option>
+                            <option defaultValue={data.status} value={PENDING}>{PENDING_TEXT}</option>
                         </SelectInput>
 
-                        <SelectInput
-                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
-                            label="Mess"
-                            name="mess_id"
-                            errors={errors.mess_id}
-                            value={data.mess_id}
-                            onChange={(e) => setData("mess_id", e.target.value)}
-                        >
-                            {messes?.length > 0 && messes.map((mess) => (
-                                <option key={mess.id} value={mess.id}>{mess.name}</option>))}
-                        </SelectInput>
 
                     </div>
                     <div className="flex items-center justify-end px-8 py-4 bg-gray-100 border-t border-gray-200">
@@ -92,7 +82,7 @@ const Edit = () => {
                             type="submit"
                             className="btn-indigo"
                         >
-                            Edit AdditionalCost
+                            Update AdditionalCost
                         </LoadingButton>
                     </div>
                 </form>

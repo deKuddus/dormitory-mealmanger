@@ -16,7 +16,7 @@ class ChefCollection extends ResourceCollection
     {
         return $this->collection->map->only(
             'id',
-            'mess_id',
+            'dormitory_id',
             'name',
             'phone',
             'address',

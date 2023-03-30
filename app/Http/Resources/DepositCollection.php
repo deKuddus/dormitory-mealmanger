@@ -16,11 +16,10 @@ class DepositCollection extends ResourceCollection
     {
         return $this->collection->map->only(
             'id',
-            'user_id',
-            'mess_id',
-            'amount',
-            'deposit_date',
-            'status'
+            'first_name',
+            'last_name',
+            'deposit',
+            'deposits',
         );
     }
 }

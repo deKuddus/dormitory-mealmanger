@@ -8,12 +8,11 @@ import Datepicker from "@/Shared/Datepicker";
 
 
 const Edit = () => {
-    const {messes,users,deposit} =   usePage().props;
+    const {users,deposit} =   usePage().props;
     const { data, setData, errors, post, processing } = useForm({
         amount: deposit.amount ||  "",
         deposit_date: deposit.deposit_date || "",
         status: deposit.status || "",
-        mess_id: deposit.mess_id || "",
         user_id: deposit.user_id || "",
         _method:'PUT'
     });
@@ -43,8 +42,20 @@ const Edit = () => {
             <div className="w-full overflow-hidden bg-white rounded shadow">
                 <form name="createForm" onSubmit={handleSubmit}>
                     <div className="flex flex-wrap p-8 -mb-8 -mr-6">
+
+                        <SelectInput
+                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/2"
+                            label="User"
+                            name="user_id"
+                            errors={errors.user_id}
+                            value={data.user_id}
+                            onChange={(e) => setData("user_id", e.target.value)}
+                        >
+                            {users?.length > 0 && users.map((user) => (<option key={user.id} defaultValue={deposit.user_id} value={user.id}>{user.first_name} {user.last_name}</option>))}
+                        </SelectInput>
+
                         <TextInput
-                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
+                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/2"
                             label="Amount"
                             name="amount"
                             type="number"
@@ -56,7 +67,7 @@ const Edit = () => {
                         />
 
                         <Datepicker
-                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
+                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/2"
                             label="Deposit Date"
                             errors={errors.deposit_date}
                             value={data.deposit_date}
@@ -65,7 +76,7 @@ const Edit = () => {
                         />
 
                         <SelectInput
-                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
+                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/2"
                             label="Status"
                             name="status"
                             errors={errors.status}
@@ -76,27 +87,7 @@ const Edit = () => {
                             <option value="0">InActive</option>
                         </SelectInput>
 
-                        <SelectInput
-                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
-                            label="Mess"
-                            name="mess_id"
-                            errors={errors.mess_id}
-                            value={data.mess_id}
-                            onChange={(e) => setData("mess_id", e.target.value)}
-                        >
-                            {messes?.length > 0 && messes.map((mess) => (<option key={mess.id} defaultValue={deposit.mess_id} value={mess.id}>{mess.name}</option>))}
-                        </SelectInput>
 
-                        <SelectInput
-                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
-                            label="User"
-                            name="user_id"
-                            errors={errors.user_id}
-                            value={data.user_id}
-                            onChange={(e) => setData("user_id", e.target.value)}
-                        >
-                            {users?.length > 0 && users.map((user) => (<option key={user.id} defaultValue={deposit.user_id} value={user.id}>{user.first_name}</option>))}
-                        </SelectInput>
 
                     </div>
                     <div className="flex items-center justify-end px-8 py-4 bg-gray-100 border-t border-gray-200">

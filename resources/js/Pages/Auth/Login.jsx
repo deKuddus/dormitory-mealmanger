@@ -1,14 +1,14 @@
 import React from "react";
-import { Head, useForm } from "@inertiajs/react";
-import Logo from "@/Shared/Logo";
+import {Head, useForm, usePage} from "@inertiajs/react";
 import LoadingButton from "@/Shared/LoadingButton";
 import TextInput from "@/Shared/TextInput";
 
 export default () => {
-    const { data, setData, errors, post, processing } = useForm({
-        email: "johndoe@example.com",
-        password: "secret",
-        remember: true,
+    const {flash, app_url} = usePage().props;
+    const {data, setData, errors, post, processing} = useForm({
+        email: "",
+        password: "",
+        remember: false,
     });
 
     function handleSubmit(e) {
@@ -16,14 +16,17 @@ export default () => {
         post(route("login.attempt"));
     }
 
+
     return (
         <div className="flex items-center justify-center min-h-screen p-6 bg-indigo-900">
-            <Head title="Login" />
+            <Head>
+                <title> Register</title>
+                <link rel="canonical" href={app_url}/>
+                <meta name="title" content="Login-WPDeveloper Dormitory"/>
+                <meta property="og:title" content="Login-WPDeveloper Dormitory"/>
+                <meta property="og:image" content="/ogimage.png"/>
+            </Head>
             <div className="w-full max-w-md">
-                <Logo
-                    className="block w-full max-w-xs mx-auto text-white fill-current text-center"
-                    height={50}
-                />
                 <form
                     onSubmit={handleSubmit}
                     className="mt-8 overflow-hidden bg-white rounded-lg shadow-xl"
@@ -32,7 +35,13 @@ export default () => {
                         <h1 className="text-3xl font-bold text-center">
                             Welcome Back!
                         </h1>
-                        <div className="w-24 mx-auto mt-6 border-b-2" />
+                        {flash && flash.registration_success && (
+                            <div
+                                className="flex items-center justify-center ">
+                                <span className="text-xl text-green-500">{flash.registration_success}</span>
+                            </div>
+                        )}
+                        <div className="w-24 mx-auto mt-6 border-b-2"/>
                         <TextInput
                             className="mt-10"
                             label="Email"

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\DormitoryIdStatic;
 use Illuminate\Foundation\Http\FormRequest;
 
 class NoticeCreateRequest extends FormRequest
@@ -24,11 +25,17 @@ class NoticeCreateRequest extends FormRequest
     public function rules()
     {
         return [
-            'title'          => ['required', 'string', 'max:255'],
-            'description'    => ['required', 'string'],
-            'mess_id'        => ['required', 'integer'],
-            'status'         => ['required', 'integer'],
-            'published_date' => ['required', 'date'],
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string'],
+            'dormitory_id' => ['required', 'integer'],
+            'status' => ['required', 'integer'],
         ];
+    }
+
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'dormitory_id' => DormitoryIdStatic::DORMITORYID
+        ]);
     }
 }

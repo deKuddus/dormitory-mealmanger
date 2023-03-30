@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\AdditionalCostType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -14,12 +15,17 @@ class AdditionalCost extends Model
     protected $fillable = [
         'description',
         'amount',
-        'mess_id',
+        'dormitory_id',
         'status'
     ];
 
-    public function mess()
+    public function dormitory()
     {
-        return $this->belongsTo(Mess::class);
+        return $this->belongsTo(Dormitory::class);
+    }
+
+    public function scopeActive($query)
+    {
+        $query->whereStatus(AdditionalCostType::APPROVED);
     }
 }

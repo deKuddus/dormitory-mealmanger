@@ -6,7 +6,7 @@ import SearchFilter from "@/Shared/SearchFilter";
 import Pagination from "@/Shared/Pagination";
 
 const Index = () => {
-    const {chefs} = usePage().props;
+    const {chefs, user_permissions} = usePage().props;
     const {
         data,
         meta: {links},
@@ -22,20 +22,23 @@ const Index = () => {
     return (
         <div>
             <h1 className="mb-8 text-3xl font-bold">Chefs</h1>
-            <div className="flex items-center justify-between mb-6">
-                <SearchFilter/>
-                <Link
-                    className="btn-indigo focus:outline-none"
-                    href={route("chef.create")}
-                >
-                    <span>Create</span>
-                    <span className="hidden md:inline">Chef</span>
-                </Link>
-            </div>
-            <div className="overflow-x-auto bg-white rounded shadow">
+            {isUserPermittedToPerformAction('access::chef-create', user_permissions) &&
+                <div className="flex items-center justify-between mb-6">
+                    <SearchFilter/>
+                    <Link
+                        className="btn-indigo focus:outline-none"
+                        href={route("chef.create")}
+                    >
+                        <span>Add New </span>
+                        <span className="hidden md:inline">Chef</span>
+                    </Link>
+                </div>
+            }
+            <div className="overflow-x-auto bg-white rounded shadow p-3">
                 <table className="w-full whitespace-nowrap">
                     <thead>
                     <tr className="font-bold text-left">
+                        <th className="px-6 pt-5 pb-4">No</th>
                         <th className="px-6 pt-5 pb-4">Name</th>
                         <th className="px-6 pt-5 pb-4">Phone</th>
                         <th className="px-6 pt-5 pb-4">Address</th>
@@ -47,60 +50,71 @@ const Index = () => {
                     </thead>
                     <tbody>
                     {data.map(
-                        ({id, name, address, phone, status}) => {
+                        ({id, name, address, phone, status}, key) => {
                             return (
                                 <tr
                                     key={id}
                                     className="hover:bg-gray-100 focus-within:bg-gray-100"
                                 >
-                                    <td className="border-t">
+                                    <td className="border">
+                                        <p
+                                            className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
+                                        >
+                                            {key + 1}
+                                        </p>
+                                    </td>
+                                    <td className="border">
                                         <p
                                             className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
                                         >
                                             {name}
                                         </p>
                                     </td>
-                                    <td className="border-t">
+                                    <td className="border">
                                         <p
                                             className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
                                         >
                                             {phone}
                                         </p>
                                     </td>
-                                    <td className="border-t">
+                                    <td className="border">
                                         <p
                                             className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
                                         >
                                             {address}
                                         </p>
                                     </td>
-                                    <td className="border-t">
+                                    <td className="border">
                                         <p
                                             className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
                                         >
                                             {status}
                                         </p>
                                     </td>
-                                    <td className="w-px border-t px-4 py-3 whitespace-nowrap">
+                                    <td className="w-px border px-4 py-3 whitespace-nowrap">
                                         <div className="flex items-center gap-4 justify-end">
-                                            <Link
-                                                href={route("chef.edit", id)}
-                                                className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
-                                            >
-                                                <Icon
-                                                    name="FaEdit"
-                                                    className="w-6 h-4 text-gray-400 fill-current"
-                                                />
-                                            </Link>
-                                            <button
-                                                onClick={() => deleteChef(id)}
-                                                className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
-                                            >
-                                                <Icon
-                                                    name="FaTrashAlt"
-                                                    className="w-6 h-4 text-gray-400 fill-current"
-                                                />
-                                            </button>
+                                            {isUserPermittedToPerformAction('access::chef-edit', user_permissions) &&
+                                                <Link
+                                                    href={route("chef.edit", id)}
+                                                    className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
+                                                >
+                                                    <Icon
+                                                        name="FaEdit"
+                                                        className="w-6 h-4 text-gray-400 fill-current"
+                                                    />
+                                                </Link>
+                                            }
+                                            {isUserPermittedToPerformAction('access::chef-delete', user_permissions) &&
+                                                <button
+                                                    onClick={() => deleteChef(id)}
+                                                    className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
+                                                >
+                                                    <Icon
+                                                        name="FaTrashAlt"
+                                                        className="w-6 h-4 text-gray-400 fill-current"
+                                                    />
+                                                </button>
+                                            }
                                         </div>
                                     </td>
                                 </tr>
@@ -109,7 +123,7 @@ const Index = () => {
                     )}
                     {data.length === 0 && (
                         <tr>
-                            <td className="px-6 py-4 border-t" colSpan="4">
+                            <td className="px-6 py-4 border" colSpan="4">
                                 No Chef found.
                             </td>
                         </tr>

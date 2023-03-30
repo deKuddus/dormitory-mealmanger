@@ -1,26 +1,32 @@
 import React from "react";
-import { Link } from "@inertiajs/react";
+import {Link} from "@inertiajs/react";
 import classNames from "classnames";
 import Icon from "./Icon";
+import {usePage} from '@inertiajs/react'
+import {isUserPermittedToPerformAction} from "@/utils";
 
-export default ({ icon, link, name }) => {
-    const isActive = route().current(link + "*");
 
-    const iconClasses = classNames("w-4 h-4 mr-2", {
-        "text-white fill-current": isActive,
-        "text-indigo-400 group-hover:text-white fill-current": !isActive,
+export default ({icon, link, name, uri_root,canShow}) => {
+    const {user_permissions} = usePage().props;
+
+    const {url} = usePage()
+    const isActive = url.startsWith('/' + uri_root.toLowerCase());
+    const itemClass = classNames({
+        "bg-background-300": isActive,
     });
+    const iconClasses = classNames("w-4 h-4 mr-2");
 
-    const textClasses = classNames({
-        "text-white": isActive,
-        "text-indigo-200 group-hover:text-white": !isActive,
-    });
+    if(!isUserPermittedToPerformAction(canShow,user_permissions)){
+        return <></>
+    }
 
     return (
-        <div className="mb-4">
-            <Link href={route(link)} className="flex items-center group py-3">
-                <Icon name={icon} className={iconClasses} />
-                <div className={textClasses}>{name}</div>
+        <div
+            className={`m-2 text-left pl-3 hover:bg-background-300 py-3 rounded ${itemClass}`}
+        >
+            <Link href={route(link)}>
+                {/*<Icon name={icon} className={iconClasses} />*/}
+                <div className="text-gray-800">{name}</div>
             </Link>
         </div>
     );

@@ -9,6 +9,7 @@ use App\Models\Contact;
 use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Permission;
 
 class DatabaseSeeder extends Seeder
 {
@@ -20,7 +21,11 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-             UserSeeder::class
+            UserSeeder::class,
+            MessSeeder::class,
+            MenuSeeder::class,
+            PermissionSeeder::class,
+            RoleSeeder::class,
         ]);
     }
 }

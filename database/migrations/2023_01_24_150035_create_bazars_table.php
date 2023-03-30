@@ -15,8 +15,8 @@ return new class () extends Migration {
         Schema::create('bazars', function (Blueprint $table) {
             $table->id();
             $table->string('description')->nullable();
-            $table->float('amount');
-            $table->foreignId('mess_id')->constrained();
+            $table->float('amount')->default(0);
+            $table->foreignId('dormitory_id')->constrained();
             $table->timestamps();
             $table->softDeletes();
         });

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\RuleStatus;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,10 +15,10 @@ class Rule extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'mess_id',
+        'dormitory_id',
         'title',
         'status',
-        'published_date'
+        'description'
     ];
 
     protected $casts = [
@@ -25,24 +26,12 @@ class Rule extends Model
     ];
     public function scopeActive($query)
     {
-        return $query->where('status', 1);
-    }
-    public function ruleItems()
-    {
-        return $this->hasMany(RuleItem::class);
+        return $query->where('status', RuleStatus::ACTIVE);
     }
 
-    public function mess()
+    public function dormitory()
     {
-        return $this->belongsTo(Mess::class);
-    }
-
-    protected function publishedDate(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => Carbon::parse($value)->format('Y-m-d'),
-            set: fn ($value) => Carbon::parse($value)->format('Y-m-d'),
-        );
+        return $this->belongsTo(Dormitory::class);
     }
 
     public function scopeFilter($query, array $filters)
@@ -60,5 +49,4 @@ class Rule extends Model
             }
         });
     }
-
 }

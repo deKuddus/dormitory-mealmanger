@@ -15,7 +15,7 @@ return new class () extends Migration {
         Schema::create('meals', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
-            $table->foreignId('mess_id')->constrained();
+            $table->foreignId('dormitory_id')->constrained();
             $table->integer('break_fast')->default(0);
             $table->integer('lunch')->default(0);
             $table->integer('dinner')->default(0);

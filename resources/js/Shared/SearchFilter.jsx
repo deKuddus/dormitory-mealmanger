@@ -47,48 +47,10 @@ export default () => {
     }
 
     return (
-        <div className="flex items-center w-full max-w-md mr-4">
-            <div className="relative flex w-full bg-white rounded shadow">
-                <div
-                    style={{ top: "100%" }}
-                    className={`absolute ${opened ? "" : "hidden"}`}
-                >
-                    <div
-                        onClick={() => setOpened(false)}
-                        className="fixed inset-0 z-20 bg-black opacity-25"
-                    ></div>
-                    <div className="relative z-30 w-64 px-4 py-6 mt-2 bg-white rounded shadow-lg">
-                        <SelectInput
-                            label="Trashed"
-                            name="trashed"
-                            value={values.trashed}
-                            onChange={handleChange}
-                        >
-                            <option value=""></option>
-                            <option value="with">With Trashed</option>
-                            <option value="only">Only Trashed</option>
-                        </SelectInput>
-                    </div>
-                </div>
-                <button
-                    onClick={() => setOpened(true)}
-                    className="px-4 border-r rounded-l md:px-6 hover:bg-gray-100 focus:outline-none focus:border-white focus:ring-2 focus:ring-indigo-400 focus:z-10"
-                >
-                    <div className="flex items-baseline">
-                        <span className="hidden text-gray-700 md:inline">
-                            Filter
-                        </span>
-                        <svg
-                            className="w-2 h-2 text-gray-700 fill-current md:ml-2"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 961.243 599.998"
-                        >
-                            <path d="M239.998 239.999L0 0h961.243L721.246 240c-131.999 132-240.28 240-240.624 239.999-.345-.001-108.625-108.001-240.624-240z" />
-                        </svg>
-                    </div>
-                </button>
+        <div className="flex items-center w-full">
+            <div className="relative flex w-48 bg-white rounded shadow">
                 <input
-                    className="relative w-full px-6 py-3 rounded-r focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                    className="relative w-48 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
                     autoComplete="off"
                     type="text"
                     name="search"

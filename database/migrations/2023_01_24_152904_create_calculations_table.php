@@ -14,12 +14,12 @@ return new class () extends Migration {
     {
         Schema::create('calculations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('mess_id')->constrained();
+            $table->foreignId('dormitory_id')->constrained();
             $table->foreignId('user_id')->constrained();
             $table->float('amount')->default(0);
             $table->dateTime('calculate_date');
             $table->string('description')->nullable();
-            $table->bigInteger('carry')->nullable();
+            $table->decimal('carry')->nullable();
             $table->boolean('status')->default(0);
             $table->float('total_meal')->nullable();
             $table->timestamps();

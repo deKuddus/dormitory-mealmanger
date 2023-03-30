@@ -4,17 +4,18 @@ import Layout from "@/Shared/Layout";
 import LoadingButton from "@/Shared/LoadingButton";
 import TextInput from "@/Shared/TextInput";
 import SelectInput from "@/Shared/SelectInput";
+import {APPROVED, APPROVED_TEXT, PENDING, PENDING_TEXT} from "@/Shared/const/additionalCostStatus";
 
 
 const Create = () => {
-    const {messes} =   usePage().props;
-    const { data, setData, errors, post, processing } = useForm({
+    const {messes} = usePage().props;
+    const {data, setData, errors, post, processing} = useForm({
         amount: "",
         description: "",
-        status: "",
+        status: PENDING,
     });
 
-    const handleSubmit = (e) =>{
+    const handleSubmit = (e) => {
         e.preventDefault();
         post(route("additional.store"));
     }
@@ -68,19 +69,8 @@ const Create = () => {
                             value={data.status}
                             onChange={(e) => setData("status", e.target.value)}
                         >
-                            <option value="1">Active</option>
-                            <option value="0">InActive</option>
-                        </SelectInput>
-
-                        <SelectInput
-                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
-                            label="Mess"
-                            name="mess_id"
-                            errors={errors.mess_id}
-                            value={data.mess_id}
-                            onChange={(e) => setData("mess_id", e.target.value)}
-                        >
-                            {messes?.length > 0 && messes.map((mess) => (<option key={mess.id} value={mess.id}>{mess.name}</option>))}
+                            <option value={APPROVED}>{APPROVED_TEXT}</option>
+                            <option value={PENDING}>{PENDING_TEXT}</option>
                         </SelectInput>
 
                     </div>
@@ -99,6 +89,6 @@ const Create = () => {
     );
 };
 
-Create.layout = (page) => <Layout title="Create Additional Cost" children={page} />;
+Create.layout = (page) => <Layout title="Create Additional Cost" children={page}/>;
 
 export default Create;

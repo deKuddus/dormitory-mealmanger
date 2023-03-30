@@ -1,17 +1,18 @@
 import React from "react";
-import { Link, usePage, useForm, router, Head } from "@inertiajs/react";
+import {Head, Link, router, useForm, usePage} from "@inertiajs/react";
 import Layout from "@/Shared/Layout";
-import DeleteButton from "@/Shared/DeleteButton";
 import LoadingButton from "@/Shared/LoadingButton";
 import TextInput from "@/Shared/TextInput";
 import SelectInput from "@/Shared/SelectInput";
-import FileInput from "@/Shared/FileInput";
-import TrashedMessage from "@/Shared/TrashedMessage";
+import Select from "react-select";
+import {isUserPermittedToPerformAction} from "@/utils";
+import ReactQuill from "react-quill";
+import 'react-quill/dist/quill.snow.css';
 
 const Edit = () => {
-    const { user } = usePage().props;
-    const { data, setData, errors, post, processing } = useForm({
-        first_name: user.last_name || "",
+    const {user, roles, user_permissions} = usePage().props;
+    const {data, setData, errors, post, processing} = useForm({
+        first_name: user.first_name || "",
         last_name: user.last_name || "",
         email: user.email || "",
         password: "",
@@ -23,34 +24,40 @@ const Edit = () => {
         institution: user.institution || "",
         company: user.company || "",
         status: user.status || "0",
-
-        // NOTE: When working with Laravel PUT/PATCH requests and FormData
-        // you SHOULD send POST request and fake the PUT request like this.
+        roles: user.roles && user.roles.map(({id, name}, key) => (id)) || [],
         _method: "PUT",
+        is_admin: user.is_admin,
+        note: user.note,
     });
 
-    const  handleSubmit = (e)  =>{
+    const handleSubmit = (e) => {
         e.preventDefault();
 
         // NOTE: We are using POST method here, not PUT/PACH. See comment above.
         post(route("user.update", user.id));
     }
 
-    const destroy = () =>{
+    const destroy = () => {
         if (confirm("Are you sure you want to delete this user?")) {
             router.delete(route("user.destroy", user.id));
         }
     }
 
-    const restore = () =>{
+    const restore = () => {
         if (confirm("Are you sure you want to restore this user?")) {
             router.put(route("user.restore", user.id));
         }
     }
 
+    const options = roles && roles.length ? roles.map((row) => ({
+        value: row.id,
+        label: `${row.name}`
+    })) : [];
+
+
     return (
         <div>
-            <Head title={`${data.first_name} ${data.last_name}`} />
+            <Head title={`${data.first_name} ${data.last_name}`}/>
             <div className="flex justify-start max-w-lg mb-8">
                 <h1 className="text-3xl font-bold">
                     <Link
@@ -95,17 +102,19 @@ const Edit = () => {
                             value={data.email}
                             onChange={(e) => setData("email", e.target.value)}
                         />
-                        <TextInput
-                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
-                            label="Password"
-                            name="password"
-                            type="password"
-                            errors={errors.password}
-                            value={data.password}
-                            onChange={(e) =>
-                                setData("password", e.target.value)
-                            }
-                        />
+                        {isUserPermittedToPerformAction('access::password-change', user_permissions) &&
+                            (<TextInput
+                                className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
+                                label="Password"
+                                name="password"
+                                type="password"
+                                errors={errors.password}
+                                value={data.password}
+                                onChange={(e) =>
+                                    setData("password", e.target.value)
+                                }
+                            />)
+                        }
                         <TextInput
                             className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
                             label="Phone"
@@ -188,15 +197,45 @@ const Edit = () => {
                             <option value="1">Active</option>
                             <option value="0">InActive</option>
                         </SelectInput>
-                        {/*<FileInput*/}
-                        {/*    className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"*/}
-                        {/*    label="Photo"*/}
-                        {/*    name="photo"*/}
-                        {/*    accept="image/*"*/}
-                        {/*    errors={errors.photo}*/}
-                        {/*    value={data.photo}*/}
-                        {/*    onChange={(photo) => setData("photo", photo)}*/}
-                        {/*/>*/}
+
+                        <SelectInput
+                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
+                            label="Is Admin"
+                            name="is_admin"
+                            errors={errors.is_admin}
+                            value={data.is_admin}
+                            onChange={(e) => setData("is_admin", e.target.value)}
+                        >
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </SelectInput>
+
+                        <div className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3">
+                            <label className="form-label">Roles</label>
+                            <Select
+                                isMulti
+                                isClearable
+                                classNamePrefix={"react-select"}
+                                options={options}
+                                value={options.filter((option) => data.roles.includes(option.value))}
+                                onChange={(selected) =>
+                                    setData('roles',
+                                        (selected && selected.map((select) => select.value)) || []
+                                    )
+                                }
+                            />
+                            {errors && errors.roles && <div className="form-error">{errors.roles}</div>}
+                        </div>
+
+
+                        {isUserPermittedToPerformAction('access::user-note-edit', user_permissions) &&
+                            <div className="w-full pb-8 pr-6 mb-12">
+                                <label className="form-label">Notes</label>
+                                <ReactQuill className="h-48 " theme="snow" value={data.note}
+                                            onChange={(e) => setData('note', e)}/>
+                            </div>
+                        }
+
                     </div>
                     <div className="flex items-center justify-end px-8 py-4 bg-gray-100 border-t border-gray-200">
                         <LoadingButton
@@ -204,7 +243,7 @@ const Edit = () => {
                             type="submit"
                             className="btn-indigo"
                         >
-                            Create User
+                            Update User
                         </LoadingButton>
                     </div>
                 </form>
@@ -213,6 +252,6 @@ const Edit = () => {
     );
 };
 
-Edit.layout = (page) => <Layout children={page} />;
+Edit.layout = (page) => <Layout children={page}/>;
 
 export default Edit;

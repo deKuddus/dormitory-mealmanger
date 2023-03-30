@@ -14,9 +14,9 @@ class SeatController extends Controller
 {
     public function index()
     {
-        $requestParam = \request()->all('search', 'trashed');
+        $this->authorize('showSeat',Seat::class);
+
         return Inertia::render('Seat/Index', [
-            'filters' => $requestParam,
             'seats' => new SeatCollection(
                 Seat::query()
                     ->orderBy('created_at', 'desc')
@@ -28,13 +28,17 @@ class SeatController extends Controller
 
     public function create()
     {
+        $this->authorize('createSeat',Seat::class);
+
         return Inertia::render('Seat/Create',[
-            ...$this->getRoomAndUser()
+            ...$this->getRoom()
         ]);
     }
 
     public function store(SeatRequest $request)
     {
+        $this->authorize('createSeat',Seat::class);
+
         Seat::create(
             $request->validated()
         );
@@ -50,14 +54,18 @@ class SeatController extends Controller
 
     public function edit(Seat $seat)
     {
+        $this->authorize('editSeat',Seat::class);
+
         return Inertia::render('Seat/Edit', [
             'seat' => $seat,
-            ...$this->getRoomAndUser()
+            ...$this->getRoom()
         ]);
     }
 
     public function update(SeatRequest $request, Seat $seat)
     {
+        $this->authorize('editSeat',Seat::class);
+
         $seat->update(
             $request->validated()
         );
@@ -67,6 +75,8 @@ class SeatController extends Controller
 
     public function destroy(Seat $seat)
     {
+        $this->authorize('deleteSeat',Seat::class);
+
         $seat->delete();
 
         return to_route('seat.index');
@@ -78,10 +88,9 @@ class SeatController extends Controller
         return redirect()->back();
     }
 
-    private function getRoomAndUser(){
+    private function getRoom(){
         return [
             'rooms' => Room::get(['id', 'name'])->toArray(),
-            'users' => User::get(['id', 'first_name'])->toArray(),
         ];
     }
 }

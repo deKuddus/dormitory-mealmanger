@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\UserStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -13,11 +14,14 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\UploadedFile;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     use HasFactory;
     use Notifiable;
+    use HasRoles;
+
     // use HasApiTokens;
     use SoftDeletes;
 
@@ -34,6 +38,8 @@ class User extends Authenticatable
         'institution',
         'company',
         'status',
+        'is_admin',
+        'note'
     ];
     protected $perPage = 10;
 
@@ -44,9 +50,14 @@ class User extends Authenticatable
             : parent::resolveRouteBinding($value);
     }
 
+    public function dormitory()
+    {
+        return $this->belongsToMany(Dormitory::class, 'mess_users', 'user_id', 'dormitory_id');
+    }
+
     public function getNameAttribute()
     {
-        return $this->first_name.' '.$this->last_name;
+        return $this->first_name . ' ' . $this->last_name;
     }
 
     public function setPasswordAttribute($password)
@@ -88,9 +99,9 @@ class User extends Authenticatable
     {
         $query->when($filters['search'] ?? null, function ($query, $search) {
             $query->where(function ($query) use ($search) {
-                $query->where('first_name', 'like', '%'.$search.'%')
-                    ->orWhere('last_name', 'like', '%'.$search.'%')
-                    ->orWhere('email', 'like', '%'.$search.'%');
+                $query->where('first_name', 'like', '%' . $search . '%')
+                    ->orWhere('last_name', 'like', '%' . $search . '%')
+                    ->orWhere('email', 'like', '%' . $search . '%');
             });
         })->when($filters['trashed'] ?? null, function ($query, $trashed) {
             if ($trashed === 'with') {
@@ -99,5 +110,40 @@ class User extends Authenticatable
                 $query->onlyTrashed();
             }
         });
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', UserStatus::ACTIVE);
+    }
+    public function scopeInActive($query)
+    {
+        return $query->where('status', UserStatus::INACTIVE);
+    }
+
+    public function deposits()
+    {
+        return $this->hasMany(Deposit::class);
+    }
+
+
+    public function meals()
+    {
+        return $this->hasMany(Meal::class);
+    }
+
+    public function isAbleToAccessDashboard()
+    {
+        return $this->is_admin === 1;
+    }
+
+    public function isAdmin()
+    {
+        return $this->isAbleToAccessDashboard();
+    }
+
+    public function isActive()
+    {
+        return $this->status === UserStatus::ACTIVE;
     }
 }
