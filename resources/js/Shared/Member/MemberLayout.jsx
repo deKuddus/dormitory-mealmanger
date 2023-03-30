@@ -5,6 +5,7 @@ import FlashMessages from "@/Shared/FlashMessages";
 import TopHeader from "@/Shared/TopHeader";
 import BottomHeader from "@/Shared/BottomHeader";
 import MenuList from "@/Shared/Member/MenuList";
+import MemberTopHeader from "@/Shared/Member/MemberTopHeader";
 
 export default function Layout({ title, children }) {
     return (
@@ -13,7 +14,7 @@ export default function Layout({ title, children }) {
             <div className="flex flex-col">
                 <div className="flex flex-col h-screen">
                     <div className="md:flex">
-                        <TopHeader />
+                        <MemberTopHeader />
                         <BottomHeader />
                     </div>
                     <div className="flex flex-grow overflow-hidden">

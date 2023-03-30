@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\BazarStatus;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,30 +17,31 @@ class Bazar extends Model
     protected $fillable = [
         'description',
         'amount',
-        'mess_id',
+        'dormitory_id',
         'status',
         'bazar_schedule_id'
     ];
 
-    public function mess()
+    public function dormitory()
     {
-        return $this->belongsTo(Mess::class);
+        return $this->belongsTo(Dormitory::class);
     }
 
 
-    public function scopeActive($query){
-        return $query->whereStatus(1);
+    public function scopeActive($query)
+    {
+        return $query->whereStatus(BazarStatus::APPROVED);
     }
 
-    protected function createdAt():Attribute
+    protected function createdAt(): Attribute
     {
         return Attribute::make(
             get: fn ($value) => Carbon::parse($value)->format('Y-m-d'),
         );
     }
 
-    public function bazarSchedule(){
-        return $this->belongsTo(BazarSchedule::class,'bazar_schedule_id','id');
+    public function bazarSchedule()
+    {
+        return $this->belongsTo(BazarSchedule::class, 'bazar_schedule_id', 'id');
     }
-
 }

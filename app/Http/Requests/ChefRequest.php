@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\DormitoryIdStatic;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ChefRequest extends FormRequest
@@ -24,11 +25,18 @@ class ChefRequest extends FormRequest
     public function rules()
     {
         return [
-            'mess_id' => 'required|integer',
+            'dormitory_id' => 'required|integer',
             'name'    => 'required|string|max:255',
             'phone'   => 'required|string|max:20',
             'address' => 'nullable|string|max:300',
             'status'  => 'required|boolean'
         ];
+    }
+
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'dormitory_id' => DormitoryIdStatic::DORMITORYID
+        ]);
     }
 }

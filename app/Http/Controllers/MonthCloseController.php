@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\AdditionalCostType;
+use App\Enums\BazarStatus;
+use App\Enums\MealStatus;
+use App\Enums\DormitoryIdStatic;
 use App\Models\AdditionalCost;
 use App\Models\Bazar;
 use App\Models\Calculation;
@@ -14,58 +18,87 @@ class MonthCloseController extends Controller
 {
     public function __invoke()
     {
-        $messId = 1;
+        $messId = DormitoryIdStatic::DORMITORYID;
         $bazar = Bazar::query()
-            ->where('mess_id', $messId)
+            ->where('dormitory_id', $messId)
             ->whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)
             ->sum('amount');
         $additional = AdditionalCost::query()
-            ->where('mess_id', $messId)
+            ->where('dormitory_id', $messId)
             ->whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)
             ->sum('amount');
 
         $meal = Meal::query()
-            ->where('mess_id', $messId)
+            ->where('dormitory_id', $messId)
             ->whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)
             ->select(DB::raw("SUM(break_fast + lunch + dinner) as total_meals"))
             ->first();
 
-        $member = User::query()->with('mess', function ($q) use ($messId) {
-            $q->where('mess_id', $messId);
+        $member = User::query()->with('dormitory', function ($q) use ($messId) {
+            $q->where('dormitory_id', $messId);
         })->active()->count();
 
-        $mealCost = round($bazar / $meal->total_meals,2);
+        $mealCost = round($bazar / $meal->total_meals, 2);
 
-        $additionalCost = round($additional / $member,2);
+        $additionalCost = round($additional / $member, 2);
 
         $this->getUserAndMeal($messId)->each(function ($user) use ($messId, $mealCost, $additionalCost) {
+            $cost = count($user->meals) ? round((($mealCost * (int)$user->meals[0]->total_meals) + $additionalCost), 2) : $additionalCost;
             $insert = [
-                'mess_id' => $messId,
+                'deposit_time_of_calculation' => $user->deposit ?? 0,
+                'dormitory_id' => $messId,
                 'user_id' => $user->id,
-                'amount' => count($user->meals) ? ($mealCost * (int)$user->meals[0]->total_meals) + $additionalCost : $additionalCost,
+                'amount' => $cost,
                 'description' => 'month closed for ' . now()->format('F, d Y') . '. Meal cost ' . $mealCost . ' and Additional cost ' . $additionalCost,
                 'total_meal' => count($user->meals) ? $user->meals[0]->total_meals : 0,
-                'calculate_date' => now()
+                'calculate_date' => now(),
+                'carry' => $cost > $user->deposit ? $user->deposit - $cost : $user->deposit,
+                'meal_rate' => $mealCost,
             ];
-            dump($insert);
-//            Calculation::query()->create($insert);
+            Calculation::query()->create($insert);
+            $user->decrement('deposit', $cost);
         });
 
-dd(4);
+        // update all additional status to 2 , that means closed.
+        AdditionalCost::query()
+            ->where('dormitory_id', $messId)
+            ->whereStatus(AdditionalCostType::APPROVED)
+            ->whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->update(['status' => AdditionalCostType::CLOSED]);
+
+        // update all meal status to 2 , that means closed.
+        Meal::query()
+            ->where('dormitory_id', $messId)
+            ->whereStatus(MealStatus::PENDING)
+            ->whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->update(['status' => MealStatus::CLOSED]);
+
+        // update all bazar status to 2 , that means closed.
+        Bazar::query()
+            ->where('dormitory_id', $messId)
+            ->whereStatus(BazarStatus::APPROVED)
+            ->whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->update(['status' => BazarStatus::CLOSED]);
+
+        dd(4);
         return '';
     }
 
     private function getUserAndMeal($messId)
     {
         return User::query()->with([
-            'mess' => function ($q) use ($messId) {
-                $q->where('mess_id', $messId);
+            'dormitory' => function ($q) use ($messId) {
+                $q->where('dormitory_id', $messId);
             },
             'meals' => function ($query) use ($messId) {
-                $query->where('mess_id', $messId)
+                $query->where('dormitory_id', $messId)
+                    ->whereStatus(MealStatus::PENDING)
                     ->whereMonth('created_at', now()->month)
                     ->whereYear('created_at', now()->year)
                     ->select('user_id', DB::raw("SUM(break_fast + lunch + dinner) as total_meals"))

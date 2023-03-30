@@ -2,11 +2,11 @@ import React from "react";
 import {Link, router, usePage} from "@inertiajs/react";
 import Layout from "@/Shared/Layout";
 import Icon from "@/Shared/Icon";
-import SearchFilter from "@/Shared/SearchFilter";
 import Pagination from "@/Shared/Pagination";
+import {isUserPermittedToPerformAction} from "@/utils";
 
 const Index = () => {
-    const {users} = usePage().props;
+    const {users, totalMemberActive, totalMemberInActive, user_permissions} = usePage().props;
     const {
         data,
         meta: {links},
@@ -42,27 +42,28 @@ const Index = () => {
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
                 <div className="flex items-center">
                     <span className="text-xl p-3">
-                        Total Member: <span className="font-bold">50</span>
+                        Total Member: <span className="font-bold">{totalMemberActive + totalMemberInActive}</span>
                     </span>
                     <span className="text-xl p-3">
                         Active :{" "}
                         <span className="font-bold text-buttonColor-400">
-                            50
+                            {totalMemberActive}
                         </span>
                     </span>
                     <span className="text-xl p-3">
                         Inactive :{" "}
-                        <span className="font-bold text-red-600">50</span>
+                        <span className="font-bold text-red-600">{totalMemberInActive}</span>
                     </span>
                 </div>
                 <div className="flex items-center">
-                    <SearchFilter/>
-                    <Link
-                        className="p-1 text-xs font-medium text-center text-white bg-buttonColor-400 rounded focus:outline-none"
-                        href={route("user.create")}
-                    >
-                        <span>Create User</span>
-                    </Link>
+                    {isUserPermittedToPerformAction('access::user-create', user_permissions) &&
+                        <Link
+                            className="p-1 text-xs font-medium text-center text-white bg-buttonColor-400 rounded focus:outline-none"
+                            href={route("user.create")}
+                        >
+                            <span>Create New User</span>
+                        </Link>
+                    }
                 </div>
             </div>
             <div className="overflow-x-auto bg-white rounded shadow p-3">
@@ -74,7 +75,7 @@ const Index = () => {
                         <th className="px-6 pt-5 pb-4 border">Mobile</th>
                         <th className="px-6 pt-5 pb-4 border">Email</th>
                         <th className="px-6 pt-5 pb-4 border">Status</th>
-                        <th className="px-6 pt-5 pb-4 border">Access Dashboard</th>
+                        <th className="px-6 pt-5 pb-4 border">Is Admin</th>
                         <th className="px-6 pt-5 pb-4 border">Action</th>
                     </tr>
                     </thead>
@@ -115,7 +116,7 @@ const Index = () => {
                                 </td>
                                 <td className="border w-px border-t p-3 whitespace-nowrap">
                                     <div className="flex items-center gap-2 justify-end">
-                                        <Link
+                                        {isUserPermittedToPerformAction('access::user-edit', user_permissions) && <Link
                                             href={route("user.edit", id)}
                                             className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
                                         >
@@ -124,24 +125,19 @@ const Index = () => {
                                                 className="w-6 h-4 text-gray-400 hover:text-buttonColor-400 fill-current"
                                             />
                                         </Link>
-                                        <Link
-                                            href={route("user.show", id)}
-                                            className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
-                                        >
-                                            <Icon
-                                                name="FaEye"
-                                                className="w-6 h-4 text-gray-400 hover:text-blue-400 fill-current"
-                                            />
-                                        </Link>
-                                        <button
-                                            onClick={() => deleteUser(id)}
-                                            className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
-                                        >
-                                            <Icon
-                                                name="FaTrashAlt"
-                                                className="w-6 h-4 text-gray-400 hover:text-red-600 fill-current"
-                                            />
-                                        </button>
+                                        }
+
+                                        {isUserPermittedToPerformAction('access::user-delete', user_permissions) && (
+                                            <button
+                                                onClick={() => deleteUser(id)}
+                                                className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
+                                            >
+                                                <Icon
+                                                    name="FaTrashAlt"
+                                                    className="w-6 h-4 text-gray-400 hover:text-red-600 fill-current"
+                                                />
+                                            </button>
+                                        )}
                                     </div>
                                 </td>
                             </tr>

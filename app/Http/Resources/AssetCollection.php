@@ -20,7 +20,7 @@ class AssetCollection extends ResourceCollection
             'description',
             'purchase_date',
             'status',
-            'mess_id',
+            'dormitory_id',
         );
     }
 }

@@ -6,7 +6,7 @@ import TextInput from "@/Shared/TextInput";
 import {value} from "lodash/seq";
 
 
-const Create = () => {
+const Edit = () => {
     const {role, permissions} = usePage().props;
     const {data, setData, errors, post, processing} = useForm({
         name: role.name,
@@ -119,6 +119,6 @@ const Create = () => {
     );
 };
 
-Create.layout = (page) => <Layout title="Create Role" children={page}/>;
+Edit.layout = (page) => <Layout title="Create Role" children={page}/>;
 
-export default Create;
+export default Edit;

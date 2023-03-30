@@ -14,7 +14,7 @@ return new class () extends Migration {
     {
         Schema::create('calculations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('mess_id')->constrained();
+            $table->foreignId('dormitory_id')->constrained();
             $table->foreignId('user_id')->constrained();
             $table->float('amount')->default(0);
             $table->dateTime('calculate_date');

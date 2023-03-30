@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\DormitoryIdStatic;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AdditionalCostRequest extends FormRequest
@@ -26,7 +27,7 @@ class AdditionalCostRequest extends FormRequest
         return [
             'description' => 'nullable|string|max:255',
             'amount' => 'numeric|required|gt:0',
-            'mess_id' => 'required|integer',
+            'dormitory_id' => 'required|integer',
             'status' => 'integer|required',
         ];
     }
@@ -34,7 +35,7 @@ class AdditionalCostRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'mess_id' => 1,
+            'dormitory_id' => DormitoryIdStatic::DORMITORYID,
             'status' => (int)$this->status
         ]);
     }

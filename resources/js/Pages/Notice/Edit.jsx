@@ -12,7 +12,7 @@ const Edit = () => {
     const { data, setData, errors, post, processing } = useForm({
         title: notice.title || "",
         description: notice.description || "",
-        status: notice.status || "",
+        status: notice.status ,
         published_date: notice.published_date || "",
         _method: "PUT",
     });
@@ -62,8 +62,8 @@ const Edit = () => {
                             value={data.status}
                             onChange={(e) => setData("status", e.target.value)}
                         >
-                            <option value="1">Active</option>
-                            <option value="0">InActive</option>
+                            <option value="1" defaultValue={data.status}>Active</option>
+                            <option value="0" defaultValue={data.status}>InActive</option>
                         </SelectInput>
 
                         <ReactQuill className="h-48 pr-6 mb-12 w-full" theme="snow" value={data.description} onChange={(e)=>setData('description',e)} />

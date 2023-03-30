@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\DormitoryIdStatic;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AssetRequest extends FormRequest
@@ -28,14 +29,14 @@ class AssetRequest extends FormRequest
         'description' => 'nullable|string',
         'purchase_date' => 'nullable|date',
         'status' => 'required|integer',
-        'mess_id' => 'required|integer',
+        'dormitory_id' => 'required|integer',
         ];
     }
 
     protected function prepareForValidation()
     {
         $this->merge([
-            'mess_id' =>  1,
+            'dormitory_id' =>  DormitoryIdStatic::DORMITORYID,
         ]);
     }
 }

@@ -20,7 +20,7 @@ class Asset extends Model
         'description',
         'purchase_date',
         'status',
-        'mess_id'
+        'dormitory_id'
     ];
 
     protected function purchaseDate(): Attribute
@@ -30,8 +30,8 @@ class Asset extends Model
             set: fn ($value) => Carbon::parse($value)->format('Y-m-d'),
         );
     }
-    public function mess()
+    public function dormitory()
     {
-        return $this->belongsTo(Mess::class);
+        return $this->belongsTo(Dormitory::class);
     }
 }

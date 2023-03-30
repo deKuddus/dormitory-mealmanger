@@ -78,7 +78,7 @@ export default function Home() {
                         <main className="w-full lg:col-span-3" role="main">
                             <section>
                                 <div className="gap-3 grid grid-cols-1 p-4">
-                                    <div className="rounded-xl aspect-[280/300] bg-zinc-100 filter  overflow-hidden">
+                                    <div className="rounded-xl bg-zinc-100 filter  overflow-hidden">
                                         <img
                                             alt="#" className="h-full object-cover" decoding="async" height="4209"
                                             loading="lazy"

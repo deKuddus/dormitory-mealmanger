@@ -2,12 +2,12 @@ import React from "react";
 import {Link, router, usePage} from "@inertiajs/react";
 import Layout from "@/Shared/Layout";
 import Icon from "@/Shared/Icon";
-import SearchFilter from "@/Shared/SearchFilter";
 import Pagination from "@/Shared/Pagination";
 import {APPROVED, PENDING} from "@/Shared/const/additionalCostStatus";
+import {isUserPermittedToPerformAction} from "@/utils";
 
 const Index = () => {
-    const {additionals} = usePage().props;
+    const {additionals,user_permissions} = usePage().props;
     const {
         data,
         meta: {links},
@@ -24,13 +24,14 @@ const Index = () => {
         <div>
             <h1 className="mb-8 text-3xl font-bold">AdditionalCosts</h1>
             <div className="flex items-center justify-end mb-6">
-                <Link
+                {isUserPermittedToPerformAction('access::additional-create', user_permissions) && <Link
                     className="btn-indigo focus:outline-none"
                     href={route("additional.create")}
                 >
                     <span>Add New</span>
                     <span className="hidden md:inline"> Cost</span>
                 </Link>
+                }
             </div>
             <div className="overflow-x-auto bg-white rounded shadow p-3">
                 <table className="w-full whitespace-nowrap">
@@ -75,31 +76,35 @@ const Index = () => {
                                     </td>
                                     <td className="border">
                                         <p
-                                            className={`flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none ${status === APPROVED ? 'text-green-500' : status === PENDING ? 'text-red-600' : ''}`}
+                                            className={`flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none ${status === APPROVED ? 'text-green-500' : status === PENDING ? 'text-red-600' : 'text-blue-400'}`}
                                         >
                                             {status === APPROVED ? 'Approved' : status === PENDING ? 'Pending' : 'Closed'}
                                         </p>
                                     </td>
                                     <td className="w-px border px-4 py-3 whitespace-nowrap">
                                         <div className="flex items-center gap-4 justify-end">
-                                            <Link
-                                                href={route("additional.edit", id)}
-                                                className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
-                                            >
-                                                <Icon
-                                                    name="FaEdit"
-                                                    className="w-6 h-4 text-gray-400 fill-current"
-                                                />
-                                            </Link>
-                                            <button
-                                                onClick={() => deleteAdditionalCost(id)}
-                                                className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
-                                            >
-                                                <Icon
-                                                    name="FaTrashAlt"
-                                                    className="w-6 h-4 text-gray-400 fill-current"
-                                                />
-                                            </button>
+                                            {/*<Link*/}
+                                            {/*    href={route("additional.edit", id)}*/}
+                                            {/*    className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"*/}
+                                            {/*>*/}
+                                            {/*    <Icon*/}
+                                            {/*        name="FaEdit"*/}
+                                            {/*        className="w-6 h-4 text-gray-400 fill-current"*/}
+                                            {/*    />*/}
+                                            {/*</Link>*/}
+                                            {status !== 2 ? <>
+                                                {isUserPermittedToPerformAction('access::additional-delete', user_permissions) &&
+                                                    <button
+                                                        onClick={() => deleteAdditionalCost(id)}
+                                                        className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
+                                                    >
+                                                        <Icon
+                                                            name="FaTrashAlt"
+                                                            className="w-6 h-4 text-gray-400 fill-current"
+                                                        />
+                                                    </button>
+                                                }
+                                            </> : (<span className="text-3xl">🫣</span>)}
                                         </div>
                                     </td>
                                 </tr>
@@ -108,7 +113,7 @@ const Index = () => {
                     )}
                     {data.length === 0 && (
                         <tr>
-                            <td className="px-6 py-4 border" colSpan="4">
+                            <td className="px-6 py-4 border" colSpan="5">
                                 No AdditionalCost found.
                             </td>
                         </tr>
@@ -119,8 +124,9 @@ const Index = () => {
             <Pagination links={links}/>
         </div>
     );
-};
+}
+    ;
 
-Index.layout = (page) => <Layout title="Additional Cost" children={page}/>;
+    Index.layout = (page) => <Layout title="Additional Cost" children={page}/>;
 
-export default Index;
+    export default Index;

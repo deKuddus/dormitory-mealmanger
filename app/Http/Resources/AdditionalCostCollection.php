@@ -18,7 +18,7 @@ class AdditionalCostCollection extends ResourceCollection
             'id',
             'description',
             'amount',
-            'mess_id',
+            'dormitory_id',
             'status'
         );
     }

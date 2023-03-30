@@ -34,7 +34,7 @@ class DepositController extends Controller
                             DB::raw('SUM(CASE WHEN status = 0 THEN amount ELSE 0 END) as pending_amount'),
                         )->groupBy('user_id');
                     })
-                    ->select('id', 'first_name', 'last_name')
+                    ->select('id', 'first_name', 'deposit','last_name')
                     ->orderBy('created_at', 'desc')
                     ->paginate()
                     ->appends(request()->all())
@@ -61,7 +61,7 @@ class DepositController extends Controller
         );
 
         $deposit->user()->increment('deposit', $deposit->amount);
-        $deposit->mess()->increment('deposit', $deposit->amount);
+        $deposit->dormitory()->increment('deposit', $deposit->amount);
 
 
         return redirect()->back()->with('success', 'New Deposit Added');
@@ -70,7 +70,6 @@ class DepositController extends Controller
     public function show($userId)
     {
         $this->authorize('showDeposit',Deposit::class);
-
 
         return Inertia::render('Deposit/Show', [
             'user' => User::find($userId),
@@ -108,7 +107,7 @@ class DepositController extends Controller
         $this->authorize('deleteDeposit',Deposit::class);
 
         $deposit->user()->decrement('deposit', $deposit->amount);
-        $deposit->mess()->decrement('deposit', $deposit->amount);
+        $deposit->dormitory()->decrement('deposit', $deposit->amount);
         $deposit->delete();
 
         return redirect()->back()->with('success', 'Deposit deleted successfully');
@@ -129,7 +128,7 @@ class DepositController extends Controller
         $deposit->status = DepositStatus::APPROVED;
         $deposit->save();
         $deposit->user()->increment('deposit', $deposit->amount);
-        $deposit->mess()->increment('deposit', $deposit->amount);
+        $deposit->dormitory()->increment('deposit', $deposit->amount);
         return redirect()->back()->with('success', 'Deposit approved');
     }
 
@@ -156,7 +155,7 @@ class DepositController extends Controller
         );
 
         $user->decrement('deposit', $deposit->amount);
-        $deposit->mess()->decrement('deposit', $deposit->amount);
+        $deposit->dormitory()->decrement('deposit', $deposit->amount);
 
         return redirect()->back()->with('success', 'New Withdrawal added');
     }

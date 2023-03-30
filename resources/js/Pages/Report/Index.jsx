@@ -5,13 +5,13 @@ import SelectInput from "@/Shared/SelectInput";
 import moment from 'moment';
 import {currentYearMontList} from "@/utils";
 import Icon from "@/Shared/Icon";
+import {isUserPermittedToPerformAction} from "@/utils";
 
 const Index = () => {
-    const {users, balance, member, additional, bazar, totalMeal} = usePage().props;
+    const {users, balance, user_permissions, additional, bazar, totalMeal, fixedCost, mealCost} = usePage().props;
     const [currentMonth, setCurrentMonth] = useState(moment().format('MMMM-YYYY'));
 
-    const mealCost = parseFloat(bazar / totalMeal.total_meals).toFixed(2);
-    const fixedCost = parseFloat(additional / member).toFixed(2);
+
     const dateOptions = currentYearMontList();
 
     const handleDateChange = (value) => {
@@ -68,7 +68,7 @@ const Index = () => {
                                     className="flex flex-col items-center space-x-2 rtl:space-x-reverse text-xl font-medium ">
                                     <span className="text-buttonColor-400">Meal Charge: {mealCost} BDT </span>
                                     <span
-                                        className="text-gray-900 text-xl font-bold ">Total Meal : {totalMeal.total_meals} </span>
+                                        className="text-gray-900 text-xl font-bold ">Total Meal : {totalMeal} </span>
                                     <span
                                         className="text-gray-900 text-xl font-bold">Fixed Cost : {fixedCost} BDT</span>
                                 </div>
@@ -97,7 +97,9 @@ const Index = () => {
                         <th className="px-6 pt-5 pb-4 border">Total Deposit</th>
                         <th className="px-6 pt-5 pb-4 border">Total Cost</th>
                         <th className="px-6 pt-5 pb-4 border">Due (BDT)</th>
-                        <th className="px-6 pt-5 pb-4 border">Action</th>
+                        {isUserPermittedToPerformAction('access::meal-show', user_permissions) &&
+                            <th className="px-6 pt-5 pb-4 border">Action</th>
+                        }
                     </tr>
                     </thead>
                     <tbody>
@@ -137,20 +139,22 @@ const Index = () => {
                                 <DueText deposit={deposits} cost={mealCost * meals_total}/>
                             </td>
 
+                            {isUserPermittedToPerformAction('access::meal-show', user_permissions) &&
+                                <td className="border w-px border-t p-3 whitespace-nowrap">
+                                    <div className="flex items-center gap-2 justify-end">
 
-                            <td className="border w-px border-t p-3 whitespace-nowrap">
-                                <div className="flex items-center gap-2 justify-end">
-                                    <Link
-                                        href={route('meals.show',id)}
-                                        className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
-                                    >
-                                        <Icon
-                                            name="FaEye"
-                                            className="w-6 h-4 text-gray-400 hover:text-buttonColor-400 fill-current cursor-pointer"
-                                        />
-                                    </Link>
-                                </div>
-                            </td>
+                                        <Link
+                                            href={route('meals.show', id)}
+                                            className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
+                                        >
+                                            <Icon
+                                                name="FaEye"
+                                                className="w-6 h-4 text-gray-400 hover:text-buttonColor-400 fill-current cursor-pointer"
+                                            />
+                                        </Link>
+                                    </div>
+                                </td>
+                            }
                         </tr>
                     )) : (
                         <tr>
@@ -167,14 +171,14 @@ const Index = () => {
 };
 
 const DueText = ({deposit, cost}) => {
-    let result = parseFloat(deposit - cost).toFixed(2);
-    if (result < 0) {
+
+    if (cost > deposit) {
         return (<p className="flex items-center text-red-400  px-6 py-4 focus:text-indigo-700 focus:outline-none">
-            {result}
+            {parseFloat(deposit - cost).toFixed(2)}
         </p>);
     } else {
         return (<p className="flex items-center text-green-400 px-6 py-4 focus:text-indigo-700 focus:outline-none">
-            {result}
+            0
         </p>);
     }
 }

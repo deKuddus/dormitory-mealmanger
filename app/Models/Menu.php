@@ -14,15 +14,15 @@ class Menu extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'mess_id',
+        'dormitory_id',
         'break_fast',
         'lunch',
         'dinner',
         'menu_date'
     ];
 
-    public function mess()
+    public function dormitory()
     {
-        return $this->belongsTo(Mess::class);
+        return $this->belongsTo(Dormitory::class);
     }
 }

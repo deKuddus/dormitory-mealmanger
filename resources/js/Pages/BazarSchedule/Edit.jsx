@@ -12,7 +12,7 @@ const Edit = () => {
     const {data, setData, errors, post, processing} = useForm({
         bazar_date: bazarSchedule.bazar_date || "",
         users_id: bazarSchedule.users && bazarSchedule.users.map(({id,first_name,last_name},key)=>(id)) || [],
-        status: bazarSchedule.status || 0,
+        status: bazarSchedule.status,
         _method: 'PUT'
     });
 
@@ -73,8 +73,8 @@ const Edit = () => {
                             value={data.status}
                             onChange={(e) => setData("status", e.target.value)}
                         >
-                            <option value="1" defaultValue={bazarSchedule.status}>Active</option>
-                            <option value="0" defaultValue={bazarSchedule.status}>InActive</option>
+                            <option value="1" defaultValue={data.status}>Bazar Done</option>
+                            <option value="0" defaultValue={data.status}>Bazar Pending</option>
                         </SelectInput>
 
                         <div className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3">

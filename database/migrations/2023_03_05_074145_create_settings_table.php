@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('lunch_close');
             $table->string('dinner_close');
             $table->string('app_name');
-            $table->string('mess_id');
+            $table->string('dormitory_id');
             $table->timestamps();
         });
     }

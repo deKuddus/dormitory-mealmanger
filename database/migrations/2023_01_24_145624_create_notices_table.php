@@ -14,7 +14,7 @@ return new class () extends Migration {
     {
         Schema::create('notices', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('mess_id')->constrained();
+            $table->foreignId('dormitory_id')->constrained();
             $table->string('title');
             $table->text('description')->nullable();
             $table->integer('status')->default(1);

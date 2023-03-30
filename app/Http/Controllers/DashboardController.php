@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\DormitoryIdStatic;
 use App\Trait\Stats;
 use Inertia\Inertia;
 
@@ -11,7 +12,7 @@ class DashboardController extends Controller
 
     public function __invoke()
     {
-        $messId = 1;
+        $messId = DormitoryIdStatic::DORMITORYID;
         $month = now();
 
         $data = [
@@ -21,7 +22,7 @@ class DashboardController extends Controller
             'member' => $this->totalMember($messId),
             'totalMeal' => $this->getTotalMeal($messId, $month),
             'bazar' => $this->totalBazar($messId, $month),
-            'todaysMeal' => Inertia::lazy(fn() => $this->totdaysMeal($messId))
+            'todaysMeal' => Inertia::lazy(fn () => $this->totdaysMeal($messId))
         ];
         return Inertia::render('Dashboard/Index', [
             'data' => $data

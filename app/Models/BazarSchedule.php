@@ -14,7 +14,7 @@ class BazarSchedule extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'mess_id',
+        'dormitory_id',
         'bazar_date',
         'status'
     ];
@@ -27,15 +27,18 @@ class BazarSchedule extends Model
         );
     }
 
-    public function users(){
-        return $this->belongsToMany(User::class,'bazar_schedule_user');
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'bazar_schedule_user');
     }
 
-    public function mess(){
-        return $this->belongsTo(Mess::class);
+    public function dormitory()
+    {
+        return $this->belongsTo(Dormitory::class);
     }
 
-    public function bazar(){
+    public function bazar()
+    {
         return $this->hasMany(Bazar::class);
     }
 }

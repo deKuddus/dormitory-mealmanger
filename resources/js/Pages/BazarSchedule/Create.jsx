@@ -14,7 +14,7 @@ const Create = () => {
     const {data, setData, errors, post, processing} = useForm({
         bazar_date: "",
         users_id: [],
-        status: "",
+        status: 0,
     });
 
     const handleSubmit = (e) => {
@@ -72,8 +72,8 @@ const Create = () => {
                             value={data.status}
                             onChange={(e) => setData("status", e.target.value)}
                         >
-                            <option value="1">Active</option>
-                            <option value="0">InActive</option>
+                            <option value="1" defaultValue={data.status}>Bazar Done</option>
+                            <option value="0" defaultValue={data.status}>Bazar Pending</option>
                         </SelectInput>
 
                         <div className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3">

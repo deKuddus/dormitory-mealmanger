@@ -1,16 +1,16 @@
 import React from "react";
-import {Link, usePage, useForm, router, Head} from "@inertiajs/react";
+import {Head, Link, router, useForm, usePage} from "@inertiajs/react";
 import Layout from "@/Shared/Layout";
-import DeleteButton from "@/Shared/DeleteButton";
 import LoadingButton from "@/Shared/LoadingButton";
 import TextInput from "@/Shared/TextInput";
 import SelectInput from "@/Shared/SelectInput";
-import FileInput from "@/Shared/FileInput";
-import TrashedMessage from "@/Shared/TrashedMessage";
 import Select from "react-select";
+import {isUserPermittedToPerformAction} from "@/utils";
+import ReactQuill from "react-quill";
+import 'react-quill/dist/quill.snow.css';
 
 const Edit = () => {
-    const {user, roles} = usePage().props;
+    const {user, roles, user_permissions} = usePage().props;
     const {data, setData, errors, post, processing} = useForm({
         first_name: user.first_name || "",
         last_name: user.last_name || "",
@@ -27,6 +27,7 @@ const Edit = () => {
         roles: user.roles && user.roles.map(({id, name}, key) => (id)) || [],
         _method: "PUT",
         is_admin: user.is_admin,
+        note: user.note,
     });
 
     const handleSubmit = (e) => {
@@ -101,17 +102,19 @@ const Edit = () => {
                             value={data.email}
                             onChange={(e) => setData("email", e.target.value)}
                         />
-                        <TextInput
-                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
-                            label="Password"
-                            name="password"
-                            type="password"
-                            errors={errors.password}
-                            value={data.password}
-                            onChange={(e) =>
-                                setData("password", e.target.value)
-                            }
-                        />
+                        {isUserPermittedToPerformAction('access::password-change', user_permissions) &&
+                            (<TextInput
+                                className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
+                                label="Password"
+                                name="password"
+                                type="password"
+                                errors={errors.password}
+                                value={data.password}
+                                onChange={(e) =>
+                                    setData("password", e.target.value)
+                                }
+                            />)
+                        }
                         <TextInput
                             className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
                             label="Phone"
@@ -221,7 +224,18 @@ const Edit = () => {
                                     )
                                 }
                             />
+                            {errors && errors.roles && <div className="form-error">{errors.roles}</div>}
                         </div>
+
+
+                        {isUserPermittedToPerformAction('access::user-note-edit', user_permissions) &&
+                            <div className="w-full pb-8 pr-6 mb-12">
+                                <label className="form-label">Notes</label>
+                                <ReactQuill className="h-48 " theme="snow" value={data.note}
+                                            onChange={(e) => setData('note', e)}/>
+                            </div>
+                        }
+
                     </div>
                     <div className="flex items-center justify-end px-8 py-4 bg-gray-100 border-t border-gray-200">
                         <LoadingButton

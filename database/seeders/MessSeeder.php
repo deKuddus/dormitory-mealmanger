@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Mess;
+use App\Models\Dormitory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -15,6 +15,6 @@ class MessSeeder extends Seeder
      */
     public function run()
     {
-        Mess::factory()->create();
+        Dormitory::factory()->create();
     }
 }

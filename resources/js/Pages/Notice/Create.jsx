@@ -6,13 +6,14 @@ import TextInput from "@/Shared/TextInput";
 import SelectInput from "@/Shared/SelectInput";
 import 'react-quill/dist/quill.snow.css';
 import ReactQuill from 'react-quill';
+import {INACTIVE} from "@/Shared/const/noticeStatus";
 
 
 const Create = () => {
     const { data, setData, errors, post, processing } = useForm({
         title: "",
         description: "",
-        status: 0,
+        status: INACTIVE,
         published_date: "",
     });
 
@@ -62,8 +63,8 @@ const Create = () => {
                             value={data.status}
                             onChange={(e) => setData("status", e.target.value)}
                         >
-                            <option value="1">Active</option>
-                            <option value="0">InActive</option>
+                            <option value="1" defaultValue={data.status}>Active</option>
+                            <option value="0" defaultValue={data.status}>InActive</option>
                         </SelectInput>
 
                         <ReactQuill className="h-48 pr-6 mb-12 w-full" theme="snow" value={data.description} onChange={(e)=>setData('description',e)} />

@@ -1,10 +1,12 @@
 import React from "react";
-import {Link, useForm} from "@inertiajs/react";
+import {Link, useForm, usePage} from "@inertiajs/react";
 import Layout from "@/Shared/Layout";
 import LoadingButton from "@/Shared/LoadingButton";
 import TextInput from "@/Shared/TextInput";
+import SelectInput from "@/Shared/SelectInput";
 
 const Create = () => {
+    const {bazarScheduler} = usePage().props;
     const { data, setData, errors, post, processing } = useForm({
         amount: "",
         description: "",
@@ -54,6 +56,18 @@ const Create = () => {
                                 setData("description", e.target.value)
                             }
                         />
+
+                        <SelectInput
+                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
+                            label="Select Pair"
+                            name="bazar_schedule_id"
+                            errors={errors.bazar_schedule_id}
+                            value={data.bazar_schedule_id}
+                            onChange={(e) => setData("bazar_schedule_id", e.target.value)}
+                        >
+                            <option>Select Pair</option>
+                            {bazarScheduler && bazarScheduler.map((row)=>(<option value={row.id} defaultValue={data.bazar_schedule_id}>{row.pair}</option>))}
+                        </SelectInput>
 
                     </div>
                     <div className="flex items-center justify-end px-8 py-4 bg-gray-100 border-t border-gray-200">

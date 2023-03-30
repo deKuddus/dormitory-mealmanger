@@ -17,7 +17,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/test',function (){
-    dd(auth()->user()->can('access::role-show'));
   abort(404);
 });
 
@@ -66,7 +65,7 @@ Route::group(['middleware' => 'auth'],function (){
 Route::group(['middleware' => ['auth', 'remember','hasAccessInDashboard'],'prefix' => 'master'], function () {
     Route::get('/', DashboardController::class)->name('dashboard');
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
-//    Route::get('/calender/{mess_id?}', [\App\Http\Controllers\CalendarController::class, 'showCalender'])->name('dashboard');
+//    Route::get('/calender/{dormitory_id?}', [\App\Http\Controllers\CalendarController::class, 'showCalender'])->name('dashboard');
 
     Route::get('tokens',[\App\Http\Controllers\RegisterTokenController::class,'index'])->name('tokens.index');
     Route::post('tokens/create',[\App\Http\Controllers\RegisterTokenController::class,'create'])->name('tokens.create');
@@ -74,7 +73,7 @@ Route::group(['middleware' => ['auth', 'remember','hasAccessInDashboard'],'prefi
 
     Route::resource('notice', \App\Http\Controllers\NoticeController::class);
     Route::resource('user', \App\Http\Controllers\UsersController::class);
-    Route::resource('mess', \App\Http\Controllers\MessController::class);
+    Route::resource('dormitory', \App\Http\Controllers\DormitoryController::class);
     Route::resource('rule', \App\Http\Controllers\RuleController::class);
     Route::resource('asset', \App\Http\Controllers\AssetController::class);
     Route::resource('room', \App\Http\Controllers\RoomController::class);
@@ -98,6 +97,7 @@ Route::group(['middleware' => ['auth', 'remember','hasAccessInDashboard'],'prefi
     Route::get('meals',[\App\Http\Controllers\MealController::class,'index'])->name('meals.index');
     Route::get('meals/show/{user}',[\App\Http\Controllers\MealController::class,'show'])->name('meals.show');
     Route::post('meal/update',[\App\Http\Controllers\MealController::class,'update'])->name('meal.update');
+    Route::post('meal/add',[\App\Http\Controllers\MealController::class,'addNewMeal'])->name('meal.add');
 
 
     Route::get('expenses',[\App\Http\Controllers\ExpenseController::class,'index'])->name('expense.index');
@@ -106,6 +106,7 @@ Route::group(['middleware' => ['auth', 'remember','hasAccessInDashboard'],'prefi
     Route::get('permissions',[\App\Http\Controllers\PermissionController::class,'index'])->name('permissions.index');
     Route::resource('role',\App\Http\Controllers\RoleController::class);
     Route::get('report',[\App\Http\Controllers\ReportController::class,'index'])->name('report.index');
+    Route::get('report/closed',[\App\Http\Controllers\ReportController::class,'closedCalculation'])->name('report.closed.index');
 
 
 });

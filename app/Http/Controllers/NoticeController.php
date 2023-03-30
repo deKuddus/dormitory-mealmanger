@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Helper\Helper;
 use App\Http\Requests\NoticeCreateRequest;
 use App\Http\Resources\NoticeCollection;
-use App\Models\Mess;
+use App\Models\Dormitory;
 use App\Models\Notice;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -13,7 +13,6 @@ use Inertia\Inertia;
 
 class NoticeController extends Controller
 {
-
     public function index()
     {
         $this->authorize('showNotice', Notice::class);
@@ -49,11 +48,9 @@ class NoticeController extends Controller
 
     public function show(Notice $notice)
     {
-
         return Inertia::render('Notice/Show', [
             'notice' => $notice
         ]);
-
     }
 
 

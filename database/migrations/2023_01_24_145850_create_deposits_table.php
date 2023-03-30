@@ -15,7 +15,7 @@ return new class () extends Migration {
         Schema::create('deposits', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
-            $table->foreignId('mess_id')->constrained();
+            $table->foreignId('dormitory_id')->constrained();
             $table->float('amount');
             $table->dateTime('deposit_date');
             $table->integer('status')->default(0);

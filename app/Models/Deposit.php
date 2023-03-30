@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\DepositStatus;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,7 +16,7 @@ class Deposit extends Model
 
     protected $fillable = [
         'user_id',
-        'mess_id',
+        'dormitory_id',
         'amount',
         'deposit_date',
         'status'
@@ -34,13 +35,14 @@ class Deposit extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function mess()
+    public function dormitory()
     {
-        return $this->belongsTo(Mess::class);
+        return $this->belongsTo(Dormitory::class);
     }
 
 
-    public function scopeActive($query){
-        $query->whereStatus(1);
+    public function scopeActive($query)
+    {
+        $query->whereStatus(DepositStatus::APPROVED);
     }
 }

@@ -23,8 +23,8 @@ class BazarScheduleForBazarResource extends JsonResource
     private function getFormatedUserPair()
     {
         $name = '';
-        foreach ($this->users as $key => $user) {
-            $name .= $user->first_name . ' ' . $user->last_name . ' ';
+        if($this->users->count()){
+            $name = implode('&',$this->users->pluck('first_name')->all());
         }
 
         return $name ?? 'N/A';

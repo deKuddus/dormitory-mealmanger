@@ -9,7 +9,7 @@ import MealEditModal from "@/Pages/Meal/MealEditModal";
 
 
 const Show = () => {
-    const {user, balance, member, additional, bazar, totalMeal} = usePage().props;
+    const {user, balance, bazar, mealCost,totalMealCost,fixedCost, due} = usePage().props;
     const [currentMonth, setCurrentMonth] = useState(moment().format('MMMM-YYYY'));
     const mealEditInitialObject = {
         id: undefined,
@@ -22,9 +22,6 @@ const Show = () => {
     };
     const [mealData, setMealData] = useState(mealEditInitialObject);
     const [open, setOpen] = useState(false);
-    const mealCost = parseFloat(bazar / totalMeal.total_meals).toFixed(2);
-    const totalMealCost = parseFloat(user.total_meals * mealCost).toFixed(2);
-    const fixedCost = parseFloat(additional / member).toFixed(2);
     const dateOptions = currentYearMontList();
 
     const handleDateChange = (value) => {
@@ -113,7 +110,7 @@ const Show = () => {
                             <div className="space-y-2 text-white">
                                 <div
                                     className="flex flex-col items-center space-x-2 rtl:space-x-reverse text-xl font-medium ">
-                                    <span className="text-red-600 text-xl font-bold ">Total Due: 50 BDT </span>
+                                    <span className="text-red-600 text-xl font-bold ">Total Due: {due} BDT </span>
                                     <span
                                         className="text-gray-900 text-xl font-bold ">Total Cost : {totalMealCost} </span>
                                     <span

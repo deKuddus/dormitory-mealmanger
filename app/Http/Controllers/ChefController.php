@@ -6,7 +6,7 @@ use App\Helper\Helper;
 use App\Http\Requests\ChefRequest;
 use App\Http\Resources\ChefCollection;
 use App\Models\Chef;
-use App\Models\Mess;
+use App\Models\Dormitory;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -51,7 +51,6 @@ class ChefController extends Controller
 
     public function show($id)
     {
-
     }
 
 

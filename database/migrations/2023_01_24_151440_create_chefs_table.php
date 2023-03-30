@@ -14,7 +14,7 @@ return new class () extends Migration {
     {
         Schema::create('chefs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('mess_id')->constrained();
+            $table->foreignId('dormitory_id')->constrained();
             $table->string('name');
             $table->string('phone')->nullable();
             $table->text('address')->nullable();

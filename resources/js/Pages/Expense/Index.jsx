@@ -125,13 +125,6 @@ const Index = () => {
                                             {amount}
                                         </p>
                                     </td>
-                                    <td className="border">
-                                        <p
-                                            className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
-                                        >
-                                            {amount}
-                                        </p>
-                                    </td>
 
                                     <td className="border">
                                         <p

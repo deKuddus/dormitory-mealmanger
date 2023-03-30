@@ -43,7 +43,7 @@ const Create = () => {
                             label="Amount"
                             name="amount"
                             type="number"
-                            errors={errors}
+                            errors={errors.amount}
                             value={data.amount}
                             onChange={(e) =>
                                 setData("amount", e.target.value)

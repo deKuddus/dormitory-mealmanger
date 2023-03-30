@@ -4,12 +4,12 @@ import Layout from "@/Shared/Layout";
 import Icon from "@/Shared/Icon";
 import SelectInput from "@/Shared/SelectInput";
 import moment from "moment/moment";
-import {currentYearMontList} from "@/utils";
+import {currentYearMontList, isUserPermittedToPerformAction} from "@/utils";
 
 
 const Index = () => {
-    const {users} = usePage().props;
-    const [currentMonth,setCurrentMonth] = useState(moment().format('MMM-YYYY'));
+    const {users, user_permissions} = usePage().props;
+    const [currentMonth, setCurrentMonth] = useState(moment().format('MMM-YYYY'));
     const dateOptions = currentYearMontList();
 
     const handleDateChange = (value) => {
@@ -22,8 +22,23 @@ const Index = () => {
         // }
     }
 
+    const addMealForTheUser = (userId) => {
+        if (confirm('Are you sure to add meal for the selected user?')) {
+            router.post(route('meal.add'), {
+                userId
+            })
+        }
+    }
 
     const Status = ({status}) => {
+        if (status === 0) {
+            return (
+                <p className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none">
+                    <span className="text-red-600">Inactive</span>
+                </p>
+            );
+        }
+
         if (status === 1) {
             return (
                 <p className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none">
@@ -31,10 +46,11 @@ const Index = () => {
                 </p>
             );
         }
-        if (status === 0) {
+
+        if (status === 2) {
             return (
                 <p className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none">
-                    <span className="text-red-600">Inactive</span>
+                    <span className="text-red-600">Closed</span>
                 </p>
             );
         }
@@ -67,7 +83,8 @@ const Index = () => {
                                 handleDateChange(e.target.value);
                             }}
                         >
-                            {dateOptions && dateOptions.map((row,key)=>(<option key={key} value={row} defaultValue={moment().format('MMMM-YYYY')}>{row}</option>))}
+                            {dateOptions && dateOptions.map((row, key) => (<option key={key} value={row}
+                                                                                   defaultValue={moment().format('MMMM-YYYY')}>{row}</option>))}
                         </SelectInput>
                     </div>
                 </div>
@@ -85,7 +102,7 @@ const Index = () => {
                     </tr>
                     </thead>
                     <tbody>
-                    {users ? users.map(({id, first_name,last_name, meals_count, status, email}, key) => {
+                    {users ? users.map(({id, first_name, last_name, meals, status, email}, key) => {
                         return (
                             <tr
                                 key={id}
@@ -112,20 +129,32 @@ const Index = () => {
                                 </td>
                                 <td className="border">
                                     <p className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none">
-                                        {meals_count}
+                                        {meals[0] || 0}
                                     </p>
                                 </td>
                                 <td className="border w-px border-t p-3 whitespace-nowrap">
                                     <div className="flex items-center gap-2 justify-end">
-                                        <Link
-                                            href={route("meals.show", id)}
-                                            className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
-                                        >
-                                            <Icon
-                                                name="FaEye"
-                                                className="w-6 h-4 text-gray-400 hover:text-buttonColor-400 fill-current"
-                                            />
-                                        </Link>
+                                        {!meals[0] && isUserPermittedToPerformAction('access::meal-add', user_permissions) && (
+                                            <button
+                                                onClick={() => addMealForTheUser(id)}
+                                                className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline">
+                                                <Icon
+                                                    name="FaEdit"
+                                                    className="w-6 h-4 text-gray-400 hover:text-buttonColor-400 fill-current"
+                                                />
+                                            </button>
+                                        )}
+                                        {isUserPermittedToPerformAction('access::meal-show', user_permissions) &&
+                                            <Link
+                                                href={route("meals.show", id)}
+                                                className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
+                                            >
+                                                <Icon
+                                                    name="FaEye"
+                                                    className="w-6 h-4 text-gray-400 hover:text-buttonColor-400 fill-current"
+                                                />
+                                            </Link>
+                                        }
                                     </div>
                                 </td>
                             </tr>

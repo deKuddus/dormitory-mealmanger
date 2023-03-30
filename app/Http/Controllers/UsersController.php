@@ -24,12 +24,13 @@ class UsersController extends Controller
             'filters' => Request::all('search', 'role', 'trashed'),
             'users' => new UserCollection(
                 User::query()
-                    ->with('roles')
                     ->orderBy('created_at','desc')
                     ->filter(Request::only('search', 'role', 'trashed'))
                     ->paginate()
                     ->appends(Request::all())
             ),
+            'totalMemberActive' => User::query()->active()->count(),
+            'totalMemberInActive' => User::query()->inActive()->count()
         ]);
     }
 
@@ -51,7 +52,7 @@ class UsersController extends Controller
             $request->validated()
         );
 
-        $user->mess()->sync($request->mess_id);
+        $user->dormitory()->sync($request->dormitory_id);
         $user->syncRoles($request->validated('roles'));
 
         return Redirect::route('user.index')->with('success', 'User created.');
@@ -86,7 +87,7 @@ class UsersController extends Controller
             $request->validated()
         );
 
-        $user->mess()->sync($request->mess_id);
+        $user->dormitory()->sync($request->dormitory_id);
         $user->syncRoles($request->validated('roles'));
 
         return Redirect::back()->with('success', 'User updated.');

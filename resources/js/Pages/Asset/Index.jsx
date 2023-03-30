@@ -2,11 +2,11 @@ import React from "react";
 import {Link, router, usePage} from "@inertiajs/react";
 import Layout from "@/Shared/Layout";
 import Icon from "@/Shared/Icon";
-import SearchFilter from "@/Shared/SearchFilter";
 import Pagination from "@/Shared/Pagination";
+import {isUserPermittedToPerformAction} from "@/utils";
 
 const Index = () => {
-    const {assets} = usePage().props;
+    const {assets, user_permissions} = usePage().props;
     const {
         data,
         meta: {links},
@@ -23,14 +23,14 @@ const Index = () => {
         <div>
             <h1 className="mb-8 text-3xl font-bold">Assets</h1>
             <div className="flex items-center justify-between mb-6">
-                <SearchFilter/>
-                <Link
+                {isUserPermittedToPerformAction('access::asset-create', user_permissions) && <Link
                     className="btn-indigo focus:outline-none"
                     href={route("asset.create")}
                 >
-                    <span>Create</span>
+                    <span>Add New </span>
                     <span className="hidden md:inline">Asset</span>
                 </Link>
+                }
             </div>
             <div className="overflow-x-auto bg-white rounded shadow p-3">
                 <table className="w-full whitespace-nowrap">
@@ -47,8 +47,8 @@ const Index = () => {
                     </tr>
                     </thead>
                     <tbody>
-                    {data.map(
-                        ({id, title, description, purchase_date, status},key) => {
+                    {data && data.length ? data.map(
+                        ({id, title, description, purchase_date, status}, key) => {
                             return (
                                 <tr
                                     key={id}
@@ -58,7 +58,7 @@ const Index = () => {
                                         <p
                                             className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
                                         >
-                                            {key+1}
+                                            {key + 1}
                                         </p>
                                     </td>
                                     <td className="border">
@@ -91,33 +91,36 @@ const Index = () => {
                                     </td>
                                     <td className="w-px border px-4 py-3 whitespace-nowrap">
                                         <div className="flex items-center gap-4 justify-end">
-                                            <Link
-                                                href={route("asset.edit", id)}
-                                                className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
-                                            >
-                                                <Icon
-                                                    name="FaEdit"
-                                                    className="w-6 h-4 text-gray-400 fill-current"
-                                                />
-                                            </Link>
-                                            <button
-                                                onClick={() => deleteAsset(id)}
-                                                className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
-                                            >
-                                                <Icon
-                                                    name="FaTrashAlt"
-                                                    className="w-6 h-4 text-gray-400 fill-current"
-                                                />
-                                            </button>
+                                            {isUserPermittedToPerformAction('access::asset-edit', user_permissions) &&
+                                                <Link
+                                                    href={route("asset.edit", id)}
+                                                    className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
+                                                >
+                                                    <Icon
+                                                        name="FaEdit"
+                                                        className="w-6 h-4 text-gray-400 fill-current"
+                                                    />
+                                                </Link>
+                                            }
+                                            {isUserPermittedToPerformAction('access::asset-delete', user_permissions) &&
+                                                <button
+                                                    onClick={() => deleteAsset(id)}
+                                                    className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
+                                                >
+                                                    <Icon
+                                                        name="FaTrashAlt"
+                                                        className="w-6 h-4 text-gray-400 fill-current"
+                                                    />
+                                                </button>
+                                            }
                                         </div>
                                     </td>
                                 </tr>
                             );
                         }
-                    )}
-                    {data.length === 0 && (
+                    ) : (
                         <tr>
-                            <td className="px-6 py-4 border" colSpan="4">
+                            <td className="px-6 py-4 border" colSpan="6">
                                 No Asset found.
                             </td>
                         </tr>

@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('menus', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('mess_id')->constrained();
+            $table->foreignId('dormitory_id')->constrained();
             $table->string('item')->nullable();
             $table->date('menu_date')->nullable();
             $table->timestamps();

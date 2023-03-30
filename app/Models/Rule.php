@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\RuleStatus;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,7 +15,7 @@ class Rule extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'mess_id',
+        'dormitory_id',
         'title',
         'status',
         'description'
@@ -25,12 +26,12 @@ class Rule extends Model
     ];
     public function scopeActive($query)
     {
-        return $query->where('status', 1);
+        return $query->where('status', RuleStatus::ACTIVE);
     }
 
-    public function mess()
+    public function dormitory()
     {
-        return $this->belongsTo(Mess::class);
+        return $this->belongsTo(Dormitory::class);
     }
 
     public function scopeFilter($query, array $filters)
@@ -48,5 +49,4 @@ class Rule extends Model
             }
         });
     }
-
 }

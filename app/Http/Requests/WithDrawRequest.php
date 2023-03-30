@@ -28,14 +28,14 @@ class WithDrawRequest extends FormRequest
             'deposit_date' => 'required',
             'status' => 'required',
             'amount' => 'required|numeric|min:1',
-            'mess_id' => 'required|integer'
+            'dormitory_id' => 'required|integer'
         ];
     }
 
     protected function prepareForValidation()
     {
         $this->merge([
-            'mess_id' => 1
+            'dormitory_id' => 1
         ]);
     }
 

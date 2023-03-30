@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Enums\DormitoryIdStatic;
 use App\Models\RegisterToken;
 use App\User;
 use App\Http\Controllers\Controller;
@@ -64,7 +65,7 @@ class RegisterController extends Controller
 
     protected function create(array $data)
     {
-        $messId = 1;
+        $messId = DormitoryIdStatic::DORMITORYID;
 
         $user = \App\Models\User::create([
             'first_name' => $data['first_name'],
@@ -76,7 +77,7 @@ class RegisterController extends Controller
             'deposit' => 0,
             'status' => 1
         ]);
-        $user->mess()->sync($messId);
+        $user->dormitory()->sync($messId);
         return $user;
     }
 
