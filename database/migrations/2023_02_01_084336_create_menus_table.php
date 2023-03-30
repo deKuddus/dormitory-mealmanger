@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('menus', function (Blueprint $table) {
             $table->id();
             $table->foreignId('dormitory_id')->constrained();
-            $table->string('item')->nullable();
+            $table->string('break_fast')->nullable();
             $table->string('menu_date')->nullable();
             $table->timestamps();
             $table->softDeletes();

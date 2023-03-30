@@ -14,7 +14,6 @@ return new class extends Migration
     public function up()
     {
         Schema::table('menus', function (Blueprint $table) {
-            $table->renameColumn('item', 'break_fast');
             $table->string('lunch')->nullable();
             $table->string('dinner')->nullable();
         });
