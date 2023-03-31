@@ -52,7 +52,7 @@ class User extends Authenticatable
 
     public function dormitory()
     {
-        return $this->belongsToMany(Dormitory::class, 'mess_users', 'user_id', 'dormitory_id');
+        return $this->belongsToMany(Dormitory::class, 'dormitory_users', 'user_id', 'dormitory_id');
     }
 
     public function getNameAttribute()

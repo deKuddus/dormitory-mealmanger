@@ -32,7 +32,7 @@ class Dormitory extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'mess_users', 'dormitory_id', 'user_id');
+        return $this->belongsToMany(User::class, 'dormitory_users', 'dormitory_id', 'user_id');
     }
 
     public function scopeFilter($query, array $filters)
