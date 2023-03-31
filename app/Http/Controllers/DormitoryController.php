@@ -61,7 +61,6 @@ class DormitoryController extends Controller
 
     public function update(DormitoryCreateRequest $request, Dormitory $dormitory)
     {
-        return back();
 
         $dormitory->update(
             $request->validated()
