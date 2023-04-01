@@ -23,6 +23,7 @@ class Dormitory extends Model
         'has_breakfast',
         'has_lunch',
         'has_dinner',
+        'default_meal'
     ];
 
     public function owner()

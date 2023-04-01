@@ -14,7 +14,7 @@ const Notice = () => {
 
     return (
         <div>
-            <h1 className="mb-8 text-3xl font-bold">Notices</h1>
+            <h1 className="mb-8 text-3xl font-bold">Rules</h1>
             <div className="overflow-x-auto bg-white rounded shadow p-3">
                 <table className="w-full whitespace-wrap">
                     <thead>

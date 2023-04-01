@@ -13,9 +13,9 @@ use Illuminate\Support\Facades\DB;
 
 trait Stats
 {
-    private function getTotalMeal($messId, $month)
+    private function getTotalMeal($dormitoryId, $month)
     {
-        $meals = Meal::whereDormitoryId($messId)
+        $meals = Meal::whereDormitoryId($dormitoryId)
             ->whereMonth('created_at', '=', $month->month)
             ->whereYear('created_at', '=', $month->year)
             ->select(
@@ -25,44 +25,44 @@ trait Stats
         return $meals->total_meals ?? 0;
     }
 
-    private function totalBazar($messId, $month)
+    private function totalBazar($dormitoryId, $month)
     {
         return Bazar::query()
-            ->whereDormitoryId($messId)
+            ->whereDormitoryId($dormitoryId)
             ->active()
             ->whereMonth('created_at', '=', $month->month)
             ->whereYear('created_at', '=', $month->year)
             ->sum('amount');
     }
 
-    private function totalMember($messId)
+    private function totalMember($dormitoryId)
     {
         return User::query()
-            ->with('dormitory', function ($q) use ($messId) {
-                $q->where('dormitory_id', $messId);
+            ->with('dormitory', function ($q) use ($dormitoryId) {
+                $q->where('dormitory_id', $dormitoryId);
             })
             ->active()
             ->count();
     }
 
-    private function getTotalAdditionalCost($messId, $month)
+    private function getTotalAdditionalCost($dormitoryId, $month)
     {
         return AdditionalCost::query()
-            ->whereDormitoryId($messId)
+            ->whereDormitoryId($dormitoryId)
             ->whereMonth('created_at', '=', $month->month)
             ->whereYear('created_at', '=', $month->year)
             ->active()
             ->sum('amount');
     }
 
-    private function getTotalDeposit($messId)
+    private function getTotalDeposit($dormitoryId)
     {
         return Dormitory::query()->whereId(DormitoryIdStatic::DORMITORYID)->value('deposit');
     }
 
-    private function totdaysMeal($messId)
+    private function todaysMeal($dormitoryId)
     {
-        $meals = Meal::whereDormitoryId($messId)
+        $meals = Meal::whereDormitoryId($dormitoryId)
             ->whereDate('created_at', '=', now())
             ->select(
                 DB::raw("SUM(break_fast + lunch + dinner) as total_meals")
@@ -71,10 +71,10 @@ trait Stats
     }
 
 
-    private function getUsersByStatus($messId)
+    private function getUsersByStatus($dormitoryId)
     {
-        return  User::query()->whereHas('dormitory', function ($q) use ($messId) {
-            $q->whereId($messId);
+        return  User::query()->whereHas('dormitory', function ($q) use ($dormitoryId) {
+            $q->whereId($dormitoryId);
         })->select(
             DB::raw('COUNT(CASE WHEN status = 1 THEN 1 END) as active'),
             DB::raw('COUNT(CASE WHEN status = 0 THEN 1 END) as inactive')

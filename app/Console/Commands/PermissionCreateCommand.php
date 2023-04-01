@@ -31,10 +31,14 @@ class PermissionCreateCommand extends Command
     {
         try {
             $name = $this->ask('Permission name?');
-            $permissions = Permission::query()->create(['name' => $name]);
-            $role = Role::find(1);
-            $role->syncPermissions([...Permission::query()->pluck('id')->toArray(),$permissions->id]);
-            $this->info('Permission added');
+            if($name) {
+                $permissions = Permission::query()->create(['name' => $name]);
+                $role = Role::find(1);
+                $role->syncPermissions([...Permission::query()->pluck('id')->toArray(), $permissions->id]);
+                $this->info('Permission added');
+            }else{
+                $this->info('Nothing to add');
+            }
             return Command::SUCCESS;
         }catch (\Exception $exception){
             $this->error($exception);

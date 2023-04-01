@@ -47,7 +47,7 @@ const Create = () => {
                         href={route("user.index")}
                         className="text-indigo-600 hover:text-indigo-700"
                     >
-                        Users
+                        Members
                     </Link>
                     <span className="font-medium text-indigo-600"> /</span>{" "}
                     Create

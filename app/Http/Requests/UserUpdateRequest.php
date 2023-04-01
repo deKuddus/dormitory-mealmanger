@@ -33,8 +33,8 @@ class UserUpdateRequest extends FormRequest
             ],
             'password' => ['nullable', 'min:6', 'max:50'],
             'phone' => ['required', 'max:11'],
-            'present_address' => ['required', 'max:255'],
-            'permanent_address' => ['required', 'max:255'],
+            'present_address' => ['nullable', 'string', 'max:255'],
+            'permanent_address' => ['nullable', 'string', 'max:255'],
             'nid' => ['required', 'max:50'],
             'nid_type' => ['required', 'max:50'],
             'institution' => ['nullable', 'max:50'],
@@ -42,7 +42,7 @@ class UserUpdateRequest extends FormRequest
             'status' => ['required', 'boolean'],
             'photo' => ['nullable', 'image'],
             'dormitory_id' => ['required', 'integer'],
-            'roles' => ['required', 'array'],
+            'roles' => ['nullable', 'array'],
             'is_admin' => ['nullable', 'integer'],
             'note' => ['nullable', 'string']
         ];

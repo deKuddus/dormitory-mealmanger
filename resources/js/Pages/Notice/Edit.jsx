@@ -84,6 +84,6 @@ const Edit = () => {
     );
 };
 
-Edit.layout = (page) => <Layout title="Create User" children={page} />;
+Edit.layout = (page) => <Layout title="Edit Notice" children={page} />;
 
 export default Edit;

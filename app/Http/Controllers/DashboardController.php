@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\DormitoryIdStatic;
+use App\Services\MealService;
 use App\Trait\Stats;
 use Inertia\Inertia;
 
@@ -10,19 +11,20 @@ class DashboardController extends Controller
 {
     use Stats;
 
-    public function __invoke()
+    public function __invoke(MealService $mealService)
     {
-        $messId = DormitoryIdStatic::DORMITORYID;
+        $dormitoryId = DormitoryIdStatic::DORMITORYID;
         $month = now();
 
         $data = [
-            'users' => $this->getUsersByStatus($messId),
-            'balance' => $this->getTotalDeposit($messId),
-            'additional' => $this->getTotalAdditionalCost($messId, $month),
-            'member' => $this->totalMember($messId),
-            'totalMeal' => $this->getTotalMeal($messId, $month),
-            'bazar' => $this->totalBazar($messId, $month),
-            'todaysMeal' => Inertia::lazy(fn () => $this->totdaysMeal($messId))
+            'users' => $this->getUsersByStatus($dormitoryId),
+            'balance' => $this->getTotalDeposit($dormitoryId),
+            'additional' => $this->getTotalAdditionalCost($dormitoryId, $month),
+            'member' => $this->totalMember($dormitoryId),
+            'totalMeal' => $this->getTotalMeal($dormitoryId, $month),
+            'bazar' => $this->totalBazar($dormitoryId, $month),
+            'todaysTotalMeal' => Inertia::lazy(fn () => $this->todaysMeal($dormitoryId)),
+            'todaysMeal' => $mealService->getTodaysLunchAndDinner()
         ];
         return Inertia::render('Dashboard/Index', [
             'data' => $data

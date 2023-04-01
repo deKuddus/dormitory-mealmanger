@@ -3,13 +3,15 @@ import {Link, usePage} from "@inertiajs/react";
 import Icon from "@/Shared/Icon";
 
 export default () => {
-    const {auth, deposit,routePrefix} = usePage().props;
+    const {auth, member_deposit,dormitory_deposit,routePrefix} = usePage().props;
     const [menuOpened, setMenuOpened] = useState(false);
 
     return (
         <div
             className="flex items-center justify-between w-full p-4 text-sm bg-white border-b md:py-0 md:px-12 d:text-md">
-            <div className="mt-1 mr-4">Current Balance : {deposit} BDT</div>
+            <div className="mt-1 mr-4">
+                {!routePrefix ? `My Balance : ${member_deposit}` : `Dormitory Balance: ${dormitory_deposit}`} BDT
+            </div>
             <div className="relative">
                 <div
                     className="flex items-center cursor-pointer select-none group"

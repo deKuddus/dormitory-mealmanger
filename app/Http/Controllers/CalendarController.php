@@ -12,28 +12,29 @@ use Inertia\Inertia;
 
 class CalendarController extends Controller
 {
-    public function showCalender($messId = null)
+    public function showCalender($dormitoryId = null)
     {
         return Inertia::render('Calender/Index', [
-            'messId' => $messId
+            'messId' => $dormitoryId
         ]);
     }
 
-    public function getMeals(Request $request, $messId)
+    public function getMeals(Request $request, $dormitoryId)
     {
         $request->validate([
             'month' => 'nullable|date'
         ]);
         if ($request->get('month')) {
-            $month = Carbon::parse($request->get('month'))->month;
+            $month = Carbon::parse($request->get('month'));
         } else {
-            $month = now()->month;
+            $month = now();
         }
         return new MealCollection(
             Meal::query()
                 ->where('status', MealStatus::PENDING)
-                ->whereDormitoryId($messId)
-                ->whereMonth('created_at', '=', $month)
+                ->whereDormitoryId($dormitoryId)
+                ->whereMonth('created_at', '=', $month->month)
+                ->whereYear('created_at', '=', $month->year)
                 ->select(
                     DB::raw("SUM(CASE WHEN break_fast = 1 THEN break_fast ELSE 0 END) AS break_fast_total"),
                     DB::raw("SUM(CASE WHEN lunch = 1 THEN lunch ELSE 0 END) AS lunch_total"),

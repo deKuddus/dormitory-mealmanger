@@ -2,9 +2,10 @@
 
 namespace App\Helper;
 
+use App\Enums\DormitoryIdStatic;
 use App\Enums\MealStatus;
-use App\Models\Meal;
 use App\Models\Dormitory;
+use App\Models\Meal;
 use App\Models\Role;
 use App\Models\Rule;
 use App\Models\User;
@@ -23,7 +24,9 @@ class Helper
     public static function usersArray()
     {
         return [
-            'users' => User::get(['id', 'first_name', 'last_name'])->toArray(),
+            'users' => User::query()->with(['dormitory' => function ($q) {
+                $q->whereId(DormitoryIdStatic::DORMITORYID)->select('name');
+            }])->get(['id', 'first_name', 'last_name'])->toArray(),
         ];
     }
 
@@ -64,9 +67,9 @@ class Helper
             $dataArray[] = [
                 'user_id' => $user->id,
                 'dormitory_id' => $dormitory->id,
-                'break_fast' => $dormitory->has_breakfast ? 1 : 0,
-                'lunch' => $dormitory->has_lunch ? 1 : 0,
-                'dinner' => $dormitory->has_dinner ? 1 : 0,
+                'break_fast' => $dormitory->has_breakfast ? $dormitory->default_meal : 0,
+                'lunch' => $dormitory->has_lunch ? $dormitory->default_meal : 0,
+                'dinner' => $dormitory->has_dinner ? $dormitory->default_meal : 0,
                 'status' => MealStatus::PENDING,
                 'created_at' => Carbon::parse(date('Y-m-' . $i . ' 09:00'))->format('Y-m-d h:i'),
                 'updated_at' => Carbon::parse(date('Y-m-' . $i . ' 09:00'))->format('Y-m-d h:i'),

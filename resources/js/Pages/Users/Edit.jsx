@@ -64,7 +64,7 @@ const Edit = () => {
                         href={route("user.index")}
                         className="text-indigo-600 hover:text-indigo-700"
                     >
-                        Users
+                        Members
                     </Link>
                     <span className="mx-2 font-medium text-indigo-600">/</span>
                     {data.first_name} {data.last_name}

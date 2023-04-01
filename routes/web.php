@@ -65,6 +65,7 @@ Route::group(['middleware' => 'auth'],function (){
 Route::group(['middleware' => ['auth', 'remember','hasAccessInDashboard'],'prefix' => 'master'], function () {
     Route::get('/', DashboardController::class);
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
+    Route::get('/calender/{mess_id?}', [\App\Http\Controllers\CalendarController::class, 'showCalender'])->name('calender.view.meal');
 
     Route::get('tokens',[\App\Http\Controllers\RegisterTokenController::class,'index'])->name('tokens.index');
     Route::post('tokens/create',[\App\Http\Controllers\RegisterTokenController::class,'create'])->name('tokens.create');
@@ -78,6 +79,7 @@ Route::group(['middleware' => ['auth', 'remember','hasAccessInDashboard'],'prefi
     Route::resource('room', \App\Http\Controllers\RoomController::class);
     Route::resource('seat', \App\Http\Controllers\SeatController::class);
     Route::resource('chef', \App\Http\Controllers\ChefController::class);
+    Route::resource('issue', \App\Http\Controllers\IssueController::class);
 
     Route::resource('additional', \App\Http\Controllers\AdditionalCostController::class);
     Route::resource('menu', \App\Http\Controllers\MenuController::class);

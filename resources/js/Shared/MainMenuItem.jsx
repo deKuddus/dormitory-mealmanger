@@ -24,7 +24,7 @@ export default ({icon, link, name, uri_root,canShow}) => {
         <div
             className={`m-2 text-left pl-3 hover:bg-background-300 py-3 rounded ${itemClass}`}
         >
-            <Link href={route(link)}>
+            <Link href={link}>
                 {/*<Icon name={icon} className={iconClasses} />*/}
                 <div className="text-gray-800">{name}</div>
             </Link>

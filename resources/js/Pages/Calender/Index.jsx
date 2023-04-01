@@ -87,7 +87,7 @@ const Index = () => {
         return (
             <>
                 <div
-                    className={`p-2 flex flex-col font-bold text-md ${
+                    className={`p-2 flex flex-col font-bold text-xl ${
                         today
                             ? "bg-blue-600 shadow-2xl"
                             : "border-0 bg-gray-300"

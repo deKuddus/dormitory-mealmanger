@@ -17,7 +17,7 @@ class ExpenseController extends Controller
     {
         $this->authorize('showExpense', User::class);
 
-        $messId = DormitoryIdStatic::DORMITORYID;
+        $dormitoryId = DormitoryIdStatic::DORMITORYID;
 
         try {
             if ($request->has('month')) {
@@ -25,8 +25,8 @@ class ExpenseController extends Controller
             } else {
                 $month = Carbon::parse(now());
             }
-            $bazarModel = Bazar::query()->active()->whereDormitoryId($messId)->whereMonth('created_at', '=', $month->month)->whereYear('created_at', '=', $month->year);
-            $additionalCostModel = AdditionalCost::query()->active()->whereDormitoryId($messId)->whereMonth('created_at', '=', $month->month)->whereYear('created_at', '=', $month->year);
+            $bazarModel = Bazar::query()->active()->whereDormitoryId($dormitoryId)->whereMonth('created_at', '=', $month->month)->whereYear('created_at', '=', $month->year);
+            $additionalCostModel = AdditionalCost::query()->active()->whereDormitoryId($dormitoryId)->whereMonth('created_at', '=', $month->month)->whereYear('created_at', '=', $month->year);
             return Inertia::render('Expense/Index', [
                 'bazar' => $bazarModel->get(),
                 'bazarTotal' => $bazarModel->sum('amount'),

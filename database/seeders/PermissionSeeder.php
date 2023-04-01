@@ -87,7 +87,12 @@ class PermissionSeeder extends Seeder
             'access::closing-show',
             'access::month-close',
             'access::month-start',
-            'access::password-change'
+            'access::password-change',
+            'access::calender-show',
+            'access::issue-show',
+            'access::issue-create',
+            'access::issue-edit',
+            'access::issue-delete',
         ];
 
         foreach ($permissions as $permission) {

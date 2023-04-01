@@ -11,17 +11,7 @@ import MealEditModal from "@/Pages/Meal/MealEditModal";
 const Show = () => {
     const {user, balance, bazar, mealCost,totalMealCost,fixedCost, due} = usePage().props;
     const [currentMonth, setCurrentMonth] = useState(moment().format('MMMM-YYYY'));
-    const mealEditInitialObject = {
-        id: undefined,
-        break_fast: 0,
-        lunch: 0,
-        dinner: 0,
-        created_at: '',
-        user: '',
-        user_id: 0
-    };
-    const [mealData, setMealData] = useState(mealEditInitialObject);
-    const [open, setOpen] = useState(false);
+
     const dateOptions = currentYearMontList();
 
     const handleDateChange = (value) => {
@@ -35,29 +25,9 @@ const Show = () => {
     }
 
 
-    const handleMealEdit = (id, break_fast, lunch, dinner, created_at) => {
-        setMealData({
-            id,
-            break_fast,
-            lunch,
-            dinner,
-            created_at,
-
-        })
-        setOpen(true);
-    }
-
-
-    const handleUpdateMela = () => {
-        router.post(route('user.meal.update.each'), mealData);
-        setOpen(false);
-        setMealData(mealEditInitialObject);
-    }
 
     return (
         <div>
-            <MealEditModal mealData={mealData} setOpen={setOpen} setMealData={setMealData} open={open}
-                           handleConfirm={handleUpdateMela}/>
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
                 <div className="flex items-center">
                     <h1 className="text-3xl font-bold">Meals</h1>
@@ -127,7 +97,6 @@ const Show = () => {
                         <th className="px-6 pt-5 pb-4 border">Break Fast</th>
                         <th className="px-6 pt-5 pb-4 border">Lunch</th>
                         <th className="px-6 pt-5 pb-4 border">Dinner</th>
-                        <th className="px-6 pt-5 pb-4 border">Action</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -156,20 +125,6 @@ const Show = () => {
                                 {dinner}
                             </td>
 
-                            <td className="border w-px border-t p-3 whitespace-nowrap">
-                                <div className="flex items-center gap-2 justify-end">
-                                    <button
-                                        disabled={!is_editable}
-                                        onClick={() => handleMealEdit(id, break_fast, lunch, dinner, created_at)}
-                                        className={`inline-flex ${!is_editable ?' opacity-10':''} items-center justify-center gap-0.5 focus:outline-none focus:underline`}
-                                    >
-                                        <Icon
-                                            name="FaEdit"
-                                            className="w-6 h-4 text-gray-400 hover:text-buttonColor-400 fill-current cursor-pointer"
-                                        />
-                                    </button>
-                                </div>
-                            </td>
                         </tr>
                     )) : (
                         <tr>

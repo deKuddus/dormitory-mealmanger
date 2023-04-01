@@ -36,11 +36,11 @@ class UserDepositCreateRequest extends FormRequest
 
     protected function prepareForValidation()
     {
-        $messId = DormitoryIdStatic::DORMITORYID;
+        $dormitoryId = DormitoryIdStatic::DORMITORYID;
         $this->merge([
             'user_id' => auth()->id(),
             'status' => DepositStatus::PENDING,
-            'dormitory_id' => $messId,
+            'dormitory_id' => $dormitoryId,
             'deposit_date' => now()->format('Y-m-d 09:00:00')
         ]);
     }

@@ -29,7 +29,6 @@ const Index = () => {
                 <table className="w-full whitespace-nowrap">
                     <thead>
                     <tr className="font-bold text-left">
-                        <th className="px-6 pt-5 pb-4">No</th>
                         <th className="px-6 pt-5 pb-4">Date</th>
                         <th className="px-6 pt-5 pb-4">Amount</th>
                         <th className="px-6 pt-5 pb-4">Status</th>
@@ -45,14 +44,7 @@ const Index = () => {
                                     <p
                                         className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
                                     >
-                                        {key + 1}
-                                    </p>
-                                </td>
-                                <td className="border">
-                                    <p
-                                        className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
-                                    >
-                                        {moment(row.deposit_date).format('Do MMMM YYYY')}
+                                        {moment(row.deposit_date).format('D MMM YY')}
                                     </p>
                                 </td>
                                 <td className="border">

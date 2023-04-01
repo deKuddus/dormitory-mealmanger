@@ -28,7 +28,7 @@ class ReportController extends Controller
         $this->authorize('showReport', User::class);
 
 
-        $messId = DormitoryIdStatic::DORMITORYID;
+        $dormitoryId = DormitoryIdStatic::DORMITORYID;
 
         try {
             if ($request->has('month')) {
@@ -37,15 +37,15 @@ class ReportController extends Controller
                 $month = Carbon::parse(now());
             }
 
-            $bazar = $this->totalBazar($messId, $month);
-            $totalMeal = $this->getTotalMeal($messId, $month);
-            $additional = $this->getTotalAdditionalCost($messId, $month);
-            $members = $this->totalMember($messId);
+            $bazar = $this->totalBazar($dormitoryId, $month);
+            $totalMeal = $this->getTotalMeal($dormitoryId, $month);
+            $additional = $this->getTotalAdditionalCost($dormitoryId, $month);
+            $members = $this->totalMember($dormitoryId);
 
 
             return Inertia::render('Report/Index', [
-                'users' => $this->getUsersAndDepositWithMeal($messId, $month),
-                'balance' => $this->getTotalDeposit($messId),
+                'users' => $this->getUsersAndDepositWithMeal($dormitoryId, $month),
+                'balance' => $this->getTotalDeposit($dormitoryId),
                 'additional' => $additional,
                 'member' => $members,
                 'totalMeal' => $totalMeal,
@@ -58,12 +58,12 @@ class ReportController extends Controller
         }
     }
 
-    public function getUsersAndDepositWithMeal($messId, $month)
+    public function getUsersAndDepositWithMeal($dormitoryId, $month)
     {
         return new ReportCollection(
             User::query()
                 ->with([
-                    'dormitory' => fn ($q) => $q->where('dormitory_id', $messId),
+                    'dormitory' => fn ($q) => $q->where('dormitory_id', $dormitoryId),
                     'meals' => function ($query) use ($month) {
                         $query->whereMonth('created_at', '=', $month->month)
                             ->whereYear('created_at', '=', $month->year)

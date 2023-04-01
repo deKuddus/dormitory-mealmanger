@@ -22,10 +22,6 @@ const Create = () => {
         post(route("notice.store"));
     }
 
-    const setPublishedDate = (date) => {
-        setData("published_date", date)
-    }
-
 
     return (
         <div>
@@ -85,6 +81,6 @@ const Create = () => {
     );
 };
 
-Create.layout = (page) => <Layout title="Create User" children={page} />;
+Create.layout = (page) => <Layout title="Create Issue" children={page} />;
 
 export default Create;

@@ -22,7 +22,7 @@ const Index = () => {
     return (
         <div>
             <div className="flex items-center justify-between mb-6">
-                <h1 className="text-3xl font-bold">Rules</h1>
+                <h1 className="text-3xl font-bold">Roles</h1>
                 {isUserPermittedToPerformAction('access::role-create', user_permissions) &&
                     <Link
                         className="btn-indigo focus:outline-none"

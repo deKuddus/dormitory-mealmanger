@@ -35,7 +35,8 @@ class DormitoryCreateRequest extends FormRequest
             'is_automeal' => 'nullable|integer',
             'has_breakfast' => 'nullable|integer',
             'has_lunch' => 'nullable|integer',
-            'has_dinner' => 'nullable|integer'
+            'has_dinner' => 'nullable|integer',
+            'default_meal' => 'required|integer'
         ];
     }
 

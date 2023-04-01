@@ -65,7 +65,7 @@ class RegisterController extends Controller
 
     protected function create(array $data)
     {
-        $messId = DormitoryIdStatic::DORMITORYID;
+        $dormitoryId = DormitoryIdStatic::DORMITORYID;
 
         $user = \App\Models\User::create([
             'first_name' => $data['first_name'],
@@ -77,7 +77,7 @@ class RegisterController extends Controller
             'deposit' => 0,
             'status' => 1
         ]);
-        $user->dormitory()->sync($messId);
+        $user->dormitory()->sync($dormitoryId);
         return $user;
     }
 

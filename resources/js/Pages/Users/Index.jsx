@@ -38,7 +38,7 @@ const Index = () => {
 
     return (
         <div>
-            <h1 className="mb-8 text-3xl font-bold">Users</h1>
+            <h1 className="mb-8 text-3xl font-bold">Members</h1>
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
                 <div className="flex items-center">
                     <span className="text-xl p-3">
@@ -58,10 +58,10 @@ const Index = () => {
                 <div className="flex items-center">
                     {isUserPermittedToPerformAction('access::user-create', user_permissions) &&
                         <Link
-                            className="p-1 text-xs font-medium text-center text-white bg-buttonColor-400 rounded focus:outline-none"
+                            className="btn-indigo"
                             href={route("user.create")}
                         >
-                            <span>Create New User</span>
+                            <span>Add New Member</span>
                         </Link>
                     }
                 </div>

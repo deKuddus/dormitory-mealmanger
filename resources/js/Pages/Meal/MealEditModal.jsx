@@ -1,4 +1,4 @@
-import React, {Fragment, useRef} from 'react'
+import React, {Fragment} from 'react'
 import {Dialog, Transition} from '@headlessui/react'
 import TextInput from "@/Shared/TextInput";
 import moment from "moment";
@@ -46,7 +46,7 @@ export default function MealEditModal({mealData, setMealData, handleConfirm, ope
                                     <div className="sm:items-start">
                                         <Dialog.Title as="h3"
                                                       className="text-lg font-medium leading-6 text-gray-900 border-b mb-4 ">
-                                            Update Meal of <span className="text-xxl font-bold">{mealData.user}</span> for {moment(mealData.created_at).format('Do MMM YYYY')}
+                                            Update Meal for {moment(mealData.created_at).format('Do MMM YYYY')}
                                         </Dialog.Title>
                                         <div className="grid grid-cols-1 items-end gap-y-7">
 
@@ -59,12 +59,12 @@ export default function MealEditModal({mealData, setMealData, handleConfirm, ope
                                                 placeholder="Breakfast"
                                                 value={mealData.break_fast}
                                                 onChange={(e) => {
-                                                    if(e.target.value >= 0){
+                                                    if (e.target.value >= 0) {
                                                         setMealData((prevState) => ({
                                                             ...prevState,
-                                                            break_fast: parseInt(e.target.value,10)
+                                                            break_fast: parseInt(e.target.value, 10)
                                                         }))
-                                                    }else{
+                                                    } else {
                                                         setMealData((prevState) => ({
                                                             ...prevState,
                                                             lunch: 0
@@ -81,12 +81,12 @@ export default function MealEditModal({mealData, setMealData, handleConfirm, ope
                                                 placeholder="Lunch"
                                                 value={mealData.lunch}
                                                 onChange={(e) => {
-                                                    if(e.target.value >= 0){
+                                                    if (e.target.value >= 0) {
                                                         setMealData((prevState) => ({
                                                             ...prevState,
-                                                            lunch: parseInt(e.target.value,10)
+                                                            lunch: parseInt(e.target.value, 10)
                                                         }))
-                                                    }else{
+                                                    } else {
                                                         setMealData((prevState) => ({
                                                             ...prevState,
                                                             lunch: 0
@@ -103,12 +103,12 @@ export default function MealEditModal({mealData, setMealData, handleConfirm, ope
                                                 placeholder="Dinner"
                                                 value={mealData.dinner}
                                                 onChange={(e) => {
-                                                    if(e.target.value >= 0){
+                                                    if (e.target.value >= 0) {
                                                         setMealData((prevState) => ({
                                                             ...prevState,
-                                                            dinner: parseInt(e.target.value,10)
+                                                            dinner: parseInt(e.target.value, 10)
                                                         }))
-                                                    }else{
+                                                    } else {
                                                         setMealData((prevState) => ({
                                                             ...prevState,
                                                             dinner: 0

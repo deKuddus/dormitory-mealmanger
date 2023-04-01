@@ -21,10 +21,6 @@ const Edit = () => {
         post(route("rule.update", rule.id));
     }
 
-    const setPublishedDate = (date) => {
-        setData("published_date", date)
-    }
-
     return (
         <div>
             <div>

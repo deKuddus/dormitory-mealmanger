@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import Layout from "@/Shared/Layout";
 import {router, usePage} from "@inertiajs/react";
 import {isUserPermittedToPerformAction} from "@/utils";
@@ -17,19 +17,22 @@ const Dashboard = () => {
 
     return (
         <div>
-            <div className="flex items-center gap-2 justify-end">
-                {isUserPermittedToPerformAction('access::month-close', user_permissions) && (
-                    <div className="col-span-full mb-5">
-                        <button className="btn-indigo" onClick={handleMonthCloseRequest}>
+            <div className="flex items-center gap-2 justify-between">
+                <div className="col-span-full mb-5">
+                    <span className="font-bold">Today's Meal: <span className="text-indigo-700">{data.todaysMeal.lunch_total} Lunch</span> & <span className="text-pink-600">{data.todaysMeal.dinner_total} Dinner</span> </span>
+                </div>
+                <div className="col-span-full mb-5">
+                    {isUserPermittedToPerformAction('access::month-close', user_permissions) && (
+                        <button className="btn-indigo mr-3" onClick={handleMonthCloseRequest}>
                             Close Month
                         </button>
-                    </div>)}
-                {isUserPermittedToPerformAction('access::month-start', user_permissions) && (
-                    <div className="col-span-full mb-5">
+                    )}
+                    {isUserPermittedToPerformAction('access::month-start', user_permissions) && (
                         <button className="btn-indigo" onClick={handleMonthStart}>
-                           Start New Month
+                            Start New Month
                         </button>
-                    </div>)}
+                    )}
+                </div>
             </div>
             {isUserPermittedToPerformAction('access::dashboard-show', user_permissions) ?
                 (<>
@@ -40,7 +43,7 @@ const Dashboard = () => {
                                 <div className="space-y-2 text-white text-center">
                                     <div
                                         className="flex items-center space-x-2 rtl:space-x-reverse text-xl font-medium ">
-                                        <span>Today's Meal : {data.todaysMeal}</span>
+                                        <span>Today's Meal : {data.todaysTotalMeal}</span>
                                     </div>
                                 </div>
                             </div>

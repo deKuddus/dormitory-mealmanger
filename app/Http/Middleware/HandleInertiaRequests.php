@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\DormitoryIdStatic;
 use App\Helper\Helper;
 use App\Models\Deposit;
 use App\Models\Dormitory;
@@ -59,7 +60,10 @@ class HandleInertiaRequests extends Middleware
             'user_permissions' =>  Helper::getUserPermission(),
             'app_url' => env('APP_URL'),
             'routePrefix' => $request->route()->getPrefix(),
-            'deposit' => Auth::check() ? auth()->user()->isAdmin() ? Dormitory::query()->value('deposit') : auth()->user()->deposit : 0
+            'dormitory_deposit' => Auth::check() ? auth()->user()->isAdmin() ?
+                Dormitory::query()->whereId(DormitoryIdStatic::DORMITORYID)->value('deposit')
+                : 0 : 0,
+            'member_deposit' => \auth()->check() ? \auth()->user()->deposit : 0
         ]);
     }
 }

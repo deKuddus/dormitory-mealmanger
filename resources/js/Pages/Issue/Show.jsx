@@ -25,6 +25,6 @@ const Show = () => {
     );
 };
 
-Show.layout = (page) => <Layout title="Show Notice" children={page}/>;
+Show.layout = (page) => <Layout title="Notices" children={page}/>;
 
 export default Show;

@@ -66,7 +66,7 @@ const Index = () => {
                             return (
                                 <tr
                                     key={id}
-                                    className={`${weekDay[moment().day()] === menu_date ? 'bg-green-500 text-white font-bold text-xl shadow-2xl' : 'hover:bg-gray-100 opacity-40'} focus-within:bg-gray-100`}
+                                    className={`${weekDay[moment().day()] === menu_date ? 'bg-green-500 text-white font-bold text-xl shadow-2xl' : 'hover:bg-gray-100 opacity-40'}`}
                                 >
                                     <td className="border">
                                         <p

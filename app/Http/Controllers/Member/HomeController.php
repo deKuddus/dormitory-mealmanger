@@ -13,9 +13,9 @@ use App\Http\Resources\BazarScheduleCollection;
 use App\Http\Resources\NoticeCollection;
 use App\Models\BazarSchedule;
 use App\Models\Deposit;
+use App\Models\Dormitory;
 use App\Models\Meal;
 use App\Models\Menu;
-use App\Models\Dormitory;
 use App\Models\Notice;
 use App\Models\Rule;
 use App\Models\User;
@@ -23,30 +23,30 @@ use App\Services\MealService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rules\In;
 use Inertia\Inertia;
 
 class HomeController extends Controller
 {
     public function index(MealService $mealService)
     {
-        $messId = DormitoryIdStatic::DORMITORYID;
+        $dormitoryId = DormitoryIdStatic::DORMITORYID;
         $month = now();
         $userId = auth()->id();
 
-        $totalMeal = $mealService->allUserTotalMeal($messId, $month);
-        $balance = $mealService->getUserTotalDeposit($userId, $messId);
-        $bazar = $mealService->getTotalBazar($month, $messId);
+        $totalMeal = $mealService->allUserTotalMeal($dormitoryId, $month);
+        $balance = $mealService->getUserTotalDeposit($userId, $dormitoryId);
+        $bazar = $mealService->getTotalBazar($month, $dormitoryId);
         $mealCharge = $totalMeal === 0 ? 0 : round($bazar / $totalMeal, 2);
-        $fixedCost = $mealService->getTotalAdditionalCost($month, $messId) / $mealService->getTotalUser($messId);
+        $fixedCost = $mealService->getTotalAdditionalCost($month, $dormitoryId) / $mealService->getTotalUser($dormitoryId);
 
         return Inertia::render('Member/Index', [
             'mealCharge' => $mealCharge,
-            'meals' => $mealService->getUserAllMealForSelectedMonth($userId, $messId, $month),
+            'meals' => $mealService->getUserAllMealForSelectedMonth($userId, $dormitoryId, $month),
             'fixedCost' => $fixedCost,
             'due' => $totalMeal === 0 ? ($balance - $fixedCost) : ($balance - (($mealCharge * $totalMeal) + $fixedCost)),
             'totalMeal' => $totalMeal,
-            'totalCost' => $totalMeal === 0 ? 0 : round($totalMeal * $mealCharge, 2)
+            'totalCost' => $totalMeal === 0 ? 0 : round($totalMeal * $mealCharge, 2),
+            'todaysMeal' => $mealService->getTodaysLunchAndDinner()
         ]);
     }
 
@@ -88,17 +88,17 @@ class HomeController extends Controller
         if (now()->gte($lunchOff) && now()->gte($dinnerOff)) {
             Meal::whereIn('id', $mealIds)->whereBetween('created_at', [now()->addDay()->format('Y-m-d 09:00'), now()->lastOfMonth()->format('Y-m-d 09:00')])
                 ->update([
-                    'break_fast' => $status,
-                    'lunch' => $status,
-                    'dinner' => $status,
+                    'break_fast' => $dormitory->has_breakfast ? $status : 0,
+                    'lunch' => $dormitory->has_lunch ? $status : 0,
+                    'dinner' => $dormitory->has_dinner ? $status : 0,
                 ]);
         }
 
         if (!now()->gte($lunchOff) && now()->gte($dinnerOff)) {
             Meal::whereIn('id', $mealIds)->whereBetween('created_at', [now()->format('Y-m-d 09:00'), now()->lastOfMonth()->format('Y-m-d 09:00')])->update([
-                'break_fast' => $status,
-                'lunch' => $status,
-                'dinner' => $status,
+                'break_fast' => $dormitory->has_breakfast ? $status : 0,
+                'lunch' => $dormitory->has_lunch ? $status : 0,
+                'dinner' => $dormitory->has_dinner ? $status : 0,
             ]);
         }
 
@@ -106,13 +106,13 @@ class HomeController extends Controller
             Meal::whereIn('id', $mealIds)
                 ->whereDate('created_at', now()->format('Y-m-d'))
                 ->update([
-                    'dinner' => $status,
+                    'dinner' => $dormitory->has_dinner ? $status : 0,
                 ]);
 
             Meal::whereIn('id', $mealIds)->whereBetween('created_at', [now()->addDay()->format('Y-m-d 09:00'), now()->lastOfMonth()->format('Y-m-d 09:00')])->update([
-                'break_fast' => $status,
-                'lunch' => $status,
-                'dinner' => $status,
+                'break_fast' => $dormitory->has_breakfast ? $status : 0,
+                'lunch' => $dormitory->has_lunch ? $status : 0,
+                'dinner' => $dormitory->has_dinner ? $status : 0,
             ]);
         }
 
@@ -123,10 +123,10 @@ class HomeController extends Controller
 
     public function deposits()
     {
-        $messId = DormitoryIdStatic::DORMITORYID;
+        $dormitoryId = DormitoryIdStatic::DORMITORYID;
         return Inertia::render('Member/Deposit/Index', [
             'deposits' => Deposit::whereUserId(auth()->id())
-                ->whereDormitoryId($messId)
+                ->whereDormitoryId($dormitoryId)
                 ->orderBy('created_at', 'desc')
                 ->paginate()
         ]);
@@ -158,7 +158,7 @@ class HomeController extends Controller
 
     public function mealDetails(Request $request, MealService $mealService)
     {
-        $messId = DormitoryIdStatic::DORMITORYID;
+        $dormitoryId = DormitoryIdStatic::DORMITORYID;
 
         $user = auth()->id();
         try {
@@ -169,7 +169,7 @@ class HomeController extends Controller
             }
 
             $meal = Meal::query()
-                ->where('dormitory_id', $messId)
+                ->where('dormitory_id', $dormitoryId)
                 ->whereUserId($user)
                 ->whereMonth('created_at', now()->month)
                 ->whereYear('created_at', now()->year)
@@ -178,17 +178,17 @@ class HomeController extends Controller
                 ->first() ?? 0;
 
             $userTotalMeal = $meal ? $meal->total_meals : 0;
-            $bazar = $mealService->getTotalBazar($month, $messId);
-            $totalMealOfMess = $mealService->getTotalMeal($messId, $month);
+            $bazar = $mealService->getTotalBazar($month, $dormitoryId);
+            $totalMealOfMess = $mealService->getTotalMeal($dormitoryId, $month);
             $mealCost = $bazar === 0 ? 0 : ($userTotalMeal === 0 ? 0 : round($bazar / $totalMealOfMess, 2));
-            $additional = $mealService->getTotalAdditionalCost($month, $messId);
-            $member = $mealService->getTotalUser($messId);
-            $balance = $mealService->getUserTotalDeposit($user, $messId);
+            $additional = $mealService->getTotalAdditionalCost($month, $dormitoryId);
+            $member = $mealService->getTotalUser($dormitoryId);
+            $balance = $mealService->getUserTotalDeposit($user, $dormitoryId);
             $totalMealCost = $bazar === 0 ? 0 : round($mealCost * $userTotalMeal, 2);
             $fixedCost = $additional == 0 ? 0 : round($additional / $member, 2);
 
             return Inertia::render('Member/Meal/Show', [
-                'user' => $mealService->getUserWithMeal($user, $month, $messId),
+                'user' => $mealService->getUserWithMeal($user, $month, $dormitoryId),
                 'balance' => $balance,
                 'additional' => $additional,
                 'member' => $member,

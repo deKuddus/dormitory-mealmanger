@@ -19,6 +19,7 @@ const Edit = () => {
         has_breakfast: dormitory.has_breakfast,
         has_lunch: dormitory.has_lunch,
         has_dinner: dormitory.has_dinner,
+        default_meal:dormitory.default_meal,
         _method: "PUT",
     });
 
@@ -128,6 +129,16 @@ const Edit = () => {
                                 InActive
                             </option>
                         </SelectInput>
+
+                        <TextInput
+                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
+                            label="Default Meal Count"
+                            name="default_meal"
+                            type="number"
+                            errors={errors.default_meal}
+                            value={data.default_meal}
+                            onChange={(e) => setData("default_meal", e.target.value)}
+                        />
 
                         <SelectInput
                             className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
@@ -265,7 +276,7 @@ const Edit = () => {
                         </SelectInput>
                         <SelectInput
                             className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
-                            label="Breakfast will closed after"
+                            label="Dinner will closed after"
                             name="dinner_close"
                             value={data.dinner_close}
                             onChange={(e) =>

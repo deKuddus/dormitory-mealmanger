@@ -24,7 +24,7 @@ class Meal extends Model
 
     public function dormitory()
     {
-        return $this->belongsTo(Dormitory::class);
+        return $this->belongsTo(Dormitory::class,'dormitory_id','id');
     }
 
     protected function createdAt(): Attribute
