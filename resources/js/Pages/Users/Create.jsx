@@ -1,15 +1,17 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {Link, useForm, usePage} from "@inertiajs/react";
 import Layout from "@/Shared/Layout";
 import LoadingButton from "@/Shared/LoadingButton";
 import TextInput from "@/Shared/TextInput";
 import SelectInput from "@/Shared/SelectInput";
 import Select from "react-select";
+import {defaultApi} from "@/api";
+import {toast} from "react-toastify";
 // import FileInput from "@/Shared/FileInput";
 
 const Create = () => {
-
-    const {roles} = usePage().props;
+    const [seatOption, setSeatOptions] = useState([]);
+    const {roles, rooms} = usePage().props;
     const {data, setData, errors, post, processing} = useForm({
         first_name: "",
         last_name: "",
@@ -26,6 +28,8 @@ const Create = () => {
         status: "0",
         roles: [],
         is_admin: 0,
+        room_id: '',
+        seat_id: '',
     });
 
     const handleSubmit = (e) => {
@@ -38,6 +42,28 @@ const Create = () => {
         value: row.id,
         label: `${row.name}`
     })) : [];
+
+    const getSeatByRoom = async (roomId) => {
+        const {response, error} = await defaultApi(
+            `/api/v1/seat/${roomId}`,
+            "get"
+        );
+
+        if (error) {
+            toast.error(error.data.message);
+            setSeatOptions([]);
+        } else if (response.data && response.data.length > 0) {
+            setSeatOptions(response.data);
+        } else {
+            setSeatOptions([]);
+        }
+    }
+
+    useEffect(() => {
+        if (rooms && rooms.length) {
+            getSeatByRoom(rooms[0]?.id);
+        }
+    }, [rooms])
 
     return (
         <div>
@@ -177,6 +203,37 @@ const Create = () => {
                         >
                             <option value="1">Active</option>
                             <option value="0">InActive</option>
+                        </SelectInput>
+
+                        <SelectInput
+                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
+                            label="Room"
+                            name="room_id"
+                            errors={errors.room_id}
+                            value={data.room_id}
+                            onChange={(e) => {
+                                setData("room_id", e.target.value);
+                                getSeatByRoom(e.target.value)
+                            }}
+                        >
+                            <option>Select Room</option>
+                            {rooms && rooms.map((room, key) => (
+                                <option key={key} defaultValue={data.room_id} value={room.id}>{room.name}</option>))}
+                        </SelectInput>
+
+                        <SelectInput
+                            className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
+                            label="Seat"
+                            name="seat_id"
+                            errors={errors.seat_id}
+                            value={data.seat_id}
+                            onChange={(e) => {
+                                setData("seat_id", e.target.value);
+                            }}
+                        >
+                            <option>Select Seat</option>
+                            {seatOption && seatOption.map((seat, key) => (
+                                <option key={key} defaultValue={data.seat_id} value={seat.id}>{seat.seat_no}</option>))}
                         </SelectInput>
                         <SelectInput
                             className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"

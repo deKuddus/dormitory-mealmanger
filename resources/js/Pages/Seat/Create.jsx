@@ -6,11 +6,11 @@ import TextInput from "@/Shared/TextInput";
 import SelectInput from "@/Shared/SelectInput";
 
 const Create = () => {
-    const{users,rooms} = usePage().props;
+    const{rooms} = usePage().props;
     const { data, setData, errors, post, processing } = useForm({
         seat_no: "",
-        status: "",
-        room_id: 1,
+        status: 0,
+        room_id: rooms[0]?.id,
     });
 
     const handleSubmit = (e) =>{

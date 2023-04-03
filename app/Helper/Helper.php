@@ -7,6 +7,7 @@ use App\Enums\MealStatus;
 use App\Models\Dormitory;
 use App\Models\Meal;
 use App\Models\Role;
+use App\Models\Room;
 use App\Models\Rule;
 use App\Models\User;
 use Carbon\Carbon;
@@ -18,6 +19,13 @@ class Helper
     {
         return [
             'messes' => Dormitory::get(['id', 'name'])->toArray(),
+        ];
+    }
+
+    public static function roomArray()
+    {
+        return [
+            'rooms' => Room::query()->where('dormitory_id',DormitoryIdStatic::DORMITORYID)->get(['id', 'name'])->toArray(),
         ];
     }
 

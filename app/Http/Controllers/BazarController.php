@@ -29,17 +29,6 @@ class BazarController extends Controller
         ]);
     }
 
-    public function create()
-    {
-        return Inertia::render('Bazar/Create',[
-            'bazarScheduler' =>  BazarScheduleForBazarResource::collection(
-                BazarSchedule::query()
-                    ->with('users')
-                    ->get()
-            )
-        ]);
-    }
-
     public function store(BazarRequest $request)
     {
         $bazar = Bazar::create(
@@ -49,6 +38,18 @@ class BazarController extends Controller
         $bazar->dormitory()->decrement('deposit', $bazar->amount);
 
         return to_route('bazar.index');
+    }
+
+    public function create()
+    {
+        return Inertia::render('Bazar/Create', [
+            'bazarScheduler' => BazarScheduleForBazarResource::collection(
+                BazarSchedule::query()
+                    ->whereStatus(1)
+                    ->with('users')
+                    ->get()
+            )
+        ]);
     }
 
     public function show($id)
@@ -61,7 +62,7 @@ class BazarController extends Controller
     {
         return Inertia::render('Bazar/Edit', [
             'bazar' => $bazar,
-            'bazarScheduler' =>  BazarScheduleForBazarResource::collection(
+            'bazarScheduler' => BazarScheduleForBazarResource::collection(
                 BazarSchedule::query()
                     ->with('users')
                     ->get()
@@ -72,22 +73,22 @@ class BazarController extends Controller
     public function update(BazarRequest $request, Bazar $bazar)
     {
 
-        if($bazar->status === BazarStatus::APPROVED && $request->status === BazarStatus::APPROVED){
-            if($bazar->amount !== $request->amount){
-                $bazar->dormitory()->increment('deposit',$bazar->amount);
-                $bazar->dormitory()->decrement('deposit',$request->amount);
+        if ($bazar->status === BazarStatus::APPROVED && $request->status === BazarStatus::APPROVED) {
+            if ($bazar->amount !== $request->amount) {
+                $bazar->dormitory()->increment('deposit', $bazar->amount);
+                $bazar->dormitory()->decrement('deposit', $request->amount);
             }
         }
 
-        if($bazar->status === BazarStatus::APPROVED && $request->status === BazarStatus::PENDING){
-            if($bazar->amount !== $request->amount){
-                $bazar->dormitory()->increment('deposit',$bazar->amount);
+        if ($bazar->status === BazarStatus::APPROVED && $request->status === BazarStatus::PENDING) {
+            if ($bazar->amount !== $request->amount) {
+                $bazar->dormitory()->increment('deposit', $bazar->amount);
             }
         }
 
-        if($bazar->status === BazarStatus::PENDING && $request->status === BazarStatus::APPROVED){
-            if($bazar->amount !== $request->amount){
-                $bazar->dormitory()->decrement('deposit',$request->amount);
+        if ($bazar->status === BazarStatus::PENDING && $request->status === BazarStatus::APPROVED) {
+            if ($bazar->amount !== $request->amount) {
+                $bazar->dormitory()->decrement('deposit', $request->amount);
             }
         }
 

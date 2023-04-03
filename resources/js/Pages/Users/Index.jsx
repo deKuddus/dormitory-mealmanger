@@ -126,6 +126,16 @@ const Index = () => {
                                             />
                                         </Link>
                                         }
+                                        {isUserPermittedToPerformAction('access::user-show', user_permissions) && <Link
+                                            href={route("user.show", id)}
+                                            className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
+                                        >
+                                            <Icon
+                                                name="FaEye"
+                                                className="w-6 h-4 text-gray-400 hover:text-buttonColor-400 fill-current"
+                                            />
+                                        </Link>
+                                        }
 
                                         {isUserPermittedToPerformAction('access::user-delete', user_permissions) && (
                                             <button

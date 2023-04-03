@@ -56,6 +56,8 @@ Route::group(['middleware' => 'auth'],function (){
     Route::get('rules/{id}',[\App\Http\Controllers\Member\HomeController::class,'ruleDetails'])->name('user.rules.details');
     Route::get('notice',[\App\Http\Controllers\Member\HomeController::class,'notices'])->name('user.notices.index');
     Route::get('notice/{id}',[\App\Http\Controllers\Member\HomeController::class,'noticeDetails'])->name('user.notices.details');
+
+    Route::as('user')->resource('issue',\App\Http\Controllers\Member\IssueController::class);
 });
 
 

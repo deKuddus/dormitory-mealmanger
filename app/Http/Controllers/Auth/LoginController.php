@@ -2,19 +2,14 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Helpers\Helper;
+use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\URL;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Response;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
 {
@@ -33,12 +28,10 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-    protected function redirectTo()
+
+    public function showLoginForm()
     {
-        if (auth()->user()->is_admin == 1) {
-            return '/master';
-        }
-        return '/dashboard';
+        return Inertia::render('Auth/Login');
     }
 
     use AuthenticatesUsers;
@@ -48,23 +41,25 @@ class LoginController extends Controller
      *
      * @var string
      */
-//    protected $redirectTo = '/';
 
-    public function showLoginForm()
+    protected function redirectTo()
     {
-        return Inertia::render('Auth/Login');
+        if (auth()->user()->isAdmin()) {
+            return '/master';
+        }
+        return '/dashboard';
     }
 
     protected function attemptLogin(Request $request)
     {
         $user = User::where('email', $request->email)->first();
-        if($user){
-            if($user->isActive()) {
+        if ($user) {
+            if ($user->isActive()) {
                 if (Hash::check($request->password, $user->password)) {
                     Auth::login($user);
                     return true;
                 };
-            }else{
+            } else {
                 $this->sendFailedLoginResponse('You account is deactivated, contact with admin.');
             }
         }

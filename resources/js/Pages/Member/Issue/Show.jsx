@@ -1,6 +1,6 @@
 import React from "react";
 import {Link, usePage} from "@inertiajs/react";
-import Layout from "@/Shared/Layout";
+import MemberLayout from "@/Shared/Member/MemberLayout";
 const Show = () => {
     const {issue} = usePage().props;
 
@@ -9,7 +9,7 @@ const Show = () => {
         <>
             <h1 className="mb-8 text-3xl font-bold">
                 <Link
-                    href={route("issue.index")}
+                    href={route("user.issue.index")}
                     className="text-indigo-600 hover:text-indigo-700"
                 >
                     Issue
@@ -25,6 +25,6 @@ const Show = () => {
     );
 };
 
-Show.layout = (page) => <Layout title="Issue" children={page}/>;
+Show.layout = (page) => <MemberLayout title="Issue" children={page}/>;
 
 export default Show;

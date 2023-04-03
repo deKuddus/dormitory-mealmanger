@@ -16,4 +16,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
     Route::get('/meals/{messId}', [\App\Http\Controllers\CalendarController::class, 'getMeals']);
+    Route::get('/seat/{room_id}', [\App\Http\Controllers\CalendarController::class, 'getSeatByRoom']);
 });

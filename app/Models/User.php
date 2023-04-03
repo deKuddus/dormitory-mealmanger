@@ -5,15 +5,14 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\UserStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
-use League\Glide\Server;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\URL;
+use League\Glide\Server;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
@@ -39,7 +38,9 @@ class User extends Authenticatable
         'company',
         'status',
         'is_admin',
-        'note'
+        'note',
+        'room_id',
+        'seat_id'
     ];
     protected $perPage = 10;
 
@@ -116,6 +117,7 @@ class User extends Authenticatable
     {
         return $query->where('status', UserStatus::ACTIVE);
     }
+
     public function scopeInActive($query)
     {
         return $query->where('status', UserStatus::INACTIVE);
@@ -132,18 +134,28 @@ class User extends Authenticatable
         return $this->hasMany(Meal::class);
     }
 
-    public function isAbleToAccessDashboard()
-    {
-        return $this->is_admin === 1;
-    }
-
     public function isAdmin()
     {
         return $this->isAbleToAccessDashboard();
     }
 
+    public function isAbleToAccessDashboard()
+    {
+        return $this->is_admin === 1;
+    }
+
     public function isActive()
     {
         return $this->status === UserStatus::ACTIVE;
+    }
+
+    public function room()
+    {
+        return $this->belongsTo(Room::class);
+    }
+
+    public function seat()
+    {
+        return $this->belongsTo(Seat::class);
     }
 }

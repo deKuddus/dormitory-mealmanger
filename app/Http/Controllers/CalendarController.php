@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\MealStatus;
 use App\Http\Resources\MealCollection;
 use App\Models\Meal;
+use App\Models\Seat;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -44,5 +45,10 @@ class CalendarController extends Controller
                 ->groupBy('created_at')
                 ->get()
         );
+    }
+
+    public function getSeatByRoom($roomId)
+    {
+        return Seat::query()->whereRoomId($roomId)->where('booking_status', 0)->get()->toArray();
     }
 }

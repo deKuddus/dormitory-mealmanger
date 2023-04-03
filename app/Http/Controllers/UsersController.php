@@ -40,7 +40,8 @@ class UsersController extends Controller
 
         return Inertia::render('Users/Create', [
             ...Helper::messArray(),
-            ...Helper::rolesArray()
+            ...Helper::rolesArray(),
+            ...Helper::roomArray()
         ]);
     }
 
@@ -64,7 +65,7 @@ class UsersController extends Controller
 
         return Inertia::render('Users/Edit', [
             'user' => new UserResource($user->load('roles')),
-            ...Helper::messArray(),
+            ...Helper::roomArray(),
             ...Helper::rolesArray()
         ]);
     }
@@ -74,8 +75,7 @@ class UsersController extends Controller
         $this->authorize('showUser',User::class);
 
         return Inertia::render('Users/Show', [
-            'user' => new UserResource($user),
-            ...Helper::messArray()
+            'user' => $user->load('roles','room','seat')
         ]);
     }
 

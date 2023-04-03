@@ -44,7 +44,9 @@ class UserUpdateRequest extends FormRequest
             'dormitory_id' => ['required', 'integer'],
             'roles' => ['nullable', 'array'],
             'is_admin' => ['nullable', 'integer'],
-            'note' => ['nullable', 'string']
+            'note' => ['nullable', 'string'],
+            'room_id' => ['nullable', 'integer'],
+            'seat_id' => ['nullable', 'integer']
         ];
     }
 

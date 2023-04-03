@@ -40,8 +40,10 @@ class UserStoreRequest extends FormRequest
             'status' => ['required', 'boolean'],
             'photo' => ['nullable', 'image'],
             'dormitory_id' => ['required', 'integer'],
-            'roles' => ['required', 'array'],
-            'is_admin' => ['required', 'boolean']
+            'roles' => ['nullable', 'array'],
+            'is_admin' => ['required', 'boolean'],
+            'room_id' => ['nullable', 'integer'],
+            'seat_id' => ['nullable', 'integer']
         ];
     }
 

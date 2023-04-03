@@ -32,6 +32,8 @@ class UserResource extends JsonResource
             'meal_status' => $this->meal_status,
             'is_admin' => $this->is_admin,
             'note' => $this->note,
+            'room_id' => $this->room_id,
+            'seat_id' => $this->seat_id,
         ];
     }
 }
