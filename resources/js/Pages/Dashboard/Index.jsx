@@ -12,7 +12,7 @@ const Dashboard = () => {
     }
 
     const handleMonthStart = () => {
-        console.log(4)
+        router.post(route('new.month.start'));
     }
 
     return (

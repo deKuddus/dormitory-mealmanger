@@ -54,7 +54,7 @@ class Helper
 
     public static function createMeal()
     {
-        $autoMealGenerationForMess = Dormitory::with('users:id,dormitory_id')->active()->get();
+        $autoMealGenerationForMess = Dormitory::query()->whereId(DormitoryIdStatic::DORMITORYID)->with('users:id,dormitory_id')->active()->get();
 
 
         $autoMealGenerationForMess->each(function ($dormitory) {

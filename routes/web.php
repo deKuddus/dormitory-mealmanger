@@ -105,11 +105,12 @@ Route::group(['middleware' => ['auth', 'remember','hasAccessInDashboard'],'prefi
 
     Route::get('expenses',[\App\Http\Controllers\ExpenseController::class,'index'])->name('expense.index');
 
-    Route::post('month/close',\App\Http\Controllers\MonthCloseController::class)->name('month.close');
+    Route::post('month/close',[\App\Http\Controllers\MonthCloseController::class,'index'])->name('month.close');
     Route::get('permissions',[\App\Http\Controllers\PermissionController::class,'index'])->name('permissions.index');
     Route::resource('role',\App\Http\Controllers\RoleController::class);
     Route::get('report',[\App\Http\Controllers\ReportController::class,'index'])->name('report.index');
     Route::get('report/closed',[\App\Http\Controllers\ReportController::class,'closedCalculation'])->name('report.closed.index');
+    Route::post('start-new-month',[\App\Http\Controllers\MonthCloseController::class,'startNewMonth'])->name('new.month.start');
 
 
 });
