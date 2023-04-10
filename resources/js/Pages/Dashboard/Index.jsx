@@ -1,5 +1,5 @@
 import React from "react";
-import Layout from "@/Shared/Layout";
+import Layouts from "@/Shared/Layouts";
 import {router, usePage} from "@inertiajs/react";
 import {isUserPermittedToPerformAction} from "@/utils";
 
@@ -139,7 +139,7 @@ const Dashboard = () => {
 
 
 Dashboard.layout = (page) =>
-    <Layout title="Dashboard" children={page}/>
+    <Layouts title="Dashboard" children={page}/>
 ;
 
 export default Dashboard;
