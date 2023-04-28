@@ -7,7 +7,7 @@ import MealEditModal from "@/Pages/Meal/MealEditModal";
 
 
 const Index = () => {
-    const {auth, meals, mealCharge, due, totalCost, fixedCost, totalMeal,todaysMeal} = usePage().props;
+    const {auth, meals, mealCharge, due, totalCost, fixedCost, totalMeal, todaysMeal} = usePage().props;
     const [isCheck, setIsCheck] = useState(auth.user.meal_status === 1)
     const mealEditInitialObject = {
         id: undefined,
@@ -92,8 +92,8 @@ const Index = () => {
                             className="flex items-center space-x-2 space-y-2 text-gray-900 text-sm md:text-md lg:text-xl font-medium ">
                             <div className="text-xl px-4">
                                 <span className="font-bold">Today's Meal</span>
-                                <span className="text-blue-600 mr-4 ml-3">Lunch : {todaysMeal.lunch_total}</span>
-                                <span className="text-pink-600">Dinner: {todaysMeal.dinner_total}</span>
+                                <span className="text-blue-600 mr-4 ml-3">Lunch : {todaysMeal?.lunch_total || 0}</span>
+                                <span className="text-pink-600">Dinner: {todaysMeal?.dinner_total || 0}</span>
                             </div>
                         </div>
                     </div>
@@ -146,7 +146,7 @@ const Index = () => {
                             </thead>
                             <tbody>
 
-                            {meals && meals.map(({id,lunch, dinner, break_fast,is_editable, created_at}, key) => (
+                            {meals && meals.map(({id, lunch, dinner, break_fast, is_editable, created_at}, key) => (
                                 <tr
                                     key={key}
                                     className="hover:bg-gray-100 focus-within:bg-gray-100"

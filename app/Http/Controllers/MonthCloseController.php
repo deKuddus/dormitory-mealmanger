@@ -6,6 +6,7 @@ use App\Enums\AdditionalCostType;
 use App\Enums\BazarStatus;
 use App\Enums\MealStatus;
 use App\Enums\DormitoryIdStatic;
+use App\Helper\Helper;
 use App\Models\AdditionalCost;
 use App\Models\Bazar;
 use App\Models\Calculation;
@@ -16,7 +17,7 @@ use Illuminate\Support\Facades\DB;
 
 class MonthCloseController extends Controller
 {
-    public function __invoke()
+    public function index()
     {
         $dormitoryId = DormitoryIdStatic::DORMITORYID;
         $bazar = Bazar::query()
@@ -86,8 +87,7 @@ class MonthCloseController extends Controller
             ->whereYear('created_at', now()->year)
             ->update(['status' => BazarStatus::CLOSED]);
 
-        dd(4);
-        return '';
+        return back();
     }
 
     private function getUserAndMeal($dormitoryId)
@@ -108,5 +108,10 @@ class MonthCloseController extends Controller
             ->select('id')
             ->orderBy('created_at', 'desc')
             ->get();
+    }
+
+    public function startNewMonth(){
+        Helper::createMeal();
+        return back()->with('success','New month started');
     }
 }

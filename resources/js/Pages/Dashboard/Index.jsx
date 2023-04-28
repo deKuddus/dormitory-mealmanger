@@ -12,14 +12,14 @@ const Dashboard = () => {
     }
 
     const handleMonthStart = () => {
-        console.log(4)
+        router.post(route('new.month.start'));
     }
 
     return (
         <div>
             <div className="flex items-center gap-2 justify-between">
                 <div className="col-span-full mb-5">
-                    <span className="font-bold">Today's Meal: <span className="text-indigo-700">{data.todaysMeal.lunch_total} Lunch</span> & <span className="text-pink-600">{data.todaysMeal.dinner_total} Dinner</span> </span>
+                    <span className="font-bold">Today's Meal: <span className="text-indigo-700">{data?.todaysMeal?.lunch_total || 0} Lunch</span> & <span className="text-pink-600">{data?.todaysMeal?.dinner_total || 0} Dinner</span> </span>
                 </div>
                 <div className="col-span-full mb-5">
                     {isUserPermittedToPerformAction('access::month-close', user_permissions) && (
