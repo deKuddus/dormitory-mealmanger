@@ -1,25 +1,25 @@
 import React from "react";
-import {Link, useForm, usePage} from "@inertiajs/react";
-import Layout from "@/Shared/Layout";
+import { Link, useForm, usePage } from "@inertiajs/react";
+import Layout from "@/Shared/Layout/AuthenticatedLayout";
 import LoadingButton from "@/Shared/LoadingButton";
 import TextInput from "@/Shared/TextInput";
 import SelectInput from "@/Shared/SelectInput";
-import 'react-quill/dist/quill.snow.css';
+import "react-quill/dist/quill.snow.css";
 import ReactQuill from "react-quill";
 
 const Edit = () => {
-    const {rule} = usePage().props
-    const {data, setData, errors, post, processing} = useForm({
+    const { rule } = usePage().props;
+    const { data, setData, errors, post, processing } = useForm({
         title: rule.title,
         status: rule.status,
         description: rule.description,
-        _method: 'PUT',
+        _method: "PUT",
     });
 
     const handleSubmit = (e) => {
         e.preventDefault();
         post(route("rule.update", rule.id));
-    }
+    };
 
     return (
         <div>
@@ -31,8 +31,7 @@ const Edit = () => {
                     >
                         Rule
                     </Link>
-                    <span className="font-medium text-indigo-600"> /</span>{" "}
-                    Edit
+                    <span className="font-medium text-indigo-600"> /</span> Edit
                 </h1>
             </div>
             <div className="w-full overflow-hidden bg-white rounded shadow">
@@ -45,9 +44,7 @@ const Edit = () => {
                             type="text"
                             errors={errors.title}
                             value={data.title}
-                            onChange={(e) =>
-                                setData("title", e.target.value)
-                            }
+                            onChange={(e) => setData("title", e.target.value)}
                         />
 
                         <SelectInput
@@ -58,14 +55,20 @@ const Edit = () => {
                             value={data.status}
                             onChange={(e) => setData("status", e.target.value)}
                         >
-                            <option value="1" defaultValue={data.status}>Active</option>
-                            <option value="0" defaultValue={data.status}>InActive</option>
+                            <option value="1" defaultValue={data.status}>
+                                Active
+                            </option>
+                            <option value="0" defaultValue={data.status}>
+                                InActive
+                            </option>
                         </SelectInput>
 
-                        <ReactQuill className="h-48 pr-6 mb-12 w-full" theme="snow" value={data.description}
-                                    onChange={(e) => setData('description', e)}/>
-
-
+                        <ReactQuill
+                            className="h-48 pr-6 mb-12 w-full"
+                            theme="snow"
+                            value={data.description}
+                            onChange={(e) => setData("description", e)}
+                        />
                     </div>
                     <div className="flex items-center justify-end px-8 py-4 bg-gray-100 border-t border-gray-200">
                         <LoadingButton
@@ -82,6 +85,6 @@ const Edit = () => {
     );
 };
 
-Edit.layout = (page) => <Layout title="Edit Rule" children={page}/>;
+Edit.layout = (page) => <Layout title="Edit Rule" children={page} />;
 
 export default Edit;

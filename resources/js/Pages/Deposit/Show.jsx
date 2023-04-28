@@ -1,89 +1,100 @@
-import React, {useEffect, useState} from "react";
-import {router, useForm, usePage} from "@inertiajs/react";
-import Layout from "@/Shared/Layout";
+import React, { useEffect, useState } from "react";
+import { router, useForm, usePage } from "@inertiajs/react";
+import Layout from "@/Shared/Layout/AuthenticatedLayout";
 import TextInput from "@/Shared/TextInput";
 import LoadingButton from "@/Shared/LoadingButton";
 import Icon from "@/Shared/Icon";
-import {toast} from "react-toastify";
-import {APPROVED, WITHDRAWN} from "@/Shared/const/depostiStatus";
-import {isUserPermittedToPerformAction} from '@/utils'
+import { toast } from "react-toastify";
+import { APPROVED, WITHDRAWN } from "@/Shared/const/depostiStatus";
+import { isUserPermittedToPerformAction } from "@/utils";
 
 const Show = () => {
-    const {user, approvedDeposit, pendingDeposit, flash,user_permissions} = usePage().props;
+    const { user, approvedDeposit, pendingDeposit, flash, user_permissions } =
+        usePage().props;
 
     const [withdraw, setWithdraw] = useState(0);
 
-    const {data, setData, errors, post, processing} = useForm({
+    const { data, setData, errors, post, processing } = useForm({
         amount: 0,
         deposit_date: new Date(),
         status: APPROVED,
         user_id: user.id,
     });
 
-
     const handleDepositSubmit = (e) => {
         e.preventDefault();
         post(route("deposit.store"));
-        setData('amount', 0);
-    }
+        setData("amount", 0);
+    };
 
     const deleteDeposit = (id) => {
         if (confirm("Are you sure you want to delete this deposit?")) {
             router.delete(route("deposit.destroy", id));
         }
         return true;
-    }
+    };
 
     const approveDeposit = (id) => {
         if (confirm("Are you sure you want to approve this deposit?")) {
             router.post(route("deposit.accept", id));
         }
         return true;
-    }
+    };
 
     const rejectDeposit = (id) => {
         if (confirm("Are you sure you want to reject this deposit?")) {
             router.post(route("deposit.reject", id));
         }
         return true;
-    }
+    };
 
     const addWithdraw = () => {
         if (withdraw === 0 || withdraw < 0) {
-            return toast.error('Woops! amount can not be equal or less than zero');
+            return toast.error(
+                "Woops! amount can not be equal or less than zero"
+            );
         } else {
             router.post(route("deposit.withdraw"), {
                 user_id: user.id,
                 deposit_date: new Date(),
                 status: WITHDRAWN,
-                amount: withdraw
-            })
+                amount: withdraw,
+            });
             return setWithdraw(0);
         }
-    }
+    };
 
     useEffect(() => {
         if (errors && errors.length) {
-            toast.error('There was an errors.');
+            toast.error("There was an errors.");
         }
 
         if (flash && flash.success) {
             toast.success(flash.success);
         }
-    }, [errors, flash])
-
+    }, [errors, flash]);
 
     return (
         <div>
-            <h1 className="mb-8 text-3xl font-bold">Deposits of {user.first_name} {user.last_name}</h1>
+            <h1 className="mb-8 text-3xl font-bold">
+                Deposits of {user.first_name} {user.last_name}
+            </h1>
             <div className="overflow-x-auto bg-white rounded shadow p-3">
                 <div className="col-span-full mb-5">
-                    <h6 className="mb-1 text-gray-900 text-xl font-bold">Total: {user.deposit} BDT</h6>
+                    <h6 className="mb-1 text-gray-900 text-xl font-bold">
+                        Total: {user.deposit} BDT
+                    </h6>
                     <div className="grid md:grid-cols-2">
-                        {isUserPermittedToPerformAction('access::deposit-create', user_permissions) &&
+                        {isUserPermittedToPerformAction(
+                            "access::deposit-create",
+                            user_permissions
+                        ) && (
                             <div className="relative p-6 rounded-xl">
                                 <div className="space-y-2 text-white text-center">
-                                    <form name="createForm" onSubmit={handleDepositSubmit}>
+                                    <form
+                                        name="createForm"
+                                        onSubmit={handleDepositSubmit}
+                                    >
                                         <div className="flex w-full flex-row p-8 -mb-8 -mr-6">
                                             <TextInput
                                                 className="w-full pr-6 md:w-1/2 lg:w-1/2"
@@ -93,9 +104,12 @@ const Show = () => {
                                                 value={data.amount}
                                                 onChange={(e) => {
                                                     if (e.target.value < 0) {
-                                                        setData('amount', 0)
+                                                        setData("amount", 0);
                                                     } else {
-                                                        setData('amount', e.target.value)
+                                                        setData(
+                                                            "amount",
+                                                            e.target.value
+                                                        );
                                                     }
                                                 }}
                                                 errors={errors.amount}
@@ -107,24 +121,27 @@ const Show = () => {
                                             >
                                                 Add Deposit
                                             </LoadingButton>
-
                                         </div>
                                     </form>
                                 </div>
                             </div>
-                        }
-                        {isUserPermittedToPerformAction('access::deposit-withdraw', user_permissions) &&
+                        )}
+                        {isUserPermittedToPerformAction(
+                            "access::deposit-withdraw",
+                            user_permissions
+                        ) && (
                             <div className="relative p-6 rounded-xl">
                                 <div className="space-y-2 text-white text-center">
                                     <div className="flex w-full flex-row p-8 -mb-8 -mr-6">
-
                                         <TextInput
                                             className="w-full pr-6 md:w-1/2 lg:w-1/2"
                                             label=""
                                             name="withdraw"
                                             type="number"
                                             value={withdraw}
-                                            onChange={(e) => setWithdraw(e.target.value)}
+                                            onChange={(e) =>
+                                                setWithdraw(e.target.value)
+                                            }
                                         />
                                         <button
                                             onClick={addWithdraw}
@@ -133,187 +150,215 @@ const Show = () => {
                                         >
                                             Add Withdraw
                                         </button>
-
                                     </div>
                                 </div>
                             </div>
-                        }
+                        )}
                     </div>
                 </div>
                 <div className="grid gap-4 lg:gap-8 md:grid-cols-2">
                     <div>
-                        <h6 className="mb-4 text-gray-900 text-xl font-bold">Transaction History</h6>
+                        <h6 className="mb-4 text-gray-900 text-xl font-bold">
+                            Transaction History
+                        </h6>
                         <table className="w-full whitespace-nowrap">
                             <thead>
-                            <tr className="font-bold text-left">
-                                <th className="px-6 pt-5 pb-4">No</th>
-                                <th className="px-6 pt-5 pb-4">Date</th>
-                                <th className="px-6 pt-5 pb-4">Amount</th>
-                                {isUserPermittedToPerformAction('access::deposit-delete', user_permissions) &&
-                                    <th className="px-6 pt-5 pb-4">Action</th>
-                                }
-                            </tr>
+                                <tr className="font-bold text-left">
+                                    <th className="px-6 pt-5 pb-4">No</th>
+                                    <th className="px-6 pt-5 pb-4">Date</th>
+                                    <th className="px-6 pt-5 pb-4">Amount</th>
+                                    {isUserPermittedToPerformAction(
+                                        "access::deposit-delete",
+                                        user_permissions
+                                    ) && (
+                                        <th className="px-6 pt-5 pb-4">
+                                            Action
+                                        </th>
+                                    )}
+                                </tr>
                             </thead>
                             <tbody>
-                            {approvedDeposit.length ? approvedDeposit.map(({
-                                                                               id,
-                                                                               amount: _amount,
-                                                                               deposit_date,
-                                                                               status
-                                                                           }, key) => (
-                                <tr
-                                    key={key}
-                                    className="hover:bg-gray-100 focus-within:bg-gray-100"
-                                >
-
-
-                                    <td className="border">
-                                        <p
-                                            className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
-                                        >
-                                            {key + 1}
-                                        </p>
-                                    </td>
-                                    <td className="border">
-                                        <p
-                                            className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
-                                        >
-                                            {deposit_date}
-                                        </p>
-                                    </td>
-                                    <td className="border">
-                                        {status === WITHDRAWN ? (
-                                            <p
-                                                className="flex items-center px-6 py-4 text-red-600 focus:outline-none"
+                                {approvedDeposit.length ? (
+                                    approvedDeposit.map(
+                                        (
+                                            {
+                                                id,
+                                                amount: _amount,
+                                                deposit_date,
+                                                status,
+                                            },
+                                            key
+                                        ) => (
+                                            <tr
+                                                key={key}
+                                                className="hover:bg-gray-100 focus-within:bg-gray-100"
                                             >
-                                                - {_amount} BDT
+                                                <td className="border">
+                                                    <p className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none">
+                                                        {key + 1}
+                                                    </p>
+                                                </td>
+                                                <td className="border">
+                                                    <p className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none">
+                                                        {deposit_date}
+                                                    </p>
+                                                </td>
+                                                <td className="border">
+                                                    {status === WITHDRAWN ? (
+                                                        <p className="flex items-center px-6 py-4 text-red-600 focus:outline-none">
+                                                            - {_amount} BDT
+                                                        </p>
+                                                    ) : (
+                                                        <p className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none">
+                                                            {_amount} BDT
+                                                        </p>
+                                                    )}
+                                                </td>
+                                                {isUserPermittedToPerformAction(
+                                                    "access::deposit-delete",
+                                                    user_permissions
+                                                ) && (
+                                                    <td className="w-px border px-4 py-3 whitespace-nowrap">
+                                                        <div className="flex items-center gap-4 justify-end">
+                                                            <button
+                                                                onClick={() =>
+                                                                    deleteDeposit(
+                                                                        id
+                                                                    )
+                                                                }
+                                                                className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
+                                                            >
+                                                                <Icon
+                                                                    name="FaTrashAlt"
+                                                                    className="w-6 h-4 text-gray-400 fill-current"
+                                                                />
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                )}
+                                            </tr>
+                                        )
+                                    )
+                                ) : (
+                                    <tr className="hover:bg-gray-100 focus-within:bg-gray-100">
+                                        <td className="border" colSpan={4}>
+                                            <p className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none">
+                                                No transaction found
                                             </p>
-                                        ) : (<p
-                                            className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
-                                        >
-                                            {_amount} BDT
-                                        </p>)}
-                                    </td>
-                                    {isUserPermittedToPerformAction('access::deposit-delete', user_permissions) &&
-                                        <td className="w-px border px-4 py-3 whitespace-nowrap">
-                                            <div className="flex items-center gap-4 justify-end">
-                                                <button
-                                                    onClick={() => deleteDeposit(id)}
-                                                    className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
-                                                >
-                                                    <Icon
-                                                        name="FaTrashAlt"
-                                                        className="w-6 h-4 text-gray-400 fill-current"
-                                                    />
-                                                </button>
-
-                                            </div>
                                         </td>
-                                    }
-                                </tr>
-                            )) : (
-                                <tr
-                                    className="hover:bg-gray-100 focus-within:bg-gray-100"
-                                >
-                                    <td className="border" colSpan={4}>
-                                        <p
-                                            className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
-                                        >
-                                            No transaction found
-                                        </p>
-                                    </td>
-
-                                </tr>
-                            )}
+                                    </tr>
+                                )}
                             </tbody>
                         </table>
                     </div>
                     <div>
-                        <h6 className="mb-4 text-gray-900 text-xl font-bold">Deposit Request</h6>
+                        <h6 className="mb-4 text-gray-900 text-xl font-bold">
+                            Deposit Request
+                        </h6>
                         <table className="w-full whitespace-nowrap">
                             <thead>
-                            <tr className="font-bold text-left">
-                                <th className="px-6 pt-5 pb-4">No</th>
-                                <th className="px-6 pt-5 pb-4">Date</th>
-                                <th className="px-6 pt-5 pb-4">Amount</th>
-                                {isUserPermittedToPerformAction('access::deposit-approve', user_permissions) || isUserPermittedToPerformAction('access::deposit-reject', user_permissions) &&
-                                    <th className="px-6 pt-5 pb-4">Action</th>
-                                }
-                            </tr>
+                                <tr className="font-bold text-left">
+                                    <th className="px-6 pt-5 pb-4">No</th>
+                                    <th className="px-6 pt-5 pb-4">Date</th>
+                                    <th className="px-6 pt-5 pb-4">Amount</th>
+                                    {isUserPermittedToPerformAction(
+                                        "access::deposit-approve",
+                                        user_permissions
+                                    ) ||
+                                        (isUserPermittedToPerformAction(
+                                            "access::deposit-reject",
+                                            user_permissions
+                                        ) && (
+                                            <th className="px-6 pt-5 pb-4">
+                                                Action
+                                            </th>
+                                        ))}
+                                </tr>
                             </thead>
                             <tbody>
-                            {pendingDeposit.length ? pendingDeposit.map(({id, amount: _amount, deposit_date}, key) => (
-                                <tr
-                                    key={key}
-                                    className="hover:bg-gray-100 focus-within:bg-gray-100"
-                                >
-
-
-                                    <td className="border">
-                                        <p
-                                            className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
-                                        >
-                                            {key + 1}
-                                        </p>
-                                    </td>
-                                    <td className="border">
-                                        <p
-                                            className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
-                                        >
-                                            {deposit_date}
-                                        </p>
-                                    </td>
-                                    <td className="border">
-                                        <p
-                                            className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
-                                        >
-                                            {_amount}
-                                        </p>
-                                    </td>
-                                    <td className="w-px border px-4 py-3 whitespace-nowrap">
-                                        <div className="flex items-center gap-4 justify-end">
-                                            {isUserPermittedToPerformAction('access::deposit-approve', user_permissions) &&
-                                                <button
-                                                    onClick={() => approveDeposit(id)}
-                                                    className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
-                                                >
-                                                    <Icon
-                                                        name="FaCheck"
-                                                        className="w-6 h-4 text-buttonColor-400 fill-current"
-                                                    />
-                                                </button>
-                                            }
-                                            {isUserPermittedToPerformAction('access::deposit-reject', user_permissions) &&
-                                                <button
-                                                    onClick={() => rejectDeposit(id)}
-                                                    className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
-                                                >
-                                                    <Icon
-                                                        name="FaTimes"
-                                                        className="w-6 h-4 text-red-400 fill-current"
-                                                    />
-                                                </button>
-                                            }
-                                        </div>
-                                    </td>
-                                </tr>
-                            )) : (
-                                <tr
-                                    className="hover:bg-gray-100 focus-within:bg-gray-100"
-                                >
-                                    <td className="border" colSpan={4}>
-                                        <p
-                                            className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
-                                        >
-                                            No transaction found
-                                        </p>
-                                    </td>
-
-                                </tr>
-                            )}
+                                {pendingDeposit.length ? (
+                                    pendingDeposit.map(
+                                        (
+                                            {
+                                                id,
+                                                amount: _amount,
+                                                deposit_date,
+                                            },
+                                            key
+                                        ) => (
+                                            <tr
+                                                key={key}
+                                                className="hover:bg-gray-100 focus-within:bg-gray-100"
+                                            >
+                                                <td className="border">
+                                                    <p className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none">
+                                                        {key + 1}
+                                                    </p>
+                                                </td>
+                                                <td className="border">
+                                                    <p className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none">
+                                                        {deposit_date}
+                                                    </p>
+                                                </td>
+                                                <td className="border">
+                                                    <p className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none">
+                                                        {_amount}
+                                                    </p>
+                                                </td>
+                                                <td className="w-px border px-4 py-3 whitespace-nowrap">
+                                                    <div className="flex items-center gap-4 justify-end">
+                                                        {isUserPermittedToPerformAction(
+                                                            "access::deposit-approve",
+                                                            user_permissions
+                                                        ) && (
+                                                            <button
+                                                                onClick={() =>
+                                                                    approveDeposit(
+                                                                        id
+                                                                    )
+                                                                }
+                                                                className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
+                                                            >
+                                                                <Icon
+                                                                    name="FaCheck"
+                                                                    className="w-6 h-4 text-buttonColor-400 fill-current"
+                                                                />
+                                                            </button>
+                                                        )}
+                                                        {isUserPermittedToPerformAction(
+                                                            "access::deposit-reject",
+                                                            user_permissions
+                                                        ) && (
+                                                            <button
+                                                                onClick={() =>
+                                                                    rejectDeposit(
+                                                                        id
+                                                                    )
+                                                                }
+                                                                className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
+                                                            >
+                                                                <Icon
+                                                                    name="FaTimes"
+                                                                    className="w-6 h-4 text-red-400 fill-current"
+                                                                />
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        )
+                                    )
+                                ) : (
+                                    <tr className="hover:bg-gray-100 focus-within:bg-gray-100">
+                                        <td className="border" colSpan={4}>
+                                            <p className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none">
+                                                No transaction found
+                                            </p>
+                                        </td>
+                                    </tr>
+                                )}
                             </tbody>
                         </table>
-
                     </div>
                 </div>
             </div>
@@ -321,6 +366,6 @@ const Show = () => {
     );
 };
 
-Show.layout = (page) => <Layout title="Deposit Details" children={page}/>;
+Show.layout = (page) => <Layout title="Deposit Details" children={page} />;
 
 export default Show;

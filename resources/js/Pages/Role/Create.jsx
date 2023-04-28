@@ -1,13 +1,10 @@
-import React, {useState} from "react";
-import {Link, useForm, usePage} from "@inertiajs/react";
-import Layout from "@/Shared/Layout";
-import LoadingButton from "@/Shared/LoadingButton";
+import React from "react";
+import {useForm, usePage} from "@inertiajs/react";
+import Layout from "@/Shared/Layout/AuthenticatedLayout";
 import TextInput from "@/Shared/TextInput";
-import Select from 'react-select'
-
+import FromPageLayout from "@/Shared/Layout/FromPageLayout";
 
 const Create = () => {
-
     const {permissions} = usePage().props;
     const {data, setData, errors, post, processing} = useForm({
         name: "",
@@ -17,91 +14,96 @@ const Create = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         post(route("role.store"));
-    }
+    };
 
-
-    const options = permissions && permissions.length ? permissions.map((row) => ({
-        value: row.id,
-        label: row.name
-    })) : [];
+    const options =
+        permissions && permissions.length
+            ? permissions.map((row) => ({
+                value: row.id,
+                label: row.name,
+            }))
+            : [];
 
     const handlePermissionChange = (isChecked, permissionId) => {
         if (isChecked) {
-            let _pemission =[...data.permissions, permissionId];
-            setData('permissions',_pemission)
+            let _pemission = [...data.permissions, permissionId];
+            setData("permissions", _pemission);
         } else {
             const updatedRolePermission = data.permissions.filter(
                 (id) => id !== permissionId
             );
-            setData('permissions',updatedRolePermission)
+            setData("permissions", updatedRolePermission);
         }
-    }
-console.log(errors)
+    };
+
     return (
-        <div>
-            <div>
-                <h1 className="mb-4 text-3xl font-bold">
-                    <Link
-                        href={route("role.index")}
-                        className="text-indigo-600 hover:text-indigo-700"
+        <FromPageLayout
+            breadcumb_link={route('role.index')}
+            breadcumb_name={'Role'}
+            breadcumb_action={'Create'}
+            loading={processing}
+            button_text={'Create Role'}
+            handlFormSubmit={handleSubmit}
+            className="grid grid-cols-1"
+        >
+            <TextInput
+                label="Name"
+                name="name"
+                errors={errors.name}
+                value={data.name}
+                onChange={(e) => setData("name", e.target.value)}
+            />
+
+            <div className="flex flex-wrap p-8 -mb-8 -mr-6">
+                {options.map((row, key) => (
+                    <div
+                        className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/4"
+                        key={key}
                     >
-                        Role
-                    </Link>
-                    <span className="font-medium text-indigo-600"> /</span>
-                    Create
-                </h1>
-            </div>
-            <div className="w-full overflow-hidden bg-white rounded shadow">
-                <form name="createForm" onSubmit={handleSubmit}>
-                    <div className="flex flex-wrap p-8 -mb-8 -mr-6">
-
-
-                        <TextInput
-                            className="w-full pb-8 pr-6"
-                            label="Name"
-                            name="name"
-                            errors={errors.name}
-                            value={data.name}
-                            onChange={(e) => setData("name", e.target.value)}
-                        />
-
-                    </div>
-
-                    <div className="flex flex-wrap p-8 -mb-8 -mr-6">
-
-                        {options.map((row,key) => (
-                            <div className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/4" key={key}>
-                                <label
-                                    className={`flex items-center mt-6 select-none  ${errors.permissions ? 'form-error':''}`}
-                                    htmlFor={`permission-${row.value}`}
-                                >
-                                    <input
-                                        name="permission"
-                                        id={`permission-${row.value}`}
-                                        type="checkbox"
-                                        className={`mr-1 ${errors.permissions ? 'error':''}`}
-                                        checked={data.permissions.includes(row.value)}
-                                        onChange={(e) =>
-                                            handlePermissionChange(e.target.checked, row.value)
-                                        }
-                                    />
-                                    <span className="text-sm">{row.label}</span>
-                                </label>
-                            </div>
-                        ))}
-                    </div>
-                    <div className="flex items-center justify-end px-8 py-4 bg-gray-100 border-t border-gray-200">
-                        <LoadingButton
-                            loading={processing}
-                            type="submit"
-                            className="btn-indigo"
+                        <label
+                            className={`flex cursor-pointer select-none items-center flex items-center mt-6 select-none  ${
+                                errors.permissions ? "form-error" : ""
+                            }`}
+                            htmlFor={`permission-${row.value}`}
                         >
-                            Create Role
-                        </LoadingButton>
+                            <div className='relative'>
+                                <input
+                                    name="permission"
+                                    id={`permission-${row.value}`}
+                                    type="checkbox"
+                                    className={`sr-only mr-1 ${
+                                        errors.permissions ? "error" : ""
+                                    }`}
+                                    checked={data.permissions.includes(
+                                        row.value
+                                    )}
+                                    onChange={(e) =>
+                                        handlePermissionChange(
+                                            e.target.checked,
+                                            row.value
+                                        )
+                                    }
+                                />
+                                <div
+                                    className={`mr-4 flex h-5 w-5 items-center justify-center rounded border ${
+                                        data.permissions.includes(
+                                            row.value
+                                        ) && 'border-primary bg-gray dark:bg-transparent'
+                                    }`}
+                                >
+                                    <span
+                                        className={`h-2.5 w-2.5 rounded-sm ${data.permissions.includes(
+                                            row.value
+                                        ) && 'bg-primary'}`}
+                                    ></span>
+                                </div>
+                            </div>
+                            {row.label}
+                        </label>
                     </div>
-                </form>
+                ))}
             </div>
-        </div>
+        </FromPageLayout>
     );
 };
 

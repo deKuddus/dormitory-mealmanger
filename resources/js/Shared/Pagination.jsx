@@ -10,7 +10,7 @@ const PageLink = ({ active, label, url }) => {
             "border border-solid border-gray-300 rounded",
             "text-sm",
             "hover:bg-white",
-            "focus:outline-none focus:border-indigo-700 focus:text-indigo-700",
+            "focus:outline-none",
         ],
         {
             "bg-white": active,
@@ -28,7 +28,7 @@ const PageLink = ({ active, label, url }) => {
 // and dots, if exists (...)
 const PageInactive = ({ label }) => {
     const className = classNames(
-        "mr-1 mb-1 px-4 py-3 text-sm border rounded border-solid border-gray-300 text-gray"
+        "mr-1 mb-1 px-4 py-3 text-sm border border-solid border-gray-300 rounded"
     );
     return (
         <div

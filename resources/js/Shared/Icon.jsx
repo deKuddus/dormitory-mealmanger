@@ -16,7 +16,8 @@ import {
     FaEye,
     FaPlus,
     FaCheck,
-    FaCopy
+    FaCopy,
+    FaRegSnowflake
 } from "react-icons/fa";
 const IconComponentArray = {
     FaRegClock,
@@ -35,7 +36,8 @@ const IconComponentArray = {
     FaEye,
     FaPlus,
     FaCheck,
-    FaCopy
+    FaCopy,
+    FaRegSnowflake
 };
 
 export default ({ name, className }) => {

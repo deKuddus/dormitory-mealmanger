@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Layout from "@/Shared/Layout";
+import Layout from "@/Shared/Layout/AuthenticatedLayout";
 import { usePage } from "@inertiajs/react";
 import dayjs from "dayjs";
 import { defaultApi } from "@/api";

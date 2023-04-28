@@ -1,20 +1,20 @@
-import React, {useEffect, useState} from "react";
-import {Head, Link, router, useForm, usePage} from "@inertiajs/react";
-import Layout from "@/Shared/Layout";
+import React, { useEffect, useState } from "react";
+import { Head, Link, router, useForm, usePage } from "@inertiajs/react";
+import Layout from "@/Shared/Layout/AuthenticatedLayout";
 import LoadingButton from "@/Shared/LoadingButton";
 import TextInput from "@/Shared/TextInput";
 import SelectInput from "@/Shared/SelectInput";
 import Select from "react-select";
-import {isUserPermittedToPerformAction} from "@/utils";
+import { isUserPermittedToPerformAction } from "@/utils";
 import ReactQuill from "react-quill";
-import 'react-quill/dist/quill.snow.css';
-import {defaultApi} from "@/api";
-import {toast} from "react-toastify";
+import "react-quill/dist/quill.snow.css";
+import { defaultApi } from "@/api";
+import { toast } from "react-toastify";
 
 const Edit = () => {
-    const {user, roles, rooms, user_permissions} = usePage().props;
+    const { user, roles, rooms, user_permissions } = usePage().props;
     const [seatOption, setSeatOptions] = useState([]);
-    const {data, setData, errors, post, processing} = useForm({
+    const { data, setData, errors, post, processing } = useForm({
         first_name: user.first_name || "",
         last_name: user.last_name || "",
         email: user.email || "",
@@ -27,7 +27,7 @@ const Edit = () => {
         institution: user.institution || "",
         company: user.company || "",
         status: user.status || "0",
-        roles: user.roles && user.roles.map(({id, name}, key) => (id)) || [],
+        roles: (user.roles && user.roles.map(({ id, name }, key) => id)) || [],
         _method: "PUT",
         is_admin: user.is_admin,
         room_id: user.room_id,
@@ -40,28 +40,30 @@ const Edit = () => {
 
         // NOTE: We are using POST method here, not PUT/PACH. See comment above.
         post(route("user.update", user.id));
-    }
+    };
 
     const destroy = () => {
         if (confirm("Are you sure you want to delete this user?")) {
             router.delete(route("user.destroy", user.id));
         }
-    }
+    };
 
     const restore = () => {
         if (confirm("Are you sure you want to restore this user?")) {
             router.put(route("user.restore", user.id));
         }
-    }
+    };
 
-    const options = roles && roles.length ? roles.map((row) => ({
-        value: row.id,
-        label: `${row.name}`
-    })) : [];
-
+    const options =
+        roles && roles.length
+            ? roles.map((row) => ({
+                  value: row.id,
+                  label: `${row.name}`,
+              }))
+            : [];
 
     const getSeatByRoom = async (roomId) => {
-        const {response, error} = await defaultApi(
+        const { response, error } = await defaultApi(
             `/api/v1/seat/${roomId}`,
             "get"
         );
@@ -71,25 +73,24 @@ const Edit = () => {
             setSeatOptions([]);
         } else if (response.data && response.data.length > 0) {
             setSeatOptions(response.data);
-        }else{
+        } else {
             setSeatOptions([]);
         }
-    }
+    };
 
-    useEffect(()=>{
-        if(rooms && rooms.length){
-            if(user.room_id){
+    useEffect(() => {
+        if (rooms && rooms.length) {
+            if (user.room_id) {
                 getSeatByRoom(user.room_id);
-            }else{
+            } else {
                 getSeatByRoom(rooms[0]?.id);
             }
-
         }
-    },[rooms])
+    }, [rooms]);
 
     return (
         <div>
-            <Head title={`${data.first_name} ${data.last_name}`}/>
+            <Head title={`${data.first_name} ${data.last_name}`} />
             <div className="flex justify-start max-w-lg mb-8">
                 <h1 className="text-3xl font-bold">
                     <Link
@@ -134,8 +135,11 @@ const Edit = () => {
                             value={data.email}
                             onChange={(e) => setData("email", e.target.value)}
                         />
-                        {isUserPermittedToPerformAction('access::password-change', user_permissions) &&
-                            (<TextInput
+                        {isUserPermittedToPerformAction(
+                            "access::password-change",
+                            user_permissions
+                        ) && (
+                            <TextInput
                                 className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
                                 label="Password"
                                 name="password"
@@ -145,8 +149,8 @@ const Edit = () => {
                                 onChange={(e) =>
                                     setData("password", e.target.value)
                                 }
-                            />)
-                        }
+                            />
+                        )}
                         <TextInput
                             className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
                             label="Phone"
@@ -164,7 +168,9 @@ const Edit = () => {
                             type="text"
                             errors={errors.present_address}
                             value={data.present_address}
-                            onChange={(e) => setData("present_address", e.target.value)}
+                            onChange={(e) =>
+                                setData("present_address", e.target.value)
+                            }
                         />
 
                         <TextInput
@@ -174,7 +180,9 @@ const Edit = () => {
                             type="text"
                             errors={errors.permanent_address}
                             value={data.permanent_address}
-                            onChange={(e) => setData("permanent_address", e.target.value)}
+                            onChange={(e) =>
+                                setData("permanent_address", e.target.value)
+                            }
                         />
 
                         <TextInput
@@ -192,7 +200,9 @@ const Edit = () => {
                             name="nid_type"
                             errors={errors.nid_type}
                             value={data.nid_type}
-                            onChange={(e) => setData("nid_type", e.target.value)}
+                            onChange={(e) =>
+                                setData("nid_type", e.target.value)
+                            }
                         >
                             <option value="1">National ID</option>
                             <option value="0">Birth Certificate</option>
@@ -205,7 +215,9 @@ const Edit = () => {
                             type="text"
                             errors={errors.institution}
                             value={data.institution}
-                            onChange={(e) => setData("institution", e.target.value)}
+                            onChange={(e) =>
+                                setData("institution", e.target.value)
+                            }
                         />
 
                         <TextInput
@@ -236,7 +248,9 @@ const Edit = () => {
                             name="is_admin"
                             errors={errors.is_admin}
                             value={data.is_admin}
-                            onChange={(e) => setData("is_admin", e.target.value)}
+                            onChange={(e) =>
+                                setData("is_admin", e.target.value)
+                            }
                         >
                             <option value="1">Yes</option>
                             <option value="0">No</option>
@@ -250,11 +264,19 @@ const Edit = () => {
                             value={data.room_id}
                             onChange={(e) => {
                                 setData("room_id", e.target.value);
-                                getSeatByRoom(e.target.value)
+                                getSeatByRoom(e.target.value);
                             }}
                         >
-                            {rooms && rooms.map((room, key) => (
-                                <option key={key} defaultValue={data.room_id} value={room.id}>{room.name}</option>))}
+                            {rooms &&
+                                rooms.map((room, key) => (
+                                    <option
+                                        key={key}
+                                        defaultValue={data.room_id}
+                                        value={room.id}
+                                    >
+                                        {room.name}
+                                    </option>
+                                ))}
                         </SelectInput>
 
                         <SelectInput
@@ -268,8 +290,16 @@ const Edit = () => {
                             }}
                         >
                             <option>Select Seat</option>
-                            {seatOption && seatOption.map((seat, key) => (
-                                <option key={key} defaultValue={data.seat_id} value={seat.id}>{seat.seat_no}</option>))}
+                            {seatOption &&
+                                seatOption.map((seat, key) => (
+                                    <option
+                                        key={key}
+                                        defaultValue={data.seat_id}
+                                        value={seat.id}
+                                    >
+                                        {seat.seat_no}
+                                    </option>
+                                ))}
                         </SelectInput>
 
                         <div className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3">
@@ -279,25 +309,39 @@ const Edit = () => {
                                 isClearable
                                 classNamePrefix={"react-select"}
                                 options={options}
-                                value={options.filter((option) => data.roles.includes(option.value))}
+                                value={options.filter((option) =>
+                                    data.roles.includes(option.value)
+                                )}
                                 onChange={(selected) =>
-                                    setData('roles',
-                                        (selected && selected.map((select) => select.value)) || []
+                                    setData(
+                                        "roles",
+                                        (selected &&
+                                            selected.map(
+                                                (select) => select.value
+                                            )) ||
+                                            []
                                     )
                                 }
                             />
-                            {errors && errors.roles && <div className="form-error">{errors.roles}</div>}
+                            {errors && errors.roles && (
+                                <div className="form-error">{errors.roles}</div>
+                            )}
                         </div>
 
-
-                        {isUserPermittedToPerformAction('access::user-note-edit', user_permissions) &&
+                        {isUserPermittedToPerformAction(
+                            "access::user-note-edit",
+                            user_permissions
+                        ) && (
                             <div className="w-full pb-8 pr-6 mb-12">
                                 <label className="form-label">Notes</label>
-                                <ReactQuill className="h-48 " theme="snow" value={data.note}
-                                            onChange={(e) => setData('note', e)}/>
+                                <ReactQuill
+                                    className="h-48 "
+                                    theme="snow"
+                                    value={data.note}
+                                    onChange={(e) => setData("note", e)}
+                                />
                             </div>
-                        }
-
+                        )}
                     </div>
                     <div className="flex items-center justify-end px-8 py-4 bg-gray-100 border-t border-gray-200">
                         <LoadingButton
@@ -314,6 +358,6 @@ const Edit = () => {
     );
 };
 
-Edit.layout = (page) => <Layout children={page}/>;
+Edit.layout = (page) => <Layout children={page} />;
 
 export default Edit;

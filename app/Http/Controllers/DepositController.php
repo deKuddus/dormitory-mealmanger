@@ -64,7 +64,7 @@ class DepositController extends Controller
         $deposit->dormitory()->increment('deposit', $deposit->amount);
 
 
-        return redirect()->back()->with('success', 'New Deposit Added');
+        return to_route('deposit.index')->with('success', 'New Deposit Added');
     }
 
     public function show($userId)

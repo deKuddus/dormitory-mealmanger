@@ -1,7 +1,8 @@
 import React from "react";
-import Layout from "@/Shared/Layout";
+import Layout from "@/Shared/Layout/AuthenticatedLayout";
 import {router, usePage} from "@inertiajs/react";
 import {isUserPermittedToPerformAction} from "@/utils";
+import Card from '@/Shared/Card'
 
 
 const Dashboard = () => {
@@ -17,18 +18,20 @@ const Dashboard = () => {
 
     return (
         <div>
-            <div className="flex items-center gap-2 justify-between">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div className="col-span-full mb-5">
                     <span className="font-bold">Today's Meal: <span className="text-indigo-700">{data?.todaysMeal?.lunch_total || 0} Lunch</span> & <span className="text-pink-600">{data?.todaysMeal?.dinner_total || 0} Dinner</span> </span>
                 </div>
-                <div className="col-span-full mb-5">
+
+                <div className="flex gap-2 col-span-full mb-5">
                     {isUserPermittedToPerformAction('access::month-close', user_permissions) && (
-                        <button className="btn-indigo mr-3" onClick={handleMonthCloseRequest}>
+                        <button className="inline-flex items-center justify-center bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10" onClick={handleMonthCloseRequest}>
                             Close Month
                         </button>
+
                     )}
                     {isUserPermittedToPerformAction('access::month-start', user_permissions) && (
-                        <button className="btn-indigo" onClick={handleMonthStart}>
+                        <button className="inline-flex items-center justify-center bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10" onClick={handleMonthStart}>
                             Start New Month
                         </button>
                     )}
@@ -37,91 +40,31 @@ const Dashboard = () => {
             {isUserPermittedToPerformAction('access::dashboard-show', user_permissions) ?
                 (<>
                     <div className="col-span-full mb-5">
-                        <h6 className="mb-4 text-xl font-bold border-b">Meal</h6>
-                        <div className="grid gap-4 lg:gap-8 md:grid-cols-3">
-                            <div className="relative p-6 rounded-xl bg-buttonColor-100 shadow">
-                                <div className="space-y-2 text-white text-center">
-                                    <div
-                                        className="flex items-center space-x-2 rtl:space-x-reverse text-xl font-medium ">
-                                        <span>Today's Meal : {data.todaysTotalMeal}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="relative p-6 rounded-xl bg-buttonColor-200 shadow">
-                                <div className="space-y-2 text-white">
-                                    <div
-                                        className="flex items-center space-x-2 rtl:space-x-reverse text-xl font-medium ">
-                                        <span>Total Meal : {data.totalMeal} </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="relative p-6 rounded-xl bg-buttonColor-300 shadow">
-                                <div className="space-y-2 text-white">
-                                    <div
-                                        className="flex items-center space-x-2 rtl:space-x-reverse text-xl font-medium ">
-                                        <span>Average Meal : {parseFloat(data.totalMeal / data.member).toFixed(2)} </span>
-                                    </div>
-                                </div>
-                            </div>
+                        <h6 className="mb-4 text-xl font-bold">Meal</h6>
+
+                        <div className='grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6 xl:grid-cols-3 2xl:gap-7.5'>
+                            <Card value={data.todaysTotalMeal} text="Today's Meal" icon={'FaRegSnowflake'}/>
+                            <Card value={data.totalMeal} text="Total Meal" icon={'FaRegSnowflake'}/>
+                            <Card value={parseFloat(data.totalMeal / data.member).toFixed(2)} text="Average Meal" icon={'FaRegSnowflake'}/>
                         </div>
                     </div>
                     <div className="col-span-full mb-5">
-                        <h6 className="mb-4 text-xl font-bold border-b">Cash</h6>
-                        <div className="grid gap-4 lg:gap-8 md:grid-cols-3">
-                            <div className="relative p-6 rounded-xl bg-buttonColor-400 shadow">
-                                <div className="space-y-2 text-white">
-                                    <div
-                                        className="flex items-center space-x-2 rtl:space-x-reverse text-xl font-medium ">
-                                        <span>Meal Charge : {parseFloat(data.bazar / data.totalMeal).toFixed(2)} BDT</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="relative p-6 rounded-xl bg-buttonColor-500 shadow">
-                                <div className="space-y-2 text-white">
-                                    <div
-                                        className="flex items-center space-x-2 rtl:space-x-reverse text-xl font-medium ">
-                                        <span>Total Deposit : {parseFloat(data.balance).toFixed(2)} BDT</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="relative p-6 rounded-xl bg-buttonColor-600 shadow">
-                                <div className="space-y-2 text-white">
-                                    <div
-                                        className="flex items-center space-x-2 rtl:space-x-reverse text-xl font-medium ">
-                                        <span>Total Cost : {parseFloat(data.bazar + data.additional).toFixed(2)} BDT </span>
-                                    </div>
-                                </div>
-                            </div>
+                        <h6 className="mb-4 text-xl font-bold ">Cash</h6>
+                        <div className='grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6 xl:grid-cols-3 2xl:gap-7.5'>
+                            <Card value={`${parseFloat(data.bazar / data.totalMeal).toFixed(2)} BDT`} text="Meal Charge" icon={'FaRegSnowflake'}/>
+                            <Card value={`${parseFloat(data.balance).toFixed(2)} BDT`} text="Total Deposit" icon={'FaRegSnowflake'}/>
+                            <Card value={`${parseFloat(data.bazar + data.additional).toFixed(2)} BDT`} text="Total Cost" icon={'FaRegSnowflake'}/>
                         </div>
                     </div>
                     <div className="col-span-full mb-5">
-                        <h6 className="mb-4 text-xl font-bold border-b">Members</h6>
-                        <div className="grid gap-4 lg:gap-8 md:grid-cols-3">
-                            <div className="relative p-6 rounded-xl bg-buttonColor-700 shadow">
-                                <div className="space-y-2 text-white">
-                                    <div
-                                        className="flex items-center space-x-2 rtl:space-x-reverse text-xl font-medium ">
-                                        <span>Active : {data.users.active}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="relative p-6 rounded-xl bg-buttonColor-800 shadow">
-                                <div className="space-y-2 text-white">
-                                    <div
-                                        className="flex items-center space-x-2 rtl:space-x-reverse text-xl font-medium ">
-                                        <span>Inactive : {data.users.inactive} </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="relative p-6 rounded-xl bg-buttonColor-900 shadow">
-                                <div className="space-y-2 text-white">
-                                    <div
-                                        className="flex items-center space-x-2 rtl:space-x-reverse text-xl font-medium ">
-                                        <span>Total : {data.users.active + data.users.inactive} </span>
-                                    </div>
-                                </div>
-                            </div>
+                        <h6 className="mb-4 text-xl font-bold ">Members</h6>
+
+                        <div className='grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6 xl:grid-cols-3 2xl:gap-7.5'>
+                            <Card value={data.users.active} text="Active" icon={'FaRegSnowflake'}/>
+                            <Card value={data.users.inactive} text="Inactive" icon={'FaRegSnowflake'}/>
+                            <Card value={data.users.active + data.users.inactive} text="Total" icon={'FaRegSnowflake'}/>
                         </div>
+
                     </div>
                 </>) : (<>
                     <div className="col-span-full mb-5">

@@ -1,18 +1,18 @@
-import React, {useEffect, useState} from "react";
-import {Link, useForm, usePage} from "@inertiajs/react";
-import Layout from "@/Shared/Layout";
+import React, { useEffect, useState } from "react";
+import { Link, useForm, usePage } from "@inertiajs/react";
+import Layout from "@/Shared/Layout/AuthenticatedLayout";
 import LoadingButton from "@/Shared/LoadingButton";
 import TextInput from "@/Shared/TextInput";
 import SelectInput from "@/Shared/SelectInput";
 import Select from "react-select";
-import {defaultApi} from "@/api";
-import {toast} from "react-toastify";
+import { defaultApi } from "@/api";
+import { toast } from "react-toastify";
 // import FileInput from "@/Shared/FileInput";
 
 const Create = () => {
     const [seatOption, setSeatOptions] = useState([]);
-    const {roles, rooms} = usePage().props;
-    const {data, setData, errors, post, processing} = useForm({
+    const { roles, rooms } = usePage().props;
+    const { data, setData, errors, post, processing } = useForm({
         first_name: "",
         last_name: "",
         email: "",
@@ -28,23 +28,25 @@ const Create = () => {
         status: "0",
         roles: [],
         is_admin: 0,
-        room_id: '',
-        seat_id: '',
+        room_id: "",
+        seat_id: "",
     });
 
     const handleSubmit = (e) => {
         e.preventDefault();
         post(route("user.store"));
-    }
+    };
 
-
-    const options = roles && roles.length ? roles.map((row) => ({
-        value: row.id,
-        label: `${row.name}`
-    })) : [];
+    const options =
+        roles && roles.length
+            ? roles.map((row) => ({
+                  value: row.id,
+                  label: `${row.name}`,
+              }))
+            : [];
 
     const getSeatByRoom = async (roomId) => {
-        const {response, error} = await defaultApi(
+        const { response, error } = await defaultApi(
             `/api/v1/seat/${roomId}`,
             "get"
         );
@@ -57,13 +59,13 @@ const Create = () => {
         } else {
             setSeatOptions([]);
         }
-    }
+    };
 
     useEffect(() => {
         if (rooms && rooms.length) {
             getSeatByRoom(rooms[0]?.id);
         }
-    }, [rooms])
+    }, [rooms]);
 
     return (
         <div>
@@ -139,7 +141,9 @@ const Create = () => {
                             type="text"
                             errors={errors.present_address}
                             value={data.present_address}
-                            onChange={(e) => setData("present_address", e.target.value)}
+                            onChange={(e) =>
+                                setData("present_address", e.target.value)
+                            }
                         />
 
                         <TextInput
@@ -149,7 +153,9 @@ const Create = () => {
                             type="text"
                             errors={errors.permanent_address}
                             value={data.permanent_address}
-                            onChange={(e) => setData("permanent_address", e.target.value)}
+                            onChange={(e) =>
+                                setData("permanent_address", e.target.value)
+                            }
                         />
 
                         <TextInput
@@ -167,7 +173,9 @@ const Create = () => {
                             name="nid_type"
                             errors={errors.nid_type}
                             value={data.nid_type}
-                            onChange={(e) => setData("nid_type", e.target.value)}
+                            onChange={(e) =>
+                                setData("nid_type", e.target.value)
+                            }
                         >
                             <option value="1">National ID</option>
                             <option value="0">Birth Certificate</option>
@@ -180,7 +188,9 @@ const Create = () => {
                             type="text"
                             errors={errors.institution}
                             value={data.institution}
-                            onChange={(e) => setData("institution", e.target.value)}
+                            onChange={(e) =>
+                                setData("institution", e.target.value)
+                            }
                         />
 
                         <TextInput
@@ -213,12 +223,20 @@ const Create = () => {
                             value={data.room_id}
                             onChange={(e) => {
                                 setData("room_id", e.target.value);
-                                getSeatByRoom(e.target.value)
+                                getSeatByRoom(e.target.value);
                             }}
                         >
                             <option>Select Room</option>
-                            {rooms && rooms.map((room, key) => (
-                                <option key={key} defaultValue={data.room_id} value={room.id}>{room.name}</option>))}
+                            {rooms &&
+                                rooms.map((room, key) => (
+                                    <option
+                                        key={key}
+                                        defaultValue={data.room_id}
+                                        value={room.id}
+                                    >
+                                        {room.name}
+                                    </option>
+                                ))}
                         </SelectInput>
 
                         <SelectInput
@@ -232,8 +250,16 @@ const Create = () => {
                             }}
                         >
                             <option>Select Seat</option>
-                            {seatOption && seatOption.map((seat, key) => (
-                                <option key={key} defaultValue={data.seat_id} value={seat.id}>{seat.seat_no}</option>))}
+                            {seatOption &&
+                                seatOption.map((seat, key) => (
+                                    <option
+                                        key={key}
+                                        defaultValue={data.seat_id}
+                                        value={seat.id}
+                                    >
+                                        {seat.seat_no}
+                                    </option>
+                                ))}
                         </SelectInput>
                         <SelectInput
                             className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
@@ -241,7 +267,9 @@ const Create = () => {
                             name="is_admin"
                             errors={errors.is_admin}
                             value={data.is_admin}
-                            onChange={(e) => setData("is_admin", e.target.value)}
+                            onChange={(e) =>
+                                setData("is_admin", e.target.value)
+                            }
                         >
                             <option value="1">Yes</option>
                             <option value="0">No</option>
@@ -254,8 +282,13 @@ const Create = () => {
                                 classNamePrefix={"react-select"}
                                 options={options}
                                 onChange={(selected) =>
-                                    setData('roles',
-                                        (selected && selected.map((select) => select.value)) || []
+                                    setData(
+                                        "roles",
+                                        (selected &&
+                                            selected.map(
+                                                (select) => select.value
+                                            )) ||
+                                            []
                                     )
                                 }
                             />
@@ -276,6 +309,6 @@ const Create = () => {
     );
 };
 
-Create.layout = (page) => <Layout title="Create User" children={page}/>;
+Create.layout = (page) => <Layout title="Create User" children={page} />;
 
 export default Create;
