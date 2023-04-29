@@ -1,6 +1,6 @@
 const defaultTheme = require("tailwindcss/defaultTheme");
 
-const labelsClasses = ["indigo", "gray", "green", "blue", "red", "purple"];
+const colors = require('tailwindcss/colors');
 
 
 /** @type {import('tailwindcss').Config} */
@@ -11,17 +11,12 @@ module.exports = {
         './resources/views/**/*.blade.php',
         './resources/js/**/*.jsx',
     ],
-    safelist: [
-        ...labelsClasses.map((lbl) => `bg-${lbl}-500`),
-        ...labelsClasses.map((lbl) => `bg-${lbl}-200`),
-        ...labelsClasses.map((lbl) => `text-${lbl}-400`),
-    ],
     darkMode: 'class',
     theme: {
         fontFamily: {
             satoshi: ['Josefin Sans', 'sans-serif'],
         },
-        colors: {
+        colors: {...colors,
             background: {
                 200: "#0094FF",
                 300: "#0094FF",

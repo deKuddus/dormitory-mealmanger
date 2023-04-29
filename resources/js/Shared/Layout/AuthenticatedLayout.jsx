@@ -29,17 +29,17 @@ const AuthenticationLayout = ({title,children}) => {
                         </div>
                     </main>
                     {/* <!-- ===== Main Content End ===== --> */}
-                    <footer className="sm:hidden fixed bottom-0 w-full bg-white border-t border-gray-200 ">
-                        <div className="max-w-7xl mx-auto px-4 py-2 sm:px-6 lg:px-8 flex justify-between items-center">
-                            <div className="text-gray-600">
-                                <p className="text-sm">Your App Name</p>
-                                <p className="text-xs">Version 1.0.0</p>
-                            </div>
-                            <div className="text-gray-400 text-xs">
-                                <p>Copyright © 2023</p>
-                            </div>
-                        </div>
-                    </footer>
+                    {/*<footer className="sm:hidden fixed bottom-0 w-full bg-white border-t border-gray-200 ">*/}
+                    {/*    <div className="max-w-7xl mx-auto px-4 py-2 sm:px-6 lg:px-8 flex justify-between items-center">*/}
+                    {/*        <div className="text-gray-600">*/}
+                    {/*            <p className="text-sm">Your App Name</p>*/}
+                    {/*            <p className="text-xs">Version 1.0.0</p>*/}
+                    {/*        </div>*/}
+                    {/*        <div className="text-gray-400 text-xs">*/}
+                    {/*            <p>Copyright © 2023</p>*/}
+                    {/*        </div>*/}
+                    {/*    </div>*/}
+                    {/*</footer>*/}
 
                 </div>
                 {/* <!-- ===== Content Area End ===== --> */}

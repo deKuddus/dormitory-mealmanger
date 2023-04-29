@@ -8,6 +8,7 @@ import TableHeader from "@/Shared/TableHeader";
 import TablePageLayout from "@/Shared/Layout/TablePageLayout";
 import TableData from "@/Shared/TableData";
 import TableAction from "@/Shared/TableAction";
+import Modal from "@/Shared/Modal";
 
 const Index = () => {
     const tableHeading = ['No', 'Day', 'Breakfast', 'Lunch', 'Dinner', 'Action'];
@@ -52,7 +53,7 @@ const Index = () => {
     return (
         <>
             {open && (
-                <MenuEditModal
+                <Modal
                     handleModalClose={handleModalClose}
                     setMenuData={setMeuData}
                     menuData={menuData}

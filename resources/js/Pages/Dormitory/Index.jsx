@@ -43,6 +43,15 @@ const Index = () => {
                         <TableData value={address}/>
                         <TableData value={status ? "Active" : "Inactive"}/>
                         <TableAction>
+                            <Link
+                                href={route("calender.view.meal", 1)}
+                                className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
+                            >
+                                <Icon
+                                    name="FaCalendarAlt"
+                                    className="w-6 h-4 text-gray-500 fill-current"
+                                />
+                            </Link>
                             {isUserPermittedToPerformAction(
                                 "access::dormitory-edit",
                                 user_permissions

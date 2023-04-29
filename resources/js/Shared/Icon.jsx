@@ -17,7 +17,12 @@ import {
     FaPlus,
     FaCheck,
     FaCopy,
-    FaRegSnowflake
+    FaRegSnowflake,
+    FaCalendarAlt,
+    FaUsersSlash,
+    FaMoneyBillAlt,
+    FaMoneyBillWaveAlt,
+    FaMoneyBillWave
 } from "react-icons/fa";
 const IconComponentArray = {
     FaRegClock,
@@ -37,7 +42,12 @@ const IconComponentArray = {
     FaPlus,
     FaCheck,
     FaCopy,
-    FaRegSnowflake
+    FaRegSnowflake,
+    FaCalendarAlt,
+    FaUsersSlash,
+    FaMoneyBillAlt,
+    FaMoneyBillWaveAlt,
+    FaMoneyBillWave
 };
 
 export default ({ name, className }) => {

@@ -81,7 +81,7 @@ const Index = () => {
                             : "N/A"}
                         />
                         <TableData value={status === 0 ? 'Pending' : 'Done'}
-                                   className={`rounded-full ${status === 0 ? 'bg-danger' : 'bg-success'} text-center bg-opacity-10 py-1 px-3 text-sm text-danger`}/>
+                                   className={`rounded-full ${status === 0 ? 'bg-danger text-danger' : 'bg-success text-success'} text-center bg-opacity-10 py-1 px-3 text-sm `}/>
 
                         <TableAction>
                             {isUserPermittedToPerformAction(

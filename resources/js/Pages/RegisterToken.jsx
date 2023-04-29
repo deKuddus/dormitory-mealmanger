@@ -53,11 +53,11 @@ const RegisterToken = () => {
     return (
 
         <TablePageLayout
-            breadcumb_action={''}
             breadcumb_name={'Register Tokens'}
-            pagination_links={links}
-            breadcumb_link={''}
-            isShowButton={false}
+            breadcumb_action={'Create New Token'}
+            isShowButton={true}
+            type={'button'}
+            clickHandler={handleCreateTokenRequest}
         >
             <TableHeader rows={['No', 'Token', 'Expire At', 'Action']}/>
             <tbody>

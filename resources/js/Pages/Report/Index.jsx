@@ -1,13 +1,17 @@
-import React, { useState } from "react";
-import { Link, router, usePage } from "@inertiajs/react";
+import React, {useState} from "react";
+import {Link, router, usePage} from "@inertiajs/react";
 import Layout from "@/Shared/Layout/AuthenticatedLayout";
 import SelectInput from "@/Shared/SelectInput";
 import moment from "moment";
-import { currentYearMontList } from "@/utils";
+import {currentYearMontList, isUserPermittedToPerformAction} from "@/utils";
 import Icon from "@/Shared/Icon";
-import { isUserPermittedToPerformAction } from "@/utils";
+import TableHeader from "@/Shared/TableHeader";
+import TablePageLayout from "@/Shared/Layout/TablePageLayout";
+import TableData from "@/Shared/TableData";
+import TableAction from "@/Shared/TableAction";
 
 const Index = () => {
+    const tableHeading = ['No', 'Name', 'Total Meal', 'Total Deposit', 'Total Cost', 'Total Due', 'Action'];
     const {
         users,
         balance,
@@ -28,7 +32,7 @@ const Index = () => {
         if (value) {
             return router.get(
                 route("report.index"),
-                { month: value },
+                {month: value},
                 {
                     replace: true,
                     preserveState: true,
@@ -37,13 +41,10 @@ const Index = () => {
         }
     };
 
-    return (
-        <div>
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
-                <div className="flex items-center">
-                    <h1 className="text-3xl font-bold">Meals</h1>
-                </div>
-                <div className="flex items-center">
+    const Additional = () => {
+        return (
+            <>
+                <div className="flex items-center justify-end">
                     <div className="relative z-30 w-64 px-4 py-6 mt-2">
                         <SelectInput
                             label="Month"
@@ -69,17 +70,16 @@ const Index = () => {
                         </SelectInput>
                     </div>
                 </div>
-            </div>
-            <div className="overflow-x-auto bg-white rounded shadow p-3">
                 <div className="col-span-full mb-5">
                     <div className="grid gap-4 lg:gap-8 md:grid-cols-3">
                         <div className="relative p-6 rounded-xl">
-                            <div className="space-y-2 text-white text-center">
-                                <div className="flex flex-col items-center space-x-2 rtl:space-x-reverse text-xl font-medium ">
-                                    <span className="text-xxl font-bold text-gray-900">
+                            <div className="space-y-2 text-black dark:text-white text-center">
+                                <div
+                                    className="flex flex-col items-center space-x-2 rtl:space-x-reverse text-xl font-medium ">
+                                    <span className="text-xxl font-bold text-black dark:text-white">
                                         WP Dormitory{" "}
                                     </span>
-                                    <span className="text-sm text-gray-900">
+                                    <span className="text-sm text-black dark:text-white">
                                         Balance : {balance} BDT
                                     </span>
                                 </div>
@@ -87,14 +87,15 @@ const Index = () => {
                         </div>
                         <div className="relative p-6 rounded-xl">
                             <div className="space-y-2 text-white">
-                                <div className="flex flex-col items-center space-x-2 rtl:space-x-reverse text-xl font-medium ">
-                                    <span className="text-buttonColor-400">
+                                <div
+                                    className="flex flex-col items-center space-x-2 rtl:space-x-reverse text-xl font-medium ">
+                                    <span className="text-black dark:text-white">
                                         Meal Charge: {mealCost} BDT{" "}
                                     </span>
-                                    <span className="text-gray-900 text-xl font-bold ">
+                                    <span className="text-black dark:text-white text-xl font-bold ">
                                         Total Meal : {totalMeal}{" "}
                                     </span>
-                                    <span className="text-gray-900 text-xl font-bold">
+                                    <span className="text-black dark:text-white text-xl font-bold">
                                         Fixed Cost : {fixedCost} BDT
                                     </span>
                                 </div>
@@ -102,14 +103,15 @@ const Index = () => {
                         </div>
                         <div className="relative p-6 rounded-xl">
                             <div className="space-y-2 text-white">
-                                <div className="flex flex-col items-center space-x-2 rtl:space-x-reverse text-xl font-medium ">
-                                    <span className="text-red-600 text-xl font-bold ">
+                                <div
+                                    className="flex flex-col items-center space-x-2 rtl:space-x-reverse text-xl font-medium ">
+                                    <span className="text-danger text-xl font-bold ">
                                         Total Due: 50 BDT{" "}
                                     </span>
-                                    <span className="text-gray-900 text-xl font-bold ">
+                                    <span className="text-black dark:text-white text-xl font-bold ">
                                         Total Cost : {bazar} BDT
                                     </span>
-                                    <span className="text-gray-900 text-xl font-bold">
+                                    <span className="text-black dark:text-white text-xl font-bold">
                                         Total Fixed Cost : {additional} BDT
                                     </span>
                                 </div>
@@ -117,114 +119,67 @@ const Index = () => {
                         </div>
                     </div>
                 </div>
-                <table className="w-full whitespace-nowrap">
-                    <thead>
-                        <tr className="font-bold text-left">
-                            <th className="px-6 pt-5 pb-4 border">No</th>
-                            <th className="px-6 pt-5 pb-4 border">Name</th>
-                            <th className="px-6 pt-5 pb-4 border">
-                                Total Meal
-                            </th>
-                            <th className="px-6 pt-5 pb-4 border">
-                                Total Deposit
-                            </th>
-                            <th className="px-6 pt-5 pb-4 border">
-                                Total Cost
-                            </th>
-                            <th className="px-6 pt-5 pb-4 border">Due (BDT)</th>
-                            {isUserPermittedToPerformAction(
-                                "access::meal-show",
-                                user_permissions
-                            ) && (
-                                <th className="px-6 pt-5 pb-4 border">
-                                    Action
-                                </th>
-                            )}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {users ? (
-                            users.map(
-                                ({ id, name, meals_total, deposits }, key) => (
-                                    <tr
-                                        key={key}
-                                        className="hover:bg-gray-100 focus-within:bg-gray-100"
-                                    >
-                                        <td className="border">
-                                            <p className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none">
-                                                {key + 1}
-                                            </p>
-                                        </td>
-                                        <td className="border">
-                                            <p className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none">
-                                                {name}
-                                            </p>
-                                        </td>
-                                        <td className="border">
-                                            <p className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none">
-                                                {meals_total}
-                                            </p>
-                                        </td>
-                                        <td className="border">
-                                            <p className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none">
-                                                {deposits}
-                                            </p>
-                                        </td>
+            </>
+        )
+    }
 
-                                        <td className="border">
-                                            <p className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none">
-                                                {parseFloat(
-                                                    mealCost * meals_total
-                                                ).toFixed(2)}
-                                            </p>
-                                        </td>
-
-                                        <td className="border">
-                                            <DueText
-                                                deposit={deposits}
-                                                cost={mealCost * meals_total}
-                                            />
-                                        </td>
-
-                                        {isUserPermittedToPerformAction(
-                                            "access::meal-show",
-                                            user_permissions
-                                        ) && (
-                                            <td className="border w-px border-t p-3 whitespace-nowrap">
-                                                <div className="flex items-center gap-2 justify-end">
-                                                    <Link
-                                                        href={route(
-                                                            "meals.show",
-                                                            id
-                                                        )}
-                                                        className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
-                                                    >
-                                                        <Icon
-                                                            name="FaEye"
-                                                            className="w-6 h-4 text-gray-400 hover:text-buttonColor-400 fill-current cursor-pointer"
-                                                        />
-                                                    </Link>
-                                                </div>
-                                            </td>
+    return (
+        <TablePageLayout
+            breadcumb_name={'Reports'}
+            additionalComponent={<Additional/>}
+        >
+            <TableHeader rows={tableHeading}/>
+            <tbody>
+            {users ? (
+                users.map(
+                    ({id, name, meals_total, deposits}, key) => (
+                        <tr
+                            key={key}
+                        >
+                            <TableData value={key + 1}/>
+                            <TableData value={name}/>
+                            <TableData value={meals_total}/>
+                            <TableData value={deposits}/>
+                            <TableData value={parseFloat(mealCost * meals_total).toFixed(2)}/>
+                            <TableData value={
+                                <DueText
+                                    deposit={deposits}
+                                    cost={mealCost * meals_total}
+                                />
+                            }/>
+                            <TableAction>
+                                {isUserPermittedToPerformAction(
+                                    "access::meal-show",
+                                    user_permissions
+                                ) && (
+                                    <Link
+                                        href={route(
+                                            "meals.show",
+                                            id
                                         )}
-                                    </tr>
-                                )
-                            )
-                        ) : (
-                            <tr>
-                                <td className="px-6 py-4 border-t" colSpan="6">
-                                    No Meal found.
-                                </td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                                        className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
+                                    >
+                                        <Icon
+                                            name="FaEye"
+                                            className="w-6 h-4 text-gray-400 hover:text-black dark:text-white fill-current cursor-pointer"
+                                        />
+                                    </Link>
+                                )}
+                            </TableAction>
+                        </tr>
+                    )
+                )
+            ) : (
+                <tr>
+                    <TableData value={'No Data Found'} colSpan={tableHeading.length} className="text-center text-black dark:text-white"/>
+                </tr>
+            )}
+            </tbody>
+        </TablePageLayout>
     );
 };
 
-const DueText = ({ deposit, cost }) => {
+const DueText = ({deposit, cost}) => {
     if (cost > deposit) {
         return (
             <p className="flex items-center text-red-400  px-6 py-4 focus:text-indigo-700 focus:outline-none">
@@ -240,6 +195,6 @@ const DueText = ({ deposit, cost }) => {
     }
 };
 
-Index.layout = (page) => <Layout title="Meal Report" children={page} />;
+Index.layout = (page) => <Layout title="Meal Report" children={page}/>;
 
 export default Index;

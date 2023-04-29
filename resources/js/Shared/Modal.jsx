@@ -1,26 +1,16 @@
-import React from 'react'
+import React from "react";
 import TextInput from "@/Shared/TextInput";
-import moment from "moment";
 
-export default function MealEditModal({mealData, setMealData, handleConfirm, setOpen}) {
-
-    const handleModalClose = () => {
-        setMealData({
-            break_fast: 0,
-            lunch: 0,
-            dinner: 0
-        });
-        setOpen(false);
-    }
-
+const Modal = ({menuData, setMenuData, handleConfirm, open, handleModalClose}) => {
     return (
         <div
             className="fixed top-0 left-0 z-999999 flex h-full min-h-screen w-full items-center justify-center bg-black/90 px-4 py-5">
-            <div onClick={handleModalClose}
-                 className="relative w-full max-w-142.5 rounded-lg bg-white dark:bg-boxdark py-12 px-8 md:py-15 md:px-17.5">
+            <div  onClick={handleModalClose} className="relative w-full max-w-142.5 rounded-lg bg-white dark:bg-boxdark py-12 px-8 md:py-15 md:px-17.5">
+
+
                 <h3
-                    className="text-lg font-medium leading-6 text-black dark:text-white border-b mb-4 ">
-                    Update Meal for {moment(mealData.created_at).format('Do MMM YYYY')}
+                    className="text-lg font-medium leading-6 text-gray-900 border-b mb-4 ">
+                    Update Menu
                 </h3>
                 <div className="grid grid-cols-1 gap-4 pb-10">
 
@@ -28,78 +18,58 @@ export default function MealEditModal({mealData, setMealData, handleConfirm, set
                     <TextInput
 
                         label="Breakfast"
-                        type="number"
+                        type="text"
                         name="breakfast"
                         placeholder="Breakfast"
-                        value={mealData.break_fast}
+                        value={menuData.break_fast}
                         onChange={(e) => {
-                            if (e.target.value >= 0) {
-                                setMealData((prevState) => ({
-                                    ...prevState,
-                                    break_fast: parseInt(e.target.value, 10)
-                                }))
-                            } else {
-                                setMealData((prevState) => ({
-                                    ...prevState,
-                                    lunch: 0
-                                }))
-                            }
+                            setMenuData((prevState) => ({
+                                ...prevState,
+                                break_fast: e.target.value
+                            }))
                         }}
                     />
 
                     <TextInput
 
                         label="Lunch"
-                        type="number"
+                        type="text"
                         name="lunch"
                         placeholder="Lunch"
-                        value={mealData.lunch}
+                        value={menuData.lunch}
                         onChange={(e) => {
-                            if (e.target.value >= 0) {
-                                setMealData((prevState) => ({
-                                    ...prevState,
-                                    lunch: parseInt(e.target.value, 10)
-                                }))
-                            } else {
-                                setMealData((prevState) => ({
-                                    ...prevState,
-                                    lunch: 0
-                                }))
-                            }
+                            setMenuData((prevState) => ({
+                                ...prevState,
+                                lunch: e.target.value
+                            }))
                         }}
                     />
 
                     <TextInput
 
                         label="Dinner"
-                        type="number"
+                        type="text"
                         name="dinner"
                         placeholder="Dinner"
-                        value={mealData.dinner}
+                        value={menuData.dinner}
                         onChange={(e) => {
-                            if (e.target.value >= 0) {
-                                setMealData((prevState) => ({
-                                    ...prevState,
-                                    dinner: parseInt(e.target.value, 10)
-                                }))
-                            } else {
-                                setMealData((prevState) => ({
-                                    ...prevState,
-                                    dinner: 0
-                                }))
-                            }
+                            setMenuData((prevState) => ({
+                                ...prevState,
+                                dinner: e.target.value
+                            }))
                         }}
                     />
 
                 </div>
-                <div className="-mx-3 flex flex-wrap gap-y-4">
-                    <div className="w-full px-3 2xsm:w-1/2">
+
+                <div class="-mx-3 flex flex-wrap gap-y-4">
+                    <div class="w-full px-3 2xsm:w-1/2">
                         <button
                             onClick={handleModalClose}
                             className="block w-full rounded border border-stroke bg-gray p-3 text-center font-medium text-black transition hover:border-meta-1 hover:bg-meta-1 hover:text-white dark:border-strokedark dark:bg-meta-4 dark:text-white dark:hover:border-meta-1 dark:hover:bg-meta-1">Cancel
                         </button>
                     </div>
-                    <div className="w-full px-3 2xsm:w-1/2">
+                    <div class="w-full px-3 2xsm:w-1/2">
                         <button
                             onClick={handleConfirm}
                             className="block w-full rounded border border-primary bg-primary p-3 text-center font-medium text-white transition hover:bg-opacity-90">
@@ -118,4 +88,7 @@ export default function MealEditModal({mealData, setMealData, handleConfirm, set
             </div>
         </div>
     )
+        ;
 }
+
+export default Modal;

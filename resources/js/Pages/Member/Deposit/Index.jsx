@@ -1,80 +1,45 @@
 import React from "react";
-import {Link, router, usePage} from "@inertiajs/react";
-import MemberLayout from "@/Shared/Member/MemberLayout";
-import Pagination from "@/Shared/Pagination";
+import {usePage} from "@inertiajs/react";
+import MemberLayout from "@/Shared/Layout/AuthenticatedLayout";
 import moment from "moment";
+import TableHeader from "@/Shared/TableHeader";
+import TablePageLayout from "@/Shared/Layout/TablePageLayout";
+import TableData from "@/Shared/TableData";
 
 const Index = () => {
     const {deposits} = usePage().props;
-    const {
-        data,
-        links
-    } = deposits;
-
-
+    const {data, links} = deposits;
 
     return (
-        <div>
-            <h1 className="mb-8 text-3xl font-bold">Deposits</h1>
-            <div className="flex items-center justify-end mb-6">
-                <Link
-                    className="btn-indigo focus:outline-none"
-                    href={route("user.deposits.create")}
-                >
-                    <span>Add</span>
-                    <span className="hidden md:inline"> Deposit</span>
-                </Link>
-            </div>
-            <div className="overflow-x-auto bg-white rounded shadow p-3">
-                <table className="w-full whitespace-nowrap">
-                    <thead>
-                    <tr className="font-bold text-left">
-                        <th className="px-6 pt-5 pb-4">Date</th>
-                        <th className="px-6 pt-5 pb-4">Amount</th>
-                        <th className="px-6 pt-5 pb-4">Status</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                        {data && data.length ? data.map((row,key)=>(
-                            <tr
-                                key={key}
-                                className="hover:bg-gray-100 focus-within:bg-gray-100"
-                            >
-                                <td className="border">
-                                    <p
-                                        className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
-                                    >
-                                        {moment(row.deposit_date).format('D MMM YY')}
-                                    </p>
-                                </td>
-                                <td className="border">
-                                    <p
-                                        className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none"
-                                    >
-                                        {row.amount}
-                                    </p>
-                                </td>
+        <TablePageLayout
+            breadcumb_name={'Deposit'}
+            breadcumb_action={'Add New Deposit'}
+            breadcumb_link={route('user.deposits.create')}
+            pagination_links={links}
+            isShowButton={true}
+        >
+            <TableHeader rows={['Date', 'Amount', 'Status']}/>
+            <tbody>
+            {data && data.length ? (
+                data.map((row, key) => (
+                    <tr
+                        key={key}
 
-                                <td className="border">
-                                    <p
-                                        className={`flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none ${row.status === 0 ? 'text-red-600' : row.status === 1 ? 'text-green-500':'text-blue-400'}`}
-                                    >
-                                        {row.status === 0 ? 'Pending' : row.status === 1 ? 'Approved':'Withdrawn'}
-                                    </p>
-                                </td>
-                            </tr>
-                        )): (
-                        <tr>
-                            <td className="px-6 py-4 border" colSpan="5">
-                                No Deposit found.
-                            </td>
-                        </tr>
-                    )}
-                    </tbody>
-                </table>
-            </div>
-            <Pagination links={links}/>
-        </div>
+                    >
+                        <TableData value={moment(row.deposit_date).format("D MMM YY")}/>
+                        <TableData value={row.amount}/>
+                        <TableData value={row.status === 0 ? 'Pending' : row.status === 1 ? 'Approved' : 'N/A'}
+                                   className={`rounded-full ${row.status === 0 ? 'bg-danger text-danger' : row.status === 1 ? 'bg-success success text-success' : 'bg-buttonColor-900 text-black dark:text-white'} text-center bg-opacity-10 py-1 px-3 text-sm `}/>
+                    </tr>
+                ))
+            ) : (
+                <tr>
+                    <TableData value={'No Data Found'} colSpan={3} className="text-center text-black dark:text-white"/>
+
+                </tr>
+            )}
+            </tbody>
+        </TablePageLayout>
     );
 };
 

@@ -7,7 +7,6 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
-import EventModal from "@/Calendar/EventModal";
 
 const Index = () => {
     const { messId } = usePage().props;
@@ -32,9 +31,7 @@ const Index = () => {
                 month,
             }
         );
-        if (error) {
-            console.log(error.data.message);
-        } else if (response.data && response.data.length > 0) {
+         if (!error && response.data && response.data.length > 0) {
             let s = response.data.map(
                 ({
                     id,
@@ -71,7 +68,6 @@ const Index = () => {
     }, [messId]);
 
     const handleEvents = ({ event }) => {
-        console.log(event);
         const { lunch, dinner, id, dormitory_id } = event._def.extendedProps;
         setMeal({
             lunch,
@@ -84,13 +80,14 @@ const Index = () => {
 
     function renderEventContent({ event }) {
         const { lunch, dinner, today } = event._def.extendedProps;
+        console.log(today)
         return (
             <>
                 <div
                     className={`p-2 flex flex-col font-bold text-xl ${
                         today
-                            ? "bg-blue-600 shadow-2xl"
-                            : "border-0 bg-gray-300"
+                            ? "bg-success shadow-2xl"
+                            : "border-0 !bg-primary opacity-25 "
                     }`}
                 >
                     <span className="p-1 mb-1">Lunch : {lunch}</span>
@@ -102,12 +99,6 @@ const Index = () => {
 
     return (
         <>
-            <EventModal
-                meal={meal}
-                setMeal={setMeal}
-                open={open}
-                setOpen={setOpen}
-            />
             <div className="p-3 rounded-2xl bg-white shadow ">
                 <FullCalendar
                     plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -124,7 +115,6 @@ const Index = () => {
                     firstDay={6}
                     events={meals}
                     eventContent={renderEventContent}
-                    eventClick={handleEvents}
 
                     /* you can update a remote database when these fire:
                     eventAdd={function(){}}

@@ -4,8 +4,12 @@ import Layout from "@/Shared/Layout/AuthenticatedLayout";
 import Pagination from "@/Shared/Pagination";
 import moment from "moment";
 import { isUserPermittedToPerformAction } from "@/utils";
+import TableHeader from "@/Shared/TableHeader";
+import TablePageLayout from "@/Shared/Layout/TablePageLayout";
+import TableData from "@/Shared/TableData";
 
 const Calcualtion = () => {
+    const tableHeading =['No', 'Closed Month', 'Member', 'Meal', 'Amount','Carry'];
     const { calculations } = usePage().props;
     const {
         data,
@@ -13,91 +17,50 @@ const Calcualtion = () => {
     } = calculations;
 
     return (
-        <div>
-            <h1 className="mb-8 text-3xl font-bold">Closed Calculation</h1>
-            <div className="overflow-x-auto bg-white rounded shadow p-3">
-                <table className="w-full whitespace-nowrap">
-                    <thead>
-                        <tr className="font-bold text-left">
-                            <th className="px-6 pt-5 pb-4">No</th>
-                            <th className="px-6 pt-5 pb-4">Closed Month</th>
-                            <th className="px-6 pt-5 pb-4">Member</th>
-                            <th className="px-6 pt-5 pb-4">Meal</th>
-                            <th className="px-6 pt-5 pb-4">Amount</th>
-                            <th className="px-6 pt-5 pb-4">Carry</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {data ? (
-                            data.map(
-                                (
-                                    {
-                                        id,
-                                        user,
-                                        amount,
-                                        description,
-                                        calculate_date,
-                                        carry,
-                                        total_meal,
-                                    },
-                                    key
-                                ) => {
-                                    return (
-                                        <tr
-                                            key={id}
-                                            className="hover:bg-gray-100 focus-within:bg-gray-100"
-                                        >
-                                            <td className="border">
-                                                <p className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none">
-                                                    {key + 1}
-                                                </p>
-                                            </td>
-                                            <td className="border">
-                                                <p className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none">
-                                                    {moment(
-                                                        calculate_date
-                                                    ).format("Do MMMM YYYY")}
-                                                </p>
-                                            </td>
-
-                                            <td className="border">
-                                                <p className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none">
-                                                    {user.first_name}{" "}
-                                                    {user.last_name}
-                                                </p>
-                                            </td>
-                                            <td className="border">
-                                                <p className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none">
-                                                    {total_meal}
-                                                </p>
-                                            </td>
-
-                                            <td className="border">
-                                                <p className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none">
-                                                    {amount}
-                                                </p>
-                                            </td>
-                                            <td className="border">
-                                                <p className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none">
-                                                    {carry}
-                                                </p>
-                                            </td>
-                                        </tr>
-                                    );
-                                }
-                            )
-                        ) : (
-                            <tr>
-                                <td className="px-6 py-4 border" colSpan="4">
-                                    No Calculation found.
-                                </td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
-            </div>
-            <Pagination links={links} />
-        </div>
+            <TablePageLayout
+                breadcumb_action={''}
+                breadcumb_name={'Closed Calculation'}
+                pagination_links={links}
+                breadcumb_link={''}
+                isShowButton={false}
+            >
+                <TableHeader rows={tableHeading}/>
+                <tbody>
+                {data ? (
+                    data.map(
+                        (
+                            {
+                                id,
+                                user,
+                                amount,
+                                description,
+                                calculate_date,
+                                carry,
+                                total_meal,
+                            },
+                            key
+                        ) => {
+                            return (
+                                <tr
+                                    key={id}
+                                >
+                                    <TableData value={key+1}/>
+                                    <TableData value={moment(calculate_date).format("Do MMMM YYYY")}/>
+                                    <TableData value={`${user.first_name}${" "}${user.last_name}`}/>
+                                    <TableData value={total_meal}/>
+                                    <TableData value={amount}/>
+                                    <TableData value={carry}/>
+                                </tr>
+                            );
+                        }
+                    )
+                ) : (
+                    <tr>
+                        <TableData value={'No Data Found'} colSpan={tableHeading.length} className="text-center text-black dark:text-white"/>
+                    </tr>
+                )}
+                </tbody>
+            </TablePageLayout>
     );
 };
 

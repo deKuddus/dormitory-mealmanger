@@ -1,13 +1,18 @@
-import React, { useState } from "react";
-import { router, usePage } from "@inertiajs/react";
+import React, {useState} from "react";
+import {router, usePage} from "@inertiajs/react";
 import Layout from "@/Shared/Layout/AuthenticatedLayout";
 import SelectInput from "@/Shared/SelectInput";
 import moment from "moment";
-import { currentYearMontList, isUserPermittedToPerformAction } from "@/utils";
+import {currentYearMontList, isUserPermittedToPerformAction} from "@/utils";
 import Icon from "@/Shared/Icon";
 import MealEditModal from "@/Pages/Meal/MealEditModal";
+import TablePageLayout from "@/Shared/Layout/TablePageLayout";
+import TableHeader from "@/Shared/TableHeader";
+import TableData from "@/Shared/TableData";
+import TableAction from "@/Shared/TableAction";
 
 const Index = () => {
+    const tableHeading = ['Date', 'Break Fast', 'Lunch', 'Dinner', 'Action'];
     const {
         user,
         balance,
@@ -40,7 +45,7 @@ const Index = () => {
         if (value) {
             return router.get(
                 route("meals.show", user.id),
-                { month: value },
+                {month: value},
                 {
                     replace: true,
                     preserveState: true,
@@ -68,20 +73,10 @@ const Index = () => {
         setMealData(mealEditInitialObject);
     };
 
-    return (
-        <div>
-            <MealEditModal
-                mealData={mealData}
-                setOpen={setOpen}
-                setMealData={setMealData}
-                open={open}
-                handleConfirm={handleUpdateMela}
-            />
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
-                <div className="flex items-center">
-                    <h1 className="text-3xl font-bold">Meals</h1>
-                </div>
-                <div className="flex items-center">
+    const Additional = () => {
+        return (
+            <>
+                <div className="flex items-center justify-end">
                     <div className="relative z-30 w-64 px-4 py-6 mt-2">
                         <SelectInput
                             label="Month"
@@ -107,18 +102,17 @@ const Index = () => {
                         </SelectInput>
                     </div>
                 </div>
-            </div>
-            <div className="overflow-x-auto bg-white rounded shadow p-3">
                 <div className="col-span-full mb-5">
                     <div className="grid gap-4 lg:gap-8 md:grid-cols-3">
                         <div className="relative p-6 rounded-xl">
-                            <div className="space-y-2 text-white text-center">
-                                <div className="flex flex-col items-center space-x-2 rtl:space-x-reverse text-xl font-medium ">
-                                    <span className="text-xxl font-bold text-gray-900">
+                            <div className="space-y-2 text-black dark:text-white text-center">
+                                <div
+                                    className="flex flex-col items-center space-x-2 rtl:space-x-reverse text-xl font-medium ">
+                                    <span className="text-xxl font-bold text-black dark:text-white">
                                         {" "}
                                         {user.name}
                                     </span>
-                                    <span className="text-sm text-gray-900">
+                                    <span className="text-sm text-black dark:text-white">
                                         Balance {balance} BDT
                                     </span>
                                 </div>
@@ -126,17 +120,18 @@ const Index = () => {
                         </div>
                         <div className="relative p-6 rounded-xl">
                             <div className="space-y-2 text-white">
-                                <div className="flex flex-col items-center space-x-2 rtl:space-x-reverse text-xl font-medium ">
-                                    <span className="text-buttonColor-400">
+                                <div
+                                    className="flex flex-col items-center space-x-2 rtl:space-x-reverse text-xl font-medium ">
+                                    <span className="text-black dark:text-white0">
                                         Meal Charge: {mealCost} BDT{" "}
                                     </span>
-                                    <span className="text-gray-900 text-xl font-bold ">
+                                    <span className="text-black dark:text-white text-xl font-bold ">
                                         Total Meal : {totalMeal}{" "}
                                     </span>
-                                    <span className="text-gray-900 text-xl font-bold">
+                                    <span className="text-black dark:text-white text-xl font-bold">
                                         Fixed Cost : {fixedCost} BDT
                                     </span>
-                                    <span className="text-gray-900 text-xl font-bold">
+                                    <span className="text-black dark:text-white text-xl font-bold">
                                         Bazar : {bazar} BDT
                                     </span>
                                 </div>
@@ -144,14 +139,15 @@ const Index = () => {
                         </div>
                         <div className="relative p-6 rounded-xl">
                             <div className="space-y-2 text-white">
-                                <div className="flex flex-col items-center space-x-2 rtl:space-x-reverse text-xl font-medium ">
-                                    <span className="text-red-600 text-xl font-bold ">
+                                <div
+                                    className="flex flex-col items-center space-x-2 rtl:space-x-reverse text-xl font-medium ">
+                                    <span className="text-danger text-xl font-bold ">
                                         Total Due: {due} BDT{" "}
                                     </span>
-                                    <span className="text-gray-900 text-xl font-bold ">
+                                    <span className="text-black dark:text-white text-xl font-bold ">
                                         Total Cost : {totalMealCost}{" "}
                                     </span>
-                                    <span className="text-gray-900 text-xl font-bold">
+                                    <span className="text-black dark:text-white text-xl font-bold">
                                         Total Fixed Cost : {fixedCost} BDT
                                     </span>
                                 </div>
@@ -159,102 +155,89 @@ const Index = () => {
                         </div>
                     </div>
                 </div>
-                <table className="w-full whitespace-nowrap">
-                    <thead>
-                        <tr className="font-bold text-left">
-                            <th className="px-6 pt-5 pb-4 border">Date</th>
-                            <th className="px-6 pt-5 pb-4 border">
-                                Break Fast
-                            </th>
-                            <th className="px-6 pt-5 pb-4 border">Lunch</th>
-                            <th className="px-6 pt-5 pb-4 border">Dinner</th>
-                            <th className="px-6 pt-5 pb-4 border">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {user.meals ? (
-                            user.meals.map(
-                                (
-                                    {
-                                        id,
-                                        break_fast,
-                                        lunch,
-                                        dinner,
-                                        created_at,
-                                    },
-                                    key
-                                ) => (
-                                    <tr
-                                        key={key}
-                                        className="hover:bg-gray-100 focus-within:bg-gray-100"
-                                    >
-                                        <td className="border">
-                                            <p className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none">
-                                                {moment(created_at).format(
-                                                    "Do MMMM YYYY"
-                                                )}
-                                            </p>
-                                        </td>
-                                        <td className="border">
-                                            <p className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none">
-                                                {break_fast}
-                                            </p>
-                                        </td>
-                                        <td className="border">
-                                            <p className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none">
-                                                {lunch}
-                                            </p>
-                                        </td>
+            </>
+        );
+    }
 
-                                        <td className="border">
-                                            <p className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none">
-                                                {dinner}
-                                            </p>
-                                        </td>
-
-                                        {isUserPermittedToPerformAction(
-                                            "access::meal-edit",
-                                            user_permissions
-                                        ) && (
-                                            <td className="border w-px border-t p-3 whitespace-nowrap">
-                                                <div className="flex items-center gap-2 justify-end">
-                                                    <button
-                                                        onClick={() =>
-                                                            handleMealEdit(
-                                                                id,
-                                                                break_fast,
-                                                                lunch,
-                                                                dinner,
-                                                                created_at
-                                                            )
-                                                        }
-                                                        className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
-                                                    >
-                                                        <Icon
-                                                            name="FaEdit"
-                                                            className="w-6 h-4 text-gray-400 hover:text-buttonColor-400 fill-current cursor-pointer"
-                                                        />
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        )}
-                                    </tr>
-                                )
-                            )
-                        ) : (
-                            <tr>
-                                <td className="px-6 py-4 border" colSpan="6">
-                                    No Meal found.
-                                </td>
+    return (
+        <>
+            {open && (
+                <MealEditModal
+                    mealData={mealData}
+                    setOpen={setOpen}
+                    setMealData={setMealData}
+                    open={open}
+                    handleConfirm={handleUpdateMela}
+                />
+            )}
+            <TablePageLayout
+                breadcumb_action={''}
+                breadcumb_name={'Meal Details'}
+                pagination_links={''}
+                breadcumb_link={''}
+                isShowButton={false}
+                additionalComponent={<Additional/>}
+            >
+                <TableHeader rows={tableHeading}/>
+                <tbody>
+                {user.meals ? (
+                    user.meals.map(
+                        (
+                            {
+                                id,
+                                break_fast,
+                                lunch,
+                                dinner,
+                                created_at,
+                            },
+                            key
+                        ) => (
+                            <tr
+                                key={key}
+                            >
+                                <TableData value={moment(created_at).format("Do MMMM YYYY")}/>
+                                <TableData value={break_fast}/>
+                                <TableData value={lunch}/>
+                                <TableData value={dinner}/>
+                                <TableAction>
+                                    {isUserPermittedToPerformAction(
+                                        "access::meal-edit",
+                                        user_permissions
+                                    ) && (
+                                        <button
+                                            onClick={() =>
+                                                handleMealEdit(
+                                                    id,
+                                                    break_fast,
+                                                    lunch,
+                                                    dinner,
+                                                    created_at
+                                                )
+                                            }
+                                            className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
+                                        >
+                                            <Icon
+                                                name="FaEdit"
+                                                className="w-6 h-4 text-gray-400 hover:text-buttonColor-400 fill-current cursor-pointer"
+                                            />
+                                        </button>
+                                    )}
+                                </TableAction>
                             </tr>
-                        )}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                        )
+                    )
+                ) : (
+                    <tr>
+                        <TableData value={'No Data Found'} colSpan={tableHeading.length} className="text-center text-black dark:text-white"/>
+                    </tr>
+                )}
+                </tbody>
+            </TablePageLayout>
+
+        </>
     );
 };
 
-Index.layout = (page) => <Layout title="Meal details" children={page} />;
+Index.layout = (page) => <Layout title="Meal details" children={page}/>;
 
 export default Index;

@@ -1,13 +1,18 @@
-import React, { useState } from "react";
-import { Link, router, usePage } from "@inertiajs/react";
+import React, {useState} from "react";
+import {Link, router, usePage} from "@inertiajs/react";
 import Layout from "@/Shared/Layout/AuthenticatedLayout";
 import Icon from "@/Shared/Icon";
 import SelectInput from "@/Shared/SelectInput";
 import moment from "moment/moment";
-import { currentYearMontList, isUserPermittedToPerformAction } from "@/utils";
+import {currentYearMontList, isUserPermittedToPerformAction} from "@/utils";
+import TablePageLayout from "@/Shared/Layout/TablePageLayout";
+import TableHeader from "@/Shared/TableHeader";
+import TableData from "@/Shared/TableData";
+import TableAction from "@/Shared/TableAction";
 
 const Index = () => {
-    const { users, user_permissions } = usePage().props;
+    const tableHeading = ['No', 'Name', 'Status', 'Meal', 'Action'];
+    const {users, user_permissions} = usePage().props;
     const [currentMonth, setCurrentMonth] = useState(
         moment().format("MMM-YYYY")
     );
@@ -31,7 +36,7 @@ const Index = () => {
         }
     };
 
-    const Status = ({ status }) => {
+    const Status = ({status}) => {
         if (status === 0) {
             return (
                 <p className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none">
@@ -57,9 +62,8 @@ const Index = () => {
         }
     };
 
-    return (
-        <div>
-            <h1 className="mb-8 text-3xl font-bold">Meals</h1>
+    const Additional = () => {
+        return (
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
                 <div className="flex items-center">
                     <span className="text-xl p-3">
@@ -99,119 +103,104 @@ const Index = () => {
                     </div>
                 </div>
             </div>
-            <div className="overflow-x-auto bg-white rounded shadow p-3">
-                <table className="w-full whitespace-nowrap">
-                    <thead>
-                        <tr className="font-bold text-left">
-                            <th className="px-6 pt-5 pb-4 border">No.</th>
-                            <th className="px-6 pt-5 pb-4 border">Name</th>
-                            <th className="px-6 pt-5 pb-4 border">Email</th>
-                            <th className="px-6 pt-5 pb-4 border">Status</th>
-                            <th className="px-6 pt-5 pb-4 border">Meal</th>
-                            <th className="px-6 pt-5 pb-4 border">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {users ? (
-                            users.map(
-                                (
-                                    {
-                                        id,
-                                        first_name,
-                                        last_name,
-                                        meals,
-                                        status,
-                                        email,
-                                    },
-                                    key
-                                ) => {
-                                    return (
-                                        <tr
-                                            key={id}
-                                            className="hover:bg-gray-100 focus-within:bg-gray-100"
-                                        >
-                                            <td className="border">
-                                                <p className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none">
-                                                    {key + 1}
-                                                </p>
-                                            </td>
-                                            <td className="border">
-                                                <p className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none">
-                                                    {first_name} {last_name}
-                                                </p>
-                                            </td>
-                                            <td className="border">
-                                                <p className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none">
-                                                    {email}
-                                                </p>
-                                            </td>
+        );
+    }
 
-                                            <td className="border">
-                                                <Status status={status} />
-                                            </td>
-                                            <td className="border">
-                                                <p className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none">
-                                                    {meals[0] || 0}
-                                                </p>
-                                            </td>
-                                            <td className="border w-px border-t p-3 whitespace-nowrap">
-                                                <div className="flex items-center gap-2 justify-end">
-                                                    {!meals[0] &&
-                                                        isUserPermittedToPerformAction(
-                                                            "access::meal-add",
-                                                            user_permissions
-                                                        ) && (
-                                                            <button
-                                                                onClick={() =>
-                                                                    addMealForTheUser(
-                                                                        id
-                                                                    )
-                                                                }
-                                                                className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
-                                                            >
-                                                                <Icon
-                                                                    name="FaEdit"
-                                                                    className="w-6 h-4 text-gray-400 hover:text-buttonColor-400 fill-current"
-                                                                />
-                                                            </button>
-                                                        )}
-                                                    {isUserPermittedToPerformAction(
-                                                        "access::meal-show",
-                                                        user_permissions
-                                                    ) && (
-                                                        <Link
-                                                            href={route(
-                                                                "meals.show",
-                                                                id
-                                                            )}
-                                                            className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
-                                                        >
-                                                            <Icon
-                                                                name="FaEye"
-                                                                className="w-6 h-4 text-gray-400 hover:text-buttonColor-400 fill-current"
-                                                            />
-                                                        </Link>
-                                                    )}
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    );
+    return (
+        <TablePageLayout
+            breadcumb_action={''}
+            breadcumb_name={'Meals'}
+            pagination_links={''}
+            breadcumb_link={''}
+            isShowButton={false}
+            additionalComponent={<Additional/>}
+        >
+            <TableHeader rows={tableHeading}/>
+            <tbody>
+            {users ? (
+                users.map(
+                    (
+                        {
+                            id,
+                            first_name,
+                            last_name,
+                            meals,
+                            status,
+                            email,
+                        },
+                        key
+                    ) => {
+                        return (
+                            <tr
+                                key={id}
+                            >
+                                <TableData value={key + 1}/>
+                                <TableData value={`${first_name} ${last_name}`}/>
+
+                                <TableData value={
+                                    status === 1
+                                        ? "Active"
+                                        : status === 0
+                                            ? "Inactive"
+                                            : "Closed"
                                 }
-                            )
-                        ) : (
-                            <tr>
-                                <td className="px-6 py-4 border-t" colSpan="6">
-                                    No users found.
-                                </td>
+                                           className={`rounded-full ${status === 1 ? 'bg-success text-success' : 'bg-danger text-danger'} text-center bg-opacity-10 py-1 px-3 text-sm `}
+                                />
+                                <TableData value={meals[0] || 0}/>
+
+                                <TableAction>
+                                    {!meals[0] &&
+                                        isUserPermittedToPerformAction(
+                                            "access::meal-add",
+                                            user_permissions
+                                        ) && (
+                                            <button
+                                                onClick={() =>
+                                                    addMealForTheUser(
+                                                        id
+                                                    )
+                                                }
+                                                className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
+                                            >
+                                                <Icon
+                                                    name="FaEdit"
+                                                    className="w-6 h-4 text-gray-400 hover:text-buttonColor-400 fill-current"
+                                                />
+                                            </button>
+                                        )}
+                                    {isUserPermittedToPerformAction(
+                                        "access::meal-show",
+                                        user_permissions
+                                    ) && (
+                                        <Link
+                                            href={route(
+                                                "meals.show",
+                                                id
+                                            )}
+                                            className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
+                                        >
+                                            <Icon
+                                                name="FaEye"
+                                                className="w-6 h-4 text-gray-400 hover:text-buttonColor-400 fill-current"
+                                            />
+                                        </Link>
+                                    )}
+                                </TableAction>
                             </tr>
-                        )}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                        );
+                    }
+                )
+            ) : (
+                <tr>
+                    <TableData value={'No Data Found'} colSpan={tableHeading.length}
+                               className="text-center text-black dark:text-white"/>
+                </tr>
+            )}
+            </tbody>
+        </TablePageLayout>
     );
 };
 
-Index.layout = (page) => <Layout title="Meals" children={page} />;
+Index.layout = (page) => <Layout title="Meals" children={page}/>;
 
 export default Index;
