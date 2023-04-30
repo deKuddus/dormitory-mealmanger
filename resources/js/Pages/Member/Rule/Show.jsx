@@ -11,7 +11,7 @@ const Show = () => {
     return (
         <TablePageLayout
             breadcumb_name={'Rule Details'}
-            breadcumb_link={route('user.rule.index')}
+            breadcumb_link={route('user.rules.index')}
             breadcumb_action={'Rule List'}
             isShowButton={true}
         >
