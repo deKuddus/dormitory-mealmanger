@@ -37,7 +37,7 @@ const Notice = () => {
                         <TableAction>
                             <Link
                                 href={route(
-                                    "user.rule.show",
+                                    "user.rules.details",
                                     id
                                 )}
                                 className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
