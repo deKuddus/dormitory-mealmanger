@@ -16,7 +16,7 @@ export default function MealEditModal({mealData, setMealData, handleConfirm, set
     return (
         <div
             className="fixed top-0 left-0 z-999999 flex h-full min-h-screen w-full items-center justify-center bg-black/90 px-4 py-5">
-            <div onClick={handleModalClose}
+            <div
                  className="relative w-full max-w-142.5 rounded-lg bg-white dark:bg-boxdark py-12 px-8 md:py-15 md:px-17.5">
                 <h3
                     className="text-lg font-medium leading-6 text-black dark:text-white border-b mb-4 ">
