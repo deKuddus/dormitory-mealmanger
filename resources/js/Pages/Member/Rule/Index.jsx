@@ -12,7 +12,7 @@ import TableAction from "@/Shared/TableAction";
 import TablePageLayout from "@/Shared/Layout/TablePageLayout";
 
 const Notice = () => {
-    const tableHeading = ['No', 'Title', 'Status', 'Action'];
+    const tableHeading = ['No', 'Title', 'Action'];
 
     const { rules } = usePage().props;
     const {
