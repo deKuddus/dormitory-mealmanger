@@ -101,8 +101,14 @@ class Helper
 
     public static function getUserUnreadNotification()
     {
+        if (auth()->check()) {
+            return [
+                'count' => 0,
+                'data' => [],
+            ];
+        }
         return [
-            'count' => auth()->user()->unreadNotifications ? auth()->user()->unreadNotifications->count() : 0,
+            'count' => auth()->user()->unreadNotifications->count(),
             'data' => auth()->user()->unreadNotifications ?? [],
         ];
     }
