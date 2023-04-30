@@ -101,7 +101,7 @@ class Helper
 
     public static function getUserUnreadNotification()
     {
-        if (auth()->check()) {
+        if (!auth()->check()) {
             return [
                 'count' => 0,
                 'data' => [],
