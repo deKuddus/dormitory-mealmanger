@@ -19,8 +19,7 @@ module.exports = {
         colors: {...colors,
             background: {
                 200: "#0094FF",
-                300: "#0094FF",
-                500: "#EEEFF6",
+                600:'#1EA143',
             },
             buttonColor:{
                 100:'#0F52B7',

@@ -56,8 +56,8 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'first_name' => ['required', 'string', 'max:50'],
-            'last_name' => ['required', 'string', 'max:50'],
+            'full_name' => ['required', 'string', 'max:50'],
+            'display_name' => ['required', 'string', 'max:50'],
             'mobile' => ['required', 'string', 'max:12'],
         ]);
     }
@@ -68,14 +68,15 @@ class RegisterController extends Controller
         $dormitoryId = DormitoryIdStatic::DORMITORYID;
 
         $user = \App\Models\User::create([
-            'first_name' => $data['first_name'],
-            'last_name' => $data['last_name'],
+            'full_name' => $data['full_name'],
+            'display_name' => $data['display_name'],
             'email' => $data['email'],
-            'phone:' => $data['mobile'],
+            'phone' => $data['mobile'],
             'password' => $data['password'],
             'is_admin' => 0,
             'deposit' => 0,
-            'status' => 1
+            'status' => 1,
+            'meal_status' => 0
         ]);
         $user->dormitory()->sync($dormitoryId);
         return $user;

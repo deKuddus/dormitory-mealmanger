@@ -43,7 +43,7 @@ class MealController extends Controller
                             ->groupBy('user_id');
                     }
                 ])
-                    ->select('id', 'first_name', 'last_name', 'email', 'status')
+                    ->select('id', 'full_name', 'email', 'status')
                     ->orderBy('created_at', 'desc')
                     ->get()
             )

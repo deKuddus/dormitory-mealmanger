@@ -3,11 +3,10 @@ import {Link, router, usePage} from "@inertiajs/react";
 import Layout from "@/Shared/Layout/AuthenticatedLayout";
 import TableHeader from "@/Shared/TableHeader";
 import TablePageLayout from "@/Shared/Layout/TablePageLayout";
-import {ASSIGNED, PENDING} from "@/Shared/const/issueStatus";
+import {ASSIGNED, PENDING,RESOLVED} from "@/Shared/const/issueStatus";
 import {isUserPermittedToPerformAction} from "@/utils";
 import Icon from "@/Shared/Icon";
 import TableData from "@/Shared/TableData";
-import {APPROVED} from "@/Shared/const/additionalCostStatus";
 import TableAction from "@/Shared/TableAction";
 
 const Index = () => {
@@ -61,13 +60,12 @@ const Index = () => {
                                                         {" "}
                                             Issued By{" "}
                                                     </span>{" "}
-                                        {issuer.first_name}{" "}
-                                        {issuer.last_name}
+                                        {issuer.full_name}
                                     </>
                                 }
                                 />
-                                <TableData value={`${resolver?.first_name || ''} ${resolver?.last_name || ''}`}/>
-                                <TableData value={`${assigner?.first_name || ''} ${assigner?.last_name || ''}`}/>
+                                <TableData value={resolver?.full_name || ''}/>
+                                <TableData value={assigner?.full_name || ''}/>
 
                                 <TableData value={
                                     status === ASSIGNED
@@ -76,7 +74,7 @@ const Index = () => {
                                             ? "Pending"
                                             : "Resolved"
                                 }
-                                           className={`rounded-full ${status === APPROVED ? 'bg-success text-success' : status === PENDING ? 'bg-danger text-danger' : 'bg-background-200 text-black dark:text-white'} text-center bg-opacity-10 py-1 px-3 text-sm `}
+                                           className={`rounded-full ${status === RESOLVED ? 'bg-success text-success' : status === PENDING ? 'bg-danger text-danger' : 'bg-background-200 text-black dark:text-white'} text-center bg-opacity-10 py-1 px-3 text-sm `}
                                 />
                                 <TableAction>
                                     {isUserPermittedToPerformAction(

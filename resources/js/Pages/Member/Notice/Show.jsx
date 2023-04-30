@@ -11,7 +11,7 @@ const Show = () => {
     return (
         <TablePageLayout
             breadcumb_name={'Notice Details'}
-            breadcumb_link={route('user.notice.index')}
+            breadcumb_link={route('user.notices.index')}
             breadcumb_action={'Notice List'}
             isShowButton={true}
         >

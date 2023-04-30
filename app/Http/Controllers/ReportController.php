@@ -78,7 +78,7 @@ class ReportController extends Controller
                     },
                     'deposits' => fn ($q) => $q->whereStatus(DepositStatus::APPROVED),
                 ])
-                ->select('id', 'first_name', 'last_name', 'email', 'status')
+                ->select('id', 'full_name', 'email', 'status')
                 ->get(),
         );
     }

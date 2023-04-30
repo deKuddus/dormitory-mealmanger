@@ -25,8 +25,8 @@ class User extends Authenticatable
     use SoftDeletes;
 
     protected $fillable = [
-        'first_name',
-        'last_name',
+        'full_name',
+        'display_name',
         'email',
         'password',
         'phone',
@@ -40,7 +40,8 @@ class User extends Authenticatable
         'is_admin',
         'note',
         'room_id',
-        'seat_id'
+        'seat_id',
+        'meal_status'
     ];
     protected $perPage = 10;
 
@@ -58,7 +59,7 @@ class User extends Authenticatable
 
     public function getNameAttribute()
     {
-        return $this->first_name . ' ' . $this->last_name;
+        return $this->full_name;
     }
 
     public function setPasswordAttribute($password)
@@ -93,15 +94,15 @@ class User extends Authenticatable
 
     public function scopeOrderByName($query)
     {
-        $query->orderBy('last_name')->orderBy('first_name');
+        $query->orderBy('full_name');
     }
 
     public function scopeFilter($query, array $filters)
     {
         $query->when($filters['search'] ?? null, function ($query, $search) {
             $query->where(function ($query) use ($search) {
-                $query->where('first_name', 'like', '%' . $search . '%')
-                    ->orWhere('last_name', 'like', '%' . $search . '%')
+                $query->where('full_name', 'like', '%' . $search . '%')
+                    ->orWhere('display_name', 'like', '%' . $search . '%')
                     ->orWhere('email', 'like', '%' . $search . '%');
             });
         })->when($filters['trashed'] ?? null, function ($query, $trashed) {

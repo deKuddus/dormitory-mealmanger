@@ -16,7 +16,7 @@ class MealReportResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->first_name . ' ' . $this->last_name,
+            'name' => $this->full_name,
             'email' => $this->email,
             'status' => $this->status,
             'meals_total' => $this->generalizedMeal(),

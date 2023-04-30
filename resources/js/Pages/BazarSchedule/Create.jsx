@@ -36,7 +36,7 @@ const Create = () => {
         users && users.length
             ? users.map((row) => ({
                   value: row.id,
-                  label: `${row.first_name} ${row.last_name}`,
+                  label: row.full_name,
               }))
             : [];
 

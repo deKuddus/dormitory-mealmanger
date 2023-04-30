@@ -19,7 +19,7 @@ class BazarController extends Controller
             'bazars' => new BazarCollection(
                 Bazar::query()
                     ->with('bazarSchedule', function ($q) {
-                        $q->select('id')->with('users:id,first_name,last_name');
+                        $q->select('id')->with('users:id,full_name');
                     })
                     ->orderBy('created_at', 'desc')
                     ->paginate()
@@ -29,9 +29,8 @@ class BazarController extends Controller
 
     public function create()
     {
-//        dd( BazarScheduleForBazarResource::collection(BazarSchedule::query()->with('users:id,first_name,last_name')->get('id')));
         return Inertia::render('Member/Bazar/Create', [
-            'schedules' => BazarScheduleForBazarResource::collection(BazarSchedule::query()->with('users:id,first_name,last_name')->get('id'))
+            'schedules' => BazarScheduleForBazarResource::collection(BazarSchedule::query()->with('users:id,full_name')->get('id'))
         ]);
     }
 

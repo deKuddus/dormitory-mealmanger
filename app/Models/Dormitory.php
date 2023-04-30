@@ -23,7 +23,8 @@ class Dormitory extends Model
         'has_breakfast',
         'has_lunch',
         'has_dinner',
-        'default_meal'
+        'default_meal',
+        'max_deposit_limit'
     ];
 
     public function owner()

@@ -15,8 +15,8 @@ const Create = () => {
     const [seatOption, setSeatOptions] = useState([]);
     const { roles, rooms } = usePage().props;
     const { data, setData, errors, post, processing } = useForm({
-        first_name: "",
-        last_name: "",
+        full_name: "",
+        display_name: "",
         email: "",
         password: "",
         owner: "0",
@@ -80,22 +80,22 @@ const Create = () => {
         >
             <TextInput
 
-                label="First Name"
-                name="first_name"
-                errors={errors.first_name}
-                value={data.first_name}
+                label="Full Name"
+                name="full_name"
+                errors={errors.full_name}
+                value={data.full_name}
                 onChange={(e) =>
-                    setData("first_name", e.target.value)
+                    setData("full_name", e.target.value)
                 }
             />
             <TextInput
 
-                label="Last Name"
-                name="last_name"
-                errors={errors.last_name}
-                value={data.last_name}
+                label="Display Name"
+                name="display_name"
+                errors={errors.display_name}
+                value={data.display_name}
                 onChange={(e) =>
-                    setData("last_name", e.target.value)
+                    setData("display_name", e.target.value)
                 }
             />
             <TextInput

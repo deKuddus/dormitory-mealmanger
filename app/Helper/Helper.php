@@ -25,7 +25,7 @@ class Helper
     public static function roomArray()
     {
         return [
-            'rooms' => Room::query()->where('dormitory_id',DormitoryIdStatic::DORMITORYID)->get(['id', 'name'])->toArray(),
+            'rooms' => Room::query()->where('dormitory_id', DormitoryIdStatic::DORMITORYID)->get(['id', 'name'])->toArray(),
         ];
     }
 
@@ -34,7 +34,7 @@ class Helper
         return [
             'users' => User::query()->with(['dormitory' => function ($q) {
                 $q->whereId(DormitoryIdStatic::DORMITORYID)->select('name');
-            }])->get(['id', 'first_name', 'last_name'])->toArray(),
+            }])->get(['id', 'full_name', 'display_name'])->toArray(),
         ];
     }
 
@@ -97,5 +97,13 @@ class Helper
         }
 
         return $permissions;
+    }
+
+    public static function getUserUnreadNotification()
+    {
+        return [
+            'count' => auth()->user()->unreadNotifications->count(),
+            'data' => auth()->user()->unreadNotifications,
+        ];
     }
 }

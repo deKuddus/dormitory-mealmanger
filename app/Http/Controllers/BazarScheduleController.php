@@ -18,7 +18,7 @@ class BazarScheduleController extends Controller
             'filters' => $requestParam,
             'bazarSchedules' => new BazarScheduleCollection(
                 BazarSchedule::query()
-                    ->with('users:id,first_name,last_name')
+                    ->with('users:id,full_name,display_name')
                     ->orderBy('status','asc')
                     ->paginate()
             ),
@@ -52,7 +52,7 @@ class BazarScheduleController extends Controller
     public function edit(BazarSchedule $bazarSchedule)
     {
         return Inertia::render('BazarSchedule/Edit',[
-            'bazarSchedule' => $bazarSchedule->load('users:id,first_name,last_name'),
+            'bazarSchedule' => $bazarSchedule->load('users:id,full_name'),
             ...Helper::usersArray()
         ]);
     }

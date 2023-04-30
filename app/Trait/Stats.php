@@ -3,11 +3,11 @@
 namespace App\Trait;
 
 use App\Enums\DormitoryIdStatic;
+use App\Enums\MealStatus;
 use App\Models\AdditionalCost;
 use App\Models\Bazar;
-use App\Models\Deposit;
-use App\Models\Meal;
 use App\Models\Dormitory;
+use App\Models\Meal;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
@@ -16,6 +16,7 @@ trait Stats
     private function getTotalMeal($dormitoryId, $month)
     {
         $meals = Meal::whereDormitoryId($dormitoryId)
+            ->whereStatus(MealStatus::PENDING)
             ->whereMonth('created_at', '=', $month->month)
             ->whereYear('created_at', '=', $month->year)
             ->select(
@@ -32,7 +33,7 @@ trait Stats
             ->active()
             ->whereMonth('created_at', '=', $month->month)
             ->whereYear('created_at', '=', $month->year)
-            ->sum('amount');
+            ->sum('amount') ?? 0;
     }
 
     private function totalMember($dormitoryId)
@@ -63,17 +64,18 @@ trait Stats
     private function todaysMeal($dormitoryId)
     {
         $meals = Meal::whereDormitoryId($dormitoryId)
+            ->whereStatus(MealStatus::PENDING)
             ->whereDate('created_at', '=', now())
             ->select(
                 DB::raw("SUM(break_fast + lunch + dinner) as total_meals")
             )->first();
-        return $meals->total_meals;
+        return $meals->total_meals ?? 0;
     }
 
 
     private function getUsersByStatus($dormitoryId)
     {
-        return  User::query()->whereHas('dormitory', function ($q) use ($dormitoryId) {
+        return User::query()->whereHas('dormitory', function ($q) use ($dormitoryId) {
             $q->whereId($dormitoryId);
         })->select(
             DB::raw('COUNT(CASE WHEN status = 1 THEN 1 END) as active'),

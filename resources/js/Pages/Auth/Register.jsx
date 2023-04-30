@@ -9,8 +9,8 @@ export default () => {
     const {data, setData, errors, post, processing} = useForm({
         email: "",
         password: "",
-        first_name: "",
-        last_name: "",
+        full_name: "",
+        display_name: "",
         mobile: "",
         password_confirmation: ""
     });
@@ -50,23 +50,23 @@ export default () => {
                         <div className={!validToken ? 'opacity-40' : ''}>
                             <TextInput
                                 className="mt-10"
-                                label="First Name"
-                                name="first_name"
+                                label="Full Name"
+                                name="full_name"
                                 type="text"
-                                errors={errors?.first_name}
-                                value={data.first_name}
-                                onChange={(e) => setData("first_name", e.target.value)}
+                                errors={errors?.full_name}
+                                value={data.full_name}
+                                onChange={(e) => setData("full_name", e.target.value)}
                                 disabled={!validToken}
                             />
 
                             <TextInput
                                 className="mt-10"
-                                label="Last Name"
-                                name="last_name"
+                                label="Display Name"
+                                name="display_name"
                                 type="text"
-                                errors={errors.last_name}
-                                value={data.last_name}
-                                onChange={(e) => setData("last_name", e.target.value)}
+                                errors={errors.display_name}
+                                value={data.display_name}
+                                onChange={(e) => setData("display_name", e.target.value)}
                                 disabled={!validToken}
                             />
 

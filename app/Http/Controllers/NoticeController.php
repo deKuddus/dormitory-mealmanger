@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Helper\Helper;
+use App\Enums\NoticeStatus;
+use App\Events\SendNoticeNotificationEvent;
 use App\Http\Requests\NoticeCreateRequest;
 use App\Http\Resources\NoticeCollection;
-use App\Models\Dormitory;
 use App\Models\Notice;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -27,6 +26,23 @@ class NoticeController extends Controller
         ]);
     }
 
+    public function store(NoticeCreateRequest $request)
+    {
+        $this->authorize('showNotice', Notice::class);
+
+
+        $notice = Notice::create(
+            $request->validated()
+        );
+
+        if ($notice->status == NoticeStatus::ACTIVE) {
+            event(new SendNoticeNotificationEvent($notice));
+        }
+
+
+        return to_route('notice.index');
+    }
+
     public function create()
     {
         $this->authorize('createNotice', Notice::class);
@@ -34,20 +50,11 @@ class NoticeController extends Controller
         return Inertia::render('Notice/Create');
     }
 
-    public function store(NoticeCreateRequest $request)
+    public function show(Notice $notice,Request $request)
     {
-        $this->authorize('showNotice', Notice::class);
-
-
-        Notice::create(
-            $request->validated()
-        );
-
-        return to_route('notice.index');
-    }
-
-    public function show(Notice $notice)
-    {
+        if($request->has('nid') && !blank($request->get('nid'))){
+            auth()->user()->unreadNotifications->where('id', $request->get('nid'))->markAsRead();
+        }
         return Inertia::render('Notice/Show', [
             'notice' => $notice
         ]);

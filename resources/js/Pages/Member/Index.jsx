@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import MemberLayout from "@/Shared/Layout/AuthenticatedLayout";
-import { Link, router, usePage } from "@inertiajs/react";
+import {Link, router, usePage} from "@inertiajs/react";
 import Icon from "@/Shared/Icon";
 import moment from "moment";
 import MealEditModal from "@/Pages/Meal/MealEditModal";
+import Card from "@/Shared/Card";
+import TableHeader from "@/Shared/TableHeader";
+import TableData from "@/Shared/TableData";
+import TableAction from "@/Shared/TableAction";
 
 const Index = () => {
     const {
@@ -56,39 +60,44 @@ const Index = () => {
     };
 
     return (
-        <div>
-            <div className="col-span-full mb-5">
-                <h6 className="mb-4 text-xl font-bold border-b">Meal</h6>
-                <div className="grid gap-4 lg:gap-8 md:grid-cols-1">
-                    <div className="relative p-6 rounded-xl bg-white shadow">
-                        <div className="space-y-2 text-white text-center">
-                            <div className="flex items-center justify-between space-x-2 ">
-                                <span className="flex flex-col justify-left text-gray-900">
-                                    <span className="text-xl font-medium">
-                                        Meal Status
-                                    </span>
-                                </span>
-                                <span>
-                                    <label className="relative inline-flex items-center mb-5 cursor-pointer">
-                                        <input
-                                            type="checkbox"
-                                            onChange={(e) =>
-                                                handleMealStatusUpdate(
-                                                    e.target.checked
-                                                )
-                                            }
-                                            defaultChecked={isCheck}
-                                            className="sr-only peer"
-                                        />
-                                        <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                                    </label>
-                                </span>
+        <>
+            <div
+                className='rounded-lg border border-stroke bg-white mb-5 shadow-default dark:border-strokedark dark:bg-boxdark'>
+                <div className="flex items-center justify-between p-2">
+                    <div>
+                        <h6 className="mb-4 text-xl font-bold pt-4 px-4">
+                            Quick Meal On/Off
+                        </h6>
+                    </div>
+                    <div>
+                        <label htmlFor='toggle1'
+                               className='flex cursor-pointer select-none items-center'>
+                            <div className="relative">
+                                <input
+                                    disabled={totalMeal === 0}
+                                    type="checkbox"
+                                    id='toggle1'
+                                    onChange={(e) =>
+                                        handleMealStatusUpdate(
+                                            e.target.checked
+                                        )
+                                    }
+                                    defaultChecked={isCheck}
+                                    className="sr-only"
+                                />
+                                <div className='dark:bg-[#5A616B] block h-8 w-14 rounded-full bg-meta-9'></div>
+                                <div
+                                    className={`absolute left-1 top-1 h-6 w-6 rounded-full bg-white transition ${
+                                        isCheck && totalMeal !== 0  ? '!right-1 !translate-x-full !bg-background-600' : ''
+                                    }`}
+                                ></div>
                             </div>
-                        </div>
+                        </label>
                     </div>
                 </div>
             </div>
-            <div className="col-span-full mb-5 rounded-xl bg-white shadow">
+            <div
+                className='rounded-lg border border-stroke bg-white mb-5 shadow-default dark:border-strokedark dark:bg-boxdark'>
                 <div className="flex items-center justify-between p-2">
                     <div>
                         <h6 className="mb-4 text-xl font-bold pt-4 px-4">
@@ -100,135 +109,122 @@ const Index = () => {
                     </div>
                     <Link
                         href={route("user.meal.show")}
-                        className="rounded border shadow p-4"
+                        className="rounded border-gray-300 bg-background-200 shadow p-4"
                     >
-                        <Icon name={"FaEye"} />
+                        <Icon name={"FaEye"} className="text-white"/>
                     </Link>
                 </div>
-                <div className="grid gap-4 lg:gap-8 md:grid-cols-2 lg:grid-cols-2 p-5">
-                    <div className="relative p-4 lg:p-6 rounded-xl bg-boxColor-300 ">
-                        <div className="flex items-center space-x-2 space-y-2 text-gray-900 text-sm md:text-md lg:text-xl font-medium ">
-                            <div className="text-xl px-4">
-                                <span className="font-bold">Today's Meal</span>
-                                <span className="text-blue-600 mr-4 ml-3">
-                                    Lunch : {todaysMeal?.lunch_total || 0}
-                                </span>
-                                <span className="text-pink-600">
-                                    Dinner: {todaysMeal?.dinner_total || 0}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="relative p-4 lg:p-6 rounded-xl bg-boxColor-100 ">
-                        <div className="flex items-center space-x-2 space-y-2 text-gray-900 text-sm md:text-md lg:text-xl font-medium ">
-                            <span>Total Meal : {totalMeal}</span>
-                        </div>
-                    </div>
-
-                    <div className="relative p-4 lg:p-6 rounded-xl bg-boxColor-200 ">
-                        <div className="flex items-center space-y-2 text-gray-900 space-x-2 text-sm md:text-md lg:text-xl font-medium ">
-                            <span>Meal Charge : {mealCharge} BDT</span>
-                        </div>
-                    </div>
-                    <div className="relative p-4 lg:p-6 rounded-xl bg-boxColor-300 ">
-                        <div className="flex items-center space-y-2 text-gray-900 space-x-2 text-sm md:text-md lg:text-xl font-medium ">
-                            <span>Total Cost : {totalCost} BDT</span>
-                        </div>
-                    </div>
-                    <div className="relative p-4 lg:p-6 rounded-xl bg-boxColor-400 ">
-                        <div className="flex space-y-2 text-gray-900 items-center space-x-2  text-sm md:text-md lg:text-xl font-medium ">
-                            <span>Fixed Cost : {fixedCost} BDT</span>
-                        </div>
-                    </div>
-                    <div className="relative p-4 lg:p-6 rounded-xl bg-boxColor-100 ">
-                        <div className="flex space-y-2 text-red-600 items-center space-x-2 text-sm md:text-md lg:text-xl font-medium ">
-                            <span>Total Due : {due} BDT</span>
-                        </div>
-                    </div>
+            </div>
+            <div className="col-span-full mb-5">
+                <div className='grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6 xl:grid-cols-3 2xl:gap-7.5'>
+                    <Card
+                        value={totalMeal}
+                        text="Total Meal"
+                        icon={'FaRegSnowflake'}
+                        bgName="bg-gradient-to-bl from-green-500 via-blue-500 to-purple-500 text-white"
+                        iconClass="text-success"
+                    />
+                    <Card
+                        value={`${mealCharge} BDT`}
+                        text="Meal Charge"
+                        icon={'FaRegSnowflake'}
+                        bgName="bg-gradient-to-r from-cyan-500 to-blue-500 text-white"
+                        iconClass="text-success"
+                    />
+                    <Card
+                        value={`${totalCost} BDT`}
+                        text="Total Cost "
+                        icon={'FaMoneyBillWave'}
+                        bgName="bg-gradient-to-tl from-green-400  from-20% to-blue-500 to-80% text-white"
+                        iconClass="text-success"
+                    />
+                    {/*<Card*/}
+                    {/*    value={`${fixedCost} BDT`}*/}
+                    {/*    text="Fixed Cost "*/}
+                    {/*    icon={'FaMoneyBillWaveAlt'}*/}
+                    {/*    bgName="bg-gradient-to-br from-green-500 via-blue-500 to-purple-500 text-white"*/}
+                    {/*    iconClass="text-success"*/}
+                    {/*/>*/}
+                    <Card
+                        value={`${due} BDT`}
+                        text="My Due"
+                        icon={'FaMoneyBillAlt'}
+                        bgName="bg-gradient-to-r from-pink-500  to-danger text-white"
+                        iconClass="text-success"
+                    />
+                    <Card
+                        value={`Lunch : ${todaysMeal?.lunch_total || 0} Dinner: ${todaysMeal?.dinner_total || 0}`}
+                        text="Today's Dorm Meal"
+                        icon={'FaRegSnowflake'}
+                        bgName="bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-white"
+                        iconClass="text-success"
+                    />
                 </div>
             </div>
-            <div className="col-span-full mb-5 rounded-xl bg-white shadow">
-                <div className="grid gap-4 lg:gap-8 grid-cols-1 p-5">
-                    <div className="overflow-x-auto">
-                        <table className="w-full whitespace-nowrap">
-                            <thead>
-                                <tr className="font-bold text-left">
-                                    <th className="px-6 pt-5 pb-4">Date</th>
-                                    <th className="px-6 pt-5 pb-4">Lunch</th>
-                                    <th className="px-6 pt-5 pb-4">Dinner</th>
-                                    <th className="px-6 pt-5 pb-4">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {meals &&
-                                    meals.map(
-                                        (
-                                            {
-                                                id,
-                                                lunch,
-                                                dinner,
-                                                break_fast,
-                                                is_editable,
-                                                created_at,
-                                            },
-                                            key
-                                        ) => (
-                                            <tr
-                                                key={key}
-                                                className="hover:bg-gray-100 focus-within:bg-gray-100"
+            <div
+                className='rounded-lg border border-stroke bg-white p-5 shadow-default dark:border-strokedark dark:bg-boxdark'>
+                <h2 className='text-title-md2 mb-10 font-semibold text-black dark:text-white'>
+                    Meal Plan
+                </h2>
+                <div className='max-w-full overflow-x-auto'>
+                    <table className='w-full table-auto'>
+                        <TableHeader rows={['Date', 'Lunch', 'Dinner', 'Edit']}/>
+                        <tbody>
+                        {meals && meals.length ?
+                            meals.map(
+                                (
+                                    {
+                                        id,
+                                        lunch,
+                                        dinner,
+                                        is_editable,
+                                        created_at,
+                                    },
+                                    key
+                                ) => (
+                                    <tr
+                                        key={key}
+                                    >
+                                        <TableData value={moment(created_at).format("D MMM")}/>
+                                        <TableData value={lunch}/>
+                                        <TableData value={dinner}/>
+
+                                        <TableAction>
+                                            <button
+                                                disabled={
+                                                    !is_editable
+                                                }
+                                                onClick={() =>
+                                                    handleMealEdit(
+                                                        id,
+                                                        break_fast,
+                                                        lunch,
+                                                        dinner,
+                                                        created_at
+                                                    )
+                                                }
+                                                className={`inline-flex ${
+                                                    !is_editable
+                                                        ? " opacity-10"
+                                                        : ""
+                                                } items-center justify-center gap-0.5 focus:outline-none focus:underline`}
                                             >
-                                                <td className="border">
-                                                    <p className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none">
-                                                        {moment(
-                                                            created_at
-                                                        ).format("D MMM YY")}
-                                                    </p>
-                                                </td>
-                                                <td className="border">
-                                                    <p className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none">
-                                                        {lunch}
-                                                    </p>
-                                                </td>
-                                                <td className="border">
-                                                    <p className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none">
-                                                        {dinner}
-                                                    </p>
-                                                </td>
-                                                <td className="border w-px border-t p-3 whitespace-nowrap">
-                                                    <div className="flex items-center gap-2 justify-end">
-                                                        <button
-                                                            disabled={
-                                                                !is_editable
-                                                            }
-                                                            onClick={() =>
-                                                                handleMealEdit(
-                                                                    id,
-                                                                    break_fast,
-                                                                    lunch,
-                                                                    dinner,
-                                                                    created_at
-                                                                )
-                                                            }
-                                                            className={`inline-flex ${
-                                                                !is_editable
-                                                                    ? " opacity-10"
-                                                                    : ""
-                                                            } items-center justify-center gap-0.5 focus:outline-none focus:underline`}
-                                                        >
-                                                            <Icon
-                                                                name="FaEdit"
-                                                                className="w-6 h-4 text-gray-400 hover:text-buttonColor-400 fill-current cursor-pointer"
-                                                            />
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        )
-                                    )}
-                            </tbody>
-                        </table>
-                    </div>
+                                                <Icon
+                                                    name="FaEdit"
+                                                    className="w-6 h-4 text-gray-400 hover:text-buttonColor-400 fill-current cursor-pointer"
+                                                />
+                                            </button>
+                                        </TableAction>
+                                    </tr>
+                                )
+                            ):(
+                                <tr>
+                                    <TableData value={'No Data Found'} colSpan={4}
+                                               className="text-center text-black dark:text-white"/>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
                 </div>
             </div>
             {open && (
@@ -240,10 +236,10 @@ const Index = () => {
                     handleConfirm={handleUpdateMela}
                 />
             )}
-        </div>
+        </>
     );
 };
 
-Index.layout = (page) => <MemberLayout title="Dashboard" children={page} />;
+Index.layout = (page) => <MemberLayout title="Dashboard" children={page}/>;
 
 export default Index;

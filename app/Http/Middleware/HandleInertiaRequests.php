@@ -53,10 +53,11 @@ class HandleInertiaRequests extends Middleware
             'flash' => function () use ($request) {
                 return [
                     'success' => $request->session()->get('success'),
-                    'errors' => $request->session()->get('errors'),
+                    'error' => $request->session()->get('error'),
                     'registration_success' => $request->session()->get('registration_success')
                 ];
             },
+            'notification' => Helper::getUserUnreadNotification(),
             'user_permissions' =>  Helper::getUserPermission(),
             'app_url' => env('APP_URL'),
             'routePrefix' => $request->route()->getPrefix(),

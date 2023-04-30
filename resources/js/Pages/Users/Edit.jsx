@@ -16,8 +16,8 @@ const Edit = () => {
     const {user, roles, rooms, user_permissions} = usePage().props;
     const [seatOption, setSeatOptions] = useState([]);
     const {data, setData, errors, post, processing} = useForm({
-        first_name: user.first_name || "",
-        last_name: user.last_name || "",
+        full_name: user.full_name || "",
+        display_name: user.display_name || "",
         email: user.email || "",
         password: "",
         phone: user.phone || "",
@@ -100,22 +100,22 @@ const Edit = () => {
         >
             <TextInput
 
-                label="First Name"
-                name="first_name"
-                errors={errors.first_name}
-                value={data.first_name}
+                label="Full Name"
+                name="full_name"
+                errors={errors.full_name}
+                value={data.full_name}
                 onChange={(e) =>
-                    setData("first_name", e.target.value)
+                    setData("full_name", e.target.value)
                 }
             />
             <TextInput
 
-                label="Last Name"
-                name="last_name"
-                errors={errors.last_name}
-                value={data.last_name}
+                label="Display Name"
+                name="display_name"
+                errors={errors.display_name}
+                value={data.display_name}
                 onChange={(e) =>
-                    setData("last_name", e.target.value)
+                    setData("display_name", e.target.value)
                 }
             />
             <TextInput

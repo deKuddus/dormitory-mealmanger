@@ -22,7 +22,7 @@ const Notice = () => {
 
     return (
         <TablePageLayout
-            breadcumb_name={'Rules'}
+            breadcumb_name={'Terms & Conditions'}
         >
             <TableHeader rows={tableHeading}/>
             <tbody>

@@ -122,7 +122,7 @@ const Index = () => {
                             <div className="space-y-2 text-white">
                                 <div
                                     className="flex flex-col items-center space-x-2 rtl:space-x-reverse text-xl font-medium ">
-                                    <span className="text-black dark:text-white0">
+                                    <span className="text-black dark:text-white">
                                         Meal Charge: {mealCost} BDT{" "}
                                     </span>
                                     <span className="text-black dark:text-white text-xl font-bold ">

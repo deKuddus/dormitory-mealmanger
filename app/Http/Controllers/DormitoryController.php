@@ -30,7 +30,7 @@ class DormitoryController extends Controller
     {
         return back();
         return Inertia::render('Dormitory/Create', [
-            'users' => User::get(['id', 'first_name'])->toArray(),
+            'users' => User::get(['id', 'full_name'])->toArray(),
         ]);
     }
 
@@ -54,7 +54,7 @@ class DormitoryController extends Controller
     {
 
         return Inertia::render('Dormitory/Edit', [
-            'users' => User::get(['id', 'first_name'])->toArray(),
+            'users' => User::get(['id', 'full_name'])->toArray(),
             'dormitory' => $dormitory,
         ]);
     }

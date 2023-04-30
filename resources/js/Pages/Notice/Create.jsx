@@ -4,7 +4,7 @@ import Layout from "@/Shared/Layout/AuthenticatedLayout";
 import TextInput from "@/Shared/TextInput";
 import SelectInput from "@/Shared/SelectInput";
 import "react-quill/dist/quill.snow.css";
-import {INACTIVE} from "@/Shared/const/noticeStatus";
+import {ACTIVE, INACTIVE} from "@/Shared/const/noticeStatus";
 import FromPageLayout from "@/Shared/Layout/FromPageLayout";
 import TextEditor from "@/Shared/TextEditor";
 
@@ -47,10 +47,10 @@ const Create = () => {
                 value={data.status}
                 onChange={(e) => setData("status", e.target.value)}
             >
-                <option value="1" defaultValue={data.status}>
+                <option value={ACTIVE} defaultValue={data.status}>
                     Active
                 </option>
-                <option value="0" defaultValue={data.status}>
+                <option value={INACTIVE} defaultValue={data.status}>
                     InActive
                 </option>
             </SelectInput>

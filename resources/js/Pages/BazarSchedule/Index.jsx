@@ -23,22 +23,7 @@ const Index = () => {
         }
         return true;
     };
-    const StautsColumn = ({status}) => {
-        if (status === 1) {
-            return (
-                <p className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none text-green-400 ">
-                    Done
-                </p>
-            );
-        }
-        if (status === 0) {
-            return (
-                <p className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none text-red-400">
-                    Pending
-                </p>
-            );
-        }
-    };
+
     return (
         <TablePageLayout
             breadcumb_action={'Add New Schedule'}
@@ -63,8 +48,7 @@ const Index = () => {
                             ? users.map(
                                 (
                                     {
-                                        first_name,
-                                        last_name,
+                                        full_name
                                     },
                                     index
                                 ) => (
@@ -75,7 +59,7 @@ const Index = () => {
                                                 ? "green"
                                                 : "red"
                                         }-200 text-gray-800  mr-2 px-2.5 py-0.5 rounded`}
-                                    >{`${first_name} ${last_name}`}</span>
+                                    >{full_name}</span>
                                 )
                             )
                             : "N/A"}

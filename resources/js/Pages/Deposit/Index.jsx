@@ -30,15 +30,14 @@ const Index = () => {
             <tbody>
             {data && data.length ? data.map(({
                                   id,
-                                  first_name,
+                                  full_name,
                                   deposit,
-                                  last_name,
                                   deposits,
                               },
                               key) => (
                 <tr key={key}>
                     <TableData value={key + 1}/>
-                    <TableData value={`${first_name} ${last_name}`}/>
+                    <TableData value={full_name}/>
                     <TableData value={deposit < 0 ? `Due ${deposit}` : `${deposit} BDT`}/>
 
                     {deposits && deposits.length ? (

@@ -8,7 +8,7 @@ const Show = () => {
     return (
         <div>
             <h1 className="mb-8 text-3xl font-bold">
-                Details of {user.first_name} {user.last_name}
+                Details of {user.full_name}
             </h1>
             <div className="overflow-x-auto bg-white rounded shadow p-3">
                 <div className="bg-white p-6">
@@ -20,7 +20,7 @@ const Show = () => {
                         />
                         <div>
                             <h2 className="text-lg font-medium">
-                                {user.first_name} {user.last_name}
+                                {user.full_name}
                             </h2>
                             <p className="text-gray-600 my-2">{user.email}</p>
                             <p className="text-gray-600 my-2">{user.phone}</p>

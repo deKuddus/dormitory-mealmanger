@@ -20,7 +20,7 @@ const Notice = () => {
         <TablePageLayout
             breadcumb_name={'Notices'}
         >
-            <TableHeader rows={['No', 'Title', 'Action']}/>
+            <TableHeader rows={['No', 'Title','Status', 'Action']}/>
             <tbody>
             {data && data.length ? data.map(({id, title, status}, key) => {
                 return (
@@ -35,7 +35,7 @@ const Notice = () => {
                         <TableAction>
                             <Link
                                 href={route(
-                                    "user.notice.show",
+                                    "user.notices.details",
                                     id
                                 )}
                                 className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"

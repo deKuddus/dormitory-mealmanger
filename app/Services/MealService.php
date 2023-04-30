@@ -19,8 +19,20 @@ class MealService
     public function userTotalMeal($userId, $mssId, $month)
     {
         $totalMeal = Meal::whereUserId($userId)
+            ->whereStatus(MealStatus::PENDING)
             ->whereDormitoryId($mssId)
-            ->whereBetween(DB::raw('DATE(`created_at`)'), [$month->startOfMonth()->format('Y-m-d'), $month->lastOfMonth()->format('Y-m-d')])
+            ->whereBetween(DB::raw('DATE(`created_at`)'), [$month->startOfMonth()->format('Y-m-d'), $month->today()->format('Y-m-d')])
+            ->select(DB::raw("SUM(break_fast + lunch + dinner) as total_meals"))
+            ->first();
+
+        return $totalMeal->total_meals ?? 0;
+    }
+
+    public function dormTotalMeal($dormId,$month){
+        $totalMeal = Meal::query()
+            ->whereStatus(MealStatus::PENDING)
+            ->whereDormitoryId($dormId)
+            ->whereBetween(DB::raw('DATE(`created_at`)'), [$month->startOfMonth()->format('Y-m-d'), $month->today()->format('Y-m-d')])
             ->select(DB::raw("SUM(break_fast + lunch + dinner) as total_meals"))
             ->first();
 
@@ -38,21 +50,22 @@ class MealService
         return $totalMeal->total_meals ?? 0;
     }
 
-    public function getUserAllMealForSelectedMonth($userId, $mssId, $month)
+    public function getUserAllMealForSelectedMonthToCurrentDate($userId, $mssId, $month)
     {
         return MemberMealShowResource::collection(
             Meal::query()
+                ->whereStatus(MealStatus::PENDING)
                 ->with('dormitory')
                 ->whereUserId($userId)
                 ->whereDormitoryId($mssId)
-                ->whereBetween(DB::raw('DATE(`created_at`)'), [$month->startOfMonth()->format('Y-m-d'), $month->lastOfMonth()->format('Y-m-d')])
+                ->whereBetween(DB::raw('DATE(`created_at`)'), [$month->startOfMonth()->format('Y-m-d'), $month->today()->format('Y-m-d')])
                 ->get()
         );
     }
 
     public function getUserTotalDeposit($user, $dormitoryId)
     {
-        return Deposit::whereUserId($user)->whereDormitoryId($dormitoryId)->active()->sum('amount');
+        return auth()->user()->deposit;
     }
 
     public function getTotalAdditionalCost($month, $dormitoryId)
@@ -90,7 +103,7 @@ class MealService
 
                 }
             ])
-                ->select('id', 'first_name', 'last_name', 'email', 'status')
+                ->select('id', 'full_name', 'email', 'status')
                 ->findOrFail($user)
         );
     }

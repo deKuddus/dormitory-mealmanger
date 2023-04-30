@@ -46,7 +46,7 @@ const Calcualtion = () => {
                                 >
                                     <TableData value={key+1}/>
                                     <TableData value={moment(calculate_date).format("Do MMMM YYYY")}/>
-                                    <TableData value={`${user.first_name}${" "}${user.last_name}`}/>
+                                    <TableData value={user.full_name}/>
                                     <TableData value={total_meal}/>
                                     <TableData value={amount}/>
                                     <TableData value={carry}/>

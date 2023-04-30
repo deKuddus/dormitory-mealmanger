@@ -72,11 +72,11 @@ const BazarScheduleUSer = ({users}) => {
     return (
         <p className="flex items-center px-6 py-4 text-center ">
             {users && users.length > 0
-                ? users.map(({first_name, last_name}, index) => (
+                ? users.map(({full_name}, index) => (
                     <span
                         key={index}
                         className={`bg-success bg-opacity-10 text-success  mr-2 py-1 px-3 rounded-full`}
-                    >{`${first_name} ${last_name}`}</span>
+                    >{full_name}</span>
                 ))
                 : "N/A"}
         </p>

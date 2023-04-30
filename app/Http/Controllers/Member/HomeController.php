@@ -33,17 +33,17 @@ class HomeController extends Controller
         $month = now();
         $userId = auth()->id();
 
-        $totalMeal = $mealService->allUserTotalMeal($dormitoryId, $month);
+        $dromTotalMeal = $mealService->dormTotalMeal($dormitoryId, $month);
+        $totalMeal = $mealService->userTotalMeal($userId, $dormitoryId, $month);
         $balance = $mealService->getUserTotalDeposit($userId, $dormitoryId);
         $bazar = $mealService->getTotalBazar($month, $dormitoryId);
-        $mealCharge = $totalMeal === 0 ? 0 : round($bazar / $totalMeal, 2);
+        $mealCharge = $dromTotalMeal === 0 ? 0 : round($bazar / $dromTotalMeal, 2);
         $fixedCost = $mealService->getTotalAdditionalCost($month, $dormitoryId) / $mealService->getTotalUser($dormitoryId);
-
         return Inertia::render('Member/Index', [
             'mealCharge' => $mealCharge,
-            'meals' => $mealService->getUserAllMealForSelectedMonth($userId, $dormitoryId, $month),
+            'meals' => $mealService->getUserAllMealForSelectedMonthToCurrentDate($userId, $dormitoryId, $month),
             'fixedCost' => $fixedCost,
-            'due' => $totalMeal === 0 ? ($balance - $fixedCost) : ($balance - (($mealCharge * $totalMeal) + $fixedCost)),
+            'due' => $totalMeal === 0 ? $balance < 0 ? $balance : ($balance - $fixedCost) : ($balance < 0 ? $balance : ($balance - (($mealCharge * $totalMeal) + $fixedCost))),
             'totalMeal' => $totalMeal,
             'totalCost' => $totalMeal === 0 ? 0 : round($totalMeal * $mealCharge, 2),
             'todaysMeal' => $mealService->getTodaysLunchAndDinner()
@@ -272,7 +272,7 @@ class HomeController extends Controller
         return Inertia::render('Member/Schedule', [
             'bazarSchedules' => new BazarScheduleCollection(
                 BazarSchedule::query()
-                    ->with('users:id,first_name,last_name')
+                    ->with('users:id,full_name')
                     ->orderBy('status', 'asc')
                     ->paginate()
             )
@@ -291,8 +291,12 @@ class HomeController extends Controller
         ]);
     }
 
-    public function noticeDetails($id)
+    public function noticeDetails($id, Request $request)
     {
+        if ($request->has('nid') && !blank($request->get('nid'))) {
+            auth()->user()->unreadNotifications->where('id', $request->get('nid'))->markAsRead();
+        }
+
         $notice = Notice::query()
             ->whereStatus(NoticeStatus::ACTIVE)
             ->findOrFail($id);

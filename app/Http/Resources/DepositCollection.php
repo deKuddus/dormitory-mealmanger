@@ -16,8 +16,8 @@ class DepositCollection extends ResourceCollection
     {
         return $this->collection->map->only(
             'id',
-            'first_name',
-            'last_name',
+            'full_name',
+            'display_name',
             'deposit',
             'deposits',
         );

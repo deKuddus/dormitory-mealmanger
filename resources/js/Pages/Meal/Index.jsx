@@ -122,8 +122,7 @@ const Index = () => {
                     (
                         {
                             id,
-                            first_name,
-                            last_name,
+                            full_name,
                             meals,
                             status,
                             email,
@@ -135,7 +134,7 @@ const Index = () => {
                                 key={id}
                             >
                                 <TableData value={key + 1}/>
-                                <TableData value={`${first_name} ${last_name}`}/>
+                                <TableData value={full_name}/>
 
                                 <TableData value={
                                     status === 1

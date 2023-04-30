@@ -53,13 +53,13 @@ const Edit = () => {
             >
                 {resolvers &&
                     resolvers.map(
-                        ({id, first_name, last_name}, key) => (
+                        ({id, full_name}, key) => (
                             <option
                                 key={key}
                                 value={id}
                                 defaultValue={data.resolved_by}
                             >
-                                {first_name} {last_name}
+                                {full_name}
                             </option>
                         )
                     )}

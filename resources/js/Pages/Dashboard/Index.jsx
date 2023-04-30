@@ -76,7 +76,7 @@ const Dashboard = () => {
                         <h6 className="mb-4 text-xl font-bold ">Cash</h6>
                         <div className='grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6 xl:grid-cols-3 2xl:gap-7.5'>
                             <Card
-                                value={`${parseFloat(data.bazar / data.totalMeal).toFixed(2)} BDT`}
+                                value={`${ data.bazar ? parseFloat(data.bazar / data.totalMeal).toFixed(2) : 0} BDT`}
                                 text="Meal Charge"
                                 bgName="bg-gradient-to-b from-purple-400 via-pink-500 to-red-500 text-white"
                                 iconClass="text-success"

@@ -17,7 +17,7 @@ class MealDetailsResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->first_name . ' ' . $this->last_name,
+            'name' => $this->full_name,
             'meals' => MemberMealShowResource::collection($this->meals) ?? 0,
             'total_meals' => $this->countTotalMeal() ?? 0
         ];

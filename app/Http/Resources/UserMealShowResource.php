@@ -16,8 +16,8 @@ class UserMealShowResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'first_name' => $this->first_name,
-            'last_name' => $this->last_name,
+            'full_name' => $this->full_name,
+            'display_name' => $this->display_name,
             'email' => $this->email,
             'meals' => $this->meals->pluck('total_meals'),
             'status' => $this->status

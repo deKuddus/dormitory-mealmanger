@@ -80,7 +80,6 @@ const Index = () => {
 
     function renderEventContent({ event }) {
         const { lunch, dinner, today } = event._def.extendedProps;
-        console.log(today)
         return (
             <>
                 <div

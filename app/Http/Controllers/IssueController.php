@@ -48,7 +48,7 @@ class IssueController extends Controller
             'resolvers' => User::query()->with(['dormitory' => function ($q) {
                 $q->whereId(DormitoryIdStatic::DORMITORYID)->select('name');
             }])
-                ->select('id', 'first_name','last_name')
+                ->select('id', 'full_name')
                 ->get()
                 ->toArray()
         ]);

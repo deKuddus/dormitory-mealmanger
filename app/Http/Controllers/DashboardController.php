@@ -23,7 +23,7 @@ class DashboardController extends Controller
             'member' => $this->totalMember($dormitoryId),
             'totalMeal' => $this->getTotalMeal($dormitoryId, $month),
             'bazar' => $this->totalBazar($dormitoryId, $month),
-            'todaysTotalMeal' => Inertia::lazy(fn () => $this->todaysMeal($dormitoryId)),
+            'todaysTotalMeal' => $this->todaysMeal($dormitoryId),
             'todaysMeal' => $mealService->getTodaysLunchAndDinner()
         ];
         return Inertia::render('Dashboard/Index', [

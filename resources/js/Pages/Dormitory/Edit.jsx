@@ -21,6 +21,7 @@ const Edit = () => {
         has_lunch: dormitory.has_lunch,
         has_dinner: dormitory.has_dinner,
         default_meal: dormitory.default_meal,
+        max_deposit_limit:dormitory.max_deposit_limit,
         _method: "PUT",
     });
 
@@ -133,6 +134,18 @@ const Edit = () => {
                value={data.default_meal}
                onChange={(e) =>
                    setData("default_meal", e.target.value)
+               }
+           />
+
+           <TextInput
+
+               label="Max Deposit Limit"
+               name="max_deposit_limit"
+               type="number"
+               errors={errors.max_deposit_limit}
+               value={data.max_deposit_limit}
+               onChange={(e) =>
+                   setData("max_deposit_limit", e.target.value)
                }
            />
 

@@ -24,8 +24,8 @@ class UserProfileUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'first_name' => "required|string|max:50",
-            'last_name' => "required|string|max:50",
+            'full_name' => "required|string|max:50",
+            'display_name' => "required|string|max:50",
             'email' => "required|string|email|max:50",
             'password' => "nullable|string",
             'phone' => "required|string",
