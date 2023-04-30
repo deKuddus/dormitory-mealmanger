@@ -2,7 +2,6 @@ import React, {useState} from "react";
 import {router, usePage} from "@inertiajs/react";
 import Layout from "@/Shared/Layout/AuthenticatedLayout";
 import Icon from "@/Shared/Icon";
-import MenuEditModal from "@/Pages/Member/Menu/Edit";
 import moment from "moment";
 import TableHeader from "@/Shared/TableHeader";
 import TablePageLayout from "@/Shared/Layout/TablePageLayout";
