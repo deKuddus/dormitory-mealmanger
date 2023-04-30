@@ -160,7 +160,7 @@ const DropdownUser = (props) => {
                                     fill=''
                                 />
                             </svg>
-                            {routePrefix ?  'Switch to member' : 'Switch to Master'}
+                            {routePrefix ?  'Switch to member' : 'Switch to Admin'}
                         </Link>
                     </li>
                     )}

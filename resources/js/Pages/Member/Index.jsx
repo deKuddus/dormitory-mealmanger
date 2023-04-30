@@ -176,6 +176,7 @@ const Index = () => {
                                     {
                                         id,
                                         lunch,
+                                        break_fast,
                                         dinner,
                                         is_editable,
                                         created_at,
