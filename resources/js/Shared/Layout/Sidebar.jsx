@@ -74,11 +74,11 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}) => {
                 has_child: false
             },
             {
-                name:'Report',
-                uri:'report',
-                has_child:true,
-                icon:'FaRegChartBar',
-                children:[
+                name: 'Report',
+                uri: 'report',
+                has_child: true,
+                icon: 'FaRegChartBar',
+                children: [
                     {
                         name: "Expenses",
                         link: route("expense.index"),
@@ -441,24 +441,27 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}) => {
                                         </SidebarLinkGroup>);
                                 } else {
                                     let isActive = url.startsWith('/' + row.uri_root.toLowerCase());
-                                    return (<li key={`${index}-${row.name}`}>
-                                        <Link
-                                            href={row.link}
-                                            className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium dark:text-white hover:text-white duration-300 ease-in-out hover:bg-background-200 ${
-                                                isActive ?
-                                                    'bg-background-200 text-white' : ''
-                                            }`}
-                                        >
-                                            <Icon name={row.icon} className={'fill-current'}/>
-                                            {row.name}
-                                        </Link>
-                                    </li>);
+                                    return (
+                                        <li key={`${index}-${row.name}`}>
+                                            <Link
+                                                href={row.link}
+                                                className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium dark:text-white hover:text-white duration-300 ease-in-out hover:bg-background-200 ${
+                                                    isActive ?
+                                                        'bg-background-200 text-white' : ''
+                                                }`}
+                                            >
+                                                <Icon name={row.icon} className={'fill-current'}/>
+                                                {row.name}
+                                            </Link>
+                                        </li>
+                                    );
                                 }
                             })}
-
                         </ul>
                     </div>
-
+                    <div class="relative lg:fixed bottom-0 left-2 p-2 bg-gray-900">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-gradient-to-r from-blue-500 to-purple-500 text-transparent bg-clip-text">Version 1.0 Beta</span>
+                    </div>
                 </nav>
 
             </div>
