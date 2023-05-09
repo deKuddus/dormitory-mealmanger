@@ -7,7 +7,7 @@ import Checkbox from "@/Shared/Checkbox";
 
 
 export default () => {
-    const {flash, app_url} = usePage().props;
+    const {flash, app_url,registration_success} = usePage().props;
     const {data, setData, errors, post, processing} = useForm({
         email: "",
         password: "",
@@ -168,6 +168,7 @@ export default () => {
                                 <h2 className='mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2'>
                                     Sign In to Dormefy
                                 </h2>
+                                {flash && flash.registration_success && (<p className="text-lg font-medium text-green-500 m-10">{flash.registration_success}</p>)}
 
                                 <form onSubmit={handleSubmit}>
                                     <div className='mb-4'>
