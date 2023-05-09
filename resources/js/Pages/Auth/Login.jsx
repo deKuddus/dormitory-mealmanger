@@ -28,14 +28,13 @@ export default () => {
                     <div className='flex flex-wrap items-center'>
                         <div className='hidden w-full xl:block xl:w-1/2'>
                             <div className='py-17.5 px-26 text-center'>
-                                <Link className='mb-5.5 inline-block' href='/'>
+                                <Link className='mb-5.5 inline-block' href='https://dormefy.com'>
                                     <img className='hidden dark:block' src={Logo} alt='Logo'/>
                                     <img className='dark:hidden' src={LogoDark} alt='Logo'/>
                                 </Link>
 
                                 <p className='2xl:px-20'>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                                    suspendisse.
+                                    Experience effortless dorm life with the <span className="text-lg font-bold ">Dormefy</span> app - your ultimate solution for efficient dormitory management
                                 </p>
 
                                 <span className='mt-15 inline-block'>
