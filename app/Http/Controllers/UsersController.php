@@ -8,6 +8,7 @@ use App\Http\Requests\UserStoreRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
+use App\Models\Dormitory;
 use App\Models\User;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
@@ -96,6 +97,10 @@ class UsersController extends Controller
     public function destroy(User $user, UserDeleteRequest $request)
     {
         $this->authorize('deleteUser',User::class);
+
+        Dormitory::query()->whereHas('users',function($query) use($user){
+            $query->whereId($user->id);
+        })->decrement('deposit',$user->deposit);
 
         $user->delete();
 

@@ -58,7 +58,7 @@ class MealService
                 ->with('dormitory')
                 ->whereUserId($userId)
                 ->whereDormitoryId($mssId)
-                ->whereBetween(DB::raw('DATE(`created_at`)'), [$month->startOfMonth()->format('Y-m-d'), $month->today()->format('Y-m-d')])
+                ->whereBetween(DB::raw('DATE(`created_at`)'), [$month->startOfMonth()->format('Y-m-d'), $month->lastOfMonth()->format('Y-m-d')])
                 ->get()
         );
     }

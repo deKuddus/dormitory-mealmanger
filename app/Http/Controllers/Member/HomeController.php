@@ -38,7 +38,8 @@ class HomeController extends Controller
         $balance = $mealService->getUserTotalDeposit($userId, $dormitoryId);
         $bazar = $mealService->getTotalBazar($month, $dormitoryId);
         $mealCharge = $dromTotalMeal === 0 ? 0 : round($bazar / $dromTotalMeal, 2);
-        $fixedCost = $mealService->getTotalAdditionalCost($month, $dormitoryId) / $mealService->getTotalUser($dormitoryId);
+        $totalUser = $mealService->getTotalUser($dormitoryId);
+        $fixedCost = $totalUser === 0 ? $mealService->getTotalAdditionalCost($month, $dormitoryId) : $mealService->getTotalAdditionalCost($month, $dormitoryId) / $totalUser;
         return Inertia::render('Member/Index', [
             'mealCharge' => $mealCharge,
             'meals' => $mealService->getUserAllMealForSelectedMonthToCurrentDate($userId, $dormitoryId, $month),
