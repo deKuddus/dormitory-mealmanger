@@ -170,6 +170,6 @@ const Profile = () => {
     );
 };
 
-Profile.layout = (page) => <MemberLayout title={user.full_name} children={page}/>;
+Profile.layout = (page) => <MemberLayout title={'Profile'} children={page}/>;
 
 export default Profile;
