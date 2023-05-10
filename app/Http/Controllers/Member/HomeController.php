@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Member;
 use App\Enums\DormitoryIdStatic;
 use App\Enums\NoticeStatus;
 use App\Enums\RuleStatus;
+use App\Helper\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserDepositCreateRequest;
 use App\Http\Requests\UserMealUpdateRequest;
@@ -88,19 +89,27 @@ class HomeController extends Controller
 
         if (now()->gte($lunchOff) && now()->gte($dinnerOff)) {
             Meal::whereIn('id', $mealIds)->whereBetween('created_at', [now()->addDay()->format('Y-m-d 09:00'), now()->lastOfMonth()->format('Y-m-d 09:00')])
-                ->update([
-                    'break_fast' => $dormitory->has_breakfast ? $status : 0,
-                    'lunch' => $dormitory->has_lunch ? $status : 0,
-                    'dinner' => $dormitory->has_dinner ? $status : 0,
-                ]);
+                ->get()
+                ->map(function ($row) use ($dormitory, $status) {
+                    $row->update([
+                        'break_fast' => $dormitory->has_breakfast ? $status : 0,
+                        'lunch' => Helper::isTodyaFridayOrSaturday($row->created_at) && $dormitory->has_lunch ? $status : 0,
+                        'dinner' => $dormitory->has_dinner ? $status : 0,
+                    ]);
+                });
         }
 
         if (!now()->gte($lunchOff) && now()->gte($dinnerOff)) {
-            Meal::whereIn('id', $mealIds)->whereBetween('created_at', [now()->format('Y-m-d 09:00'), now()->lastOfMonth()->format('Y-m-d 09:00')])->update([
-                'break_fast' => $dormitory->has_breakfast ? $status : 0,
-                'lunch' => $dormitory->has_lunch ? $status : 0,
-                'dinner' => $dormitory->has_dinner ? $status : 0,
-            ]);
+            Meal::whereIn('id', $mealIds)
+                ->whereBetween('created_at', [now()->format('Y-m-d 09:00'), now()->lastOfMonth()->format('Y-m-d 09:00')])
+                ->get()
+                ->map(function ($row) use ($dormitory, $status) {
+                    $row->update([
+                        'break_fast' => $dormitory->has_breakfast ? $status : 0,
+                        'lunch' => Helper::isTodyaFridayOrSaturday($row->created_at) && $dormitory->has_lunch ? $status : 0,
+                        'dinner' => $dormitory->has_dinner ? $status : 0,
+                    ]);
+                });
         }
 
         if (now()->gte($lunchOff) && !now()->gte($dinnerOff)) {
@@ -110,11 +119,15 @@ class HomeController extends Controller
                     'dinner' => $dormitory->has_dinner ? $status : 0,
                 ]);
 
-            Meal::whereIn('id', $mealIds)->whereBetween('created_at', [now()->addDay()->format('Y-m-d 09:00'), now()->lastOfMonth()->format('Y-m-d 09:00')])->update([
-                'break_fast' => $dormitory->has_breakfast ? $status : 0,
-                'lunch' => $dormitory->has_lunch ? $status : 0,
-                'dinner' => $dormitory->has_dinner ? $status : 0,
-            ]);
+            Meal::whereIn('id', $mealIds)->whereBetween('created_at', [now()->addDay()->format('Y-m-d 09:00'), now()->lastOfMonth()->format('Y-m-d 09:00')])
+                ->get()
+                ->map(function ($row) use ($dormitory, $status) {
+                    $row->update([
+                        'break_fast' => $dormitory->has_breakfast ? $status : 0,
+                        'lunch' => Helper::isTodyaFridayOrSaturday($row->created_at) && $dormitory->has_lunch ? $status : 0,
+                        'dinner' => $dormitory->has_dinner ? $status : 0,
+                    ]);
+                });
         }
 
         User::whereId($userId)->update(['meal_status' => $status]);
