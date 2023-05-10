@@ -140,6 +140,14 @@ class HomeController extends Controller
 
     public function storeDeposit(UserDepositCreateRequest $request)
     {
+        $data = $request->validated();
+
+        $dormitory = Dormitory::find($data['dormitory_id']);
+
+        if ($data['amount'] > $dormitory->max_deposit_limit) {
+            return back()->with('error', 'Max deposit limit ' . $dormitory->max_deposit_limit . ' BDT');
+        }
+
         Deposit::create($request->validated());
         return to_route('user.deposits.index');
     }

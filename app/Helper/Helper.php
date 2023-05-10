@@ -77,7 +77,7 @@ class Helper
                 'user_id' => $user->id,
                 'dormitory_id' => $dormitory->id,
                 'break_fast' => $dormitory->has_breakfast ? $dormitory->default_meal : 0,
-                'lunch' => $dormitory->has_lunch ? $dormitory->default_meal : 0,
+                'lunch' => self::isTodyaFridayOrSaturday(date('Y-m-' . $i)) && $dormitory->has_lunch ? $dormitory->default_meal : 0,
                 'dinner' => $dormitory->has_dinner ? $dormitory->default_meal : 0,
                 'status' => MealStatus::PENDING,
                 'created_at' => Carbon::parse(date('Y-m-' . $i . ' 09:00'))->format('Y-m-d h:i'),
@@ -85,6 +85,17 @@ class Helper
             ];
         }
         Meal::insert($dataArray);
+    }
+
+    private static function isTodyaFridayOrSaturday($date)
+    {
+        $today = Carbon::parse($date);
+        $dayOfWeek = $today->dayOfWeek;
+
+        if ($dayOfWeek === Carbon::FRIDAY or $dayOfWeek === Carbon::SATURDAY) {
+            return true;
+        }
+        return false;
     }
 
     public static function getUserPermission()
