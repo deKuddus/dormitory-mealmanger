@@ -56,7 +56,7 @@ class LoginController extends Controller
         if ($user) {
             if ($user->isActive()) {
                 if (Hash::check($request->password, $user->password)) {
-                    Auth::login($user);
+                    Auth::login($user,true);
                     return true;
                 };
             } else {
