@@ -87,7 +87,7 @@ class Helper
         Meal::insert($dataArray);
     }
 
-    private static function isTodyaFridayOrSaturday($date)
+    public static function isTodyaFridayOrSaturday($date)
     {
         $today = Carbon::parse($date);
         $dayOfWeek = $today->dayOfWeek;
