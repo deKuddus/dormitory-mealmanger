@@ -33,7 +33,7 @@ class HomeController extends Controller
         $month = now();
         $userId = auth()->id();
 
-        $dromTotalMeal = $mealService->dormTotalMeal($dormitoryId, $month);
+        $dromTotalMeal = (int)$mealService->dormTotalMeal($dormitoryId, $month);
         $totalMeal = $mealService->userTotalMeal($userId, $dormitoryId, $month);
         $balance = $mealService->getUserTotalDeposit($userId, $dormitoryId);
         $bazar = $mealService->getTotalBazar($month, $dormitoryId);
