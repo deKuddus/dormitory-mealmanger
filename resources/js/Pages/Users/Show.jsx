@@ -15,7 +15,7 @@ const Show = () => {
                     <div className="flex items-center">
                         <img
                             className="w-16 h-16 rounded-full mr-4"
-                            src="https://ui-avatars.com/api/?name=John+Doe"
+                            src={`https://ui-avatars.com/api/?name=${user.full_name || 'JD'}`}
                             alt="Profile picture"
                         />
                         <div>
