@@ -252,18 +252,9 @@ const Show = () => {
                                 <th className='border border-[#eee] p-4 font-medium text-black dark:text-white'>No</th>
                                 <th className='border border-[#eee] p-4 font-medium text-black dark:text-white'>Date</th>
                                 <th className='border border-[#eee] p-4 font-medium text-black dark:text-white'>Amount</th>
-                                {isUserPermittedToPerformAction(
-                                        "access::deposit-approve",
-                                        user_permissions
-                                    ) ||
-                                    (isUserPermittedToPerformAction(
-                                        "access::deposit-reject",
-                                        user_permissions
-                                    ) && (
-                                        <th className='border border-[#eee] p-4 font-medium text-black dark:text-white'>
-                                            Action
-                                        </th>
-                                    ))}
+                                <th className='border border-[#eee] p-4 font-medium text-black dark:text-white'>
+                                    Action
+                                </th>
                             </tr>
                             </thead>
                             <tbody>

@@ -459,7 +459,7 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}) => {
                             })}
                         </ul>
                     </div>
-                    <div class="relative lg:fixed bottom-0 left-2 p-2 bg-gray-900">
+                    <div className="relative bottom-0 left-2 p-2 bg-gray-900">
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-gradient-to-r from-blue-500 to-purple-500 text-transparent bg-clip-text">Version 1.0 Beta</span>
                     </div>
                 </nav>
