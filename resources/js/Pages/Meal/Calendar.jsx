@@ -57,8 +57,8 @@ const Index = () => {
                                             <table className="w-full table-auto">
                                                 <tbody>
                                                 <tr>
-                                                    <td className=" p-4 border-r border-[#eee] dark:border-strokedark">1</td>
-                                                    <td className=" p-4 dark:border-strokedark">2</td>
+                                                    <td className=" p-4 border-r border-[#eee] dark:border-strokedark">{meal.lunch}</td>
+                                                    <td className=" p-4 dark:border-strokedark">{meal.dinner}</td>
                                                 </tr>
                                                 </tbody>
                                             </table>
