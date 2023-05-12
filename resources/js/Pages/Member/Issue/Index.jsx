@@ -19,7 +19,7 @@ const Index = () => {
     return (
         <TablePageLayout
             breadcumb_name={'Issues'}
-            breadcumb_link={route('user.issue.index')}
+            breadcumb_link={route('user.issue.create')}
             breadcumb_action={'Create New Issue'}
             isShowButton={true}
             pagination_links={links}

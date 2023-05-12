@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\DepositStatus;
 use App\Enums\MealStatus;
 use App\Enums\DormitoryIdStatic;
 use App\Helper\Helper;
 use App\Http\Requests\MealUpdateRequest;
 use App\Http\Resources\MealDetailsResource;
+use App\Http\Resources\ReportCollection;
 use App\Http\Resources\UserMealShowResource;
 use App\Models\AdditionalCost;
 use App\Models\Bazar;
@@ -128,5 +130,29 @@ class MealController extends Controller
         } catch (\Exception $exception) {
             return back()->with('error', $exception->getMessage());
         }
+    }
+
+    public function calendarView(){
+        return Inertia::render('Meal/Calendar',[
+            'usersAndMeal' => $this->getUsersAndDepositWithMeal(),
+            'daysInMonth' => now()->daysInMonth
+        ]);
+    }
+
+    public function getUsersAndDepositWithMeal()
+    {
+        $dormitoryId = DormitoryIdStatic::DORMITORYID;
+        $month = now();
+
+        return User::query()
+            ->with([
+                'meals' => function ($query) use ($month) {
+                    $query->whereMonth('created_at', '=', $month->month)
+                        ->whereYear('created_at', '=', $month->year)
+                        ->whereStatus(MealStatus::PENDING);
+                },
+            ])
+            ->select('id', 'full_name')
+            ->get();
     }
 }

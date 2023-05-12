@@ -101,6 +101,7 @@ Route::group(['middleware' => ['auth', 'remember','hasAccessInDashboard'],'prefi
     Route::get('meals/show/{user}',[\App\Http\Controllers\MealController::class,'show'])->name('meals.show');
     Route::post('meal/update',[\App\Http\Controllers\MealController::class,'update'])->name('meal.update');
     Route::post('meal/add',[\App\Http\Controllers\MealController::class,'addNewMeal'])->name('meal.add');
+    Route::get('meal/calendar-view',[\App\Http\Controllers\MealController::class,'calendarView'])->name('meal.calender.view');
 
 
     Route::get('expenses',[\App\Http\Controllers\ExpenseController::class,'index'])->name('expense.index');

@@ -45,11 +45,37 @@ class HomeController extends Controller
             'mealCharge' => $mealCharge,
             'meals' => $mealService->getUserAllMealForSelectedMonthToCurrentDate($userId, $dormitoryId, $month),
             'fixedCost' => $fixedCost,
-            'due' => $totalMeal === 0 ? $balance < 0 ? $balance : ($balance - $fixedCost) : ($balance < 0 ? $balance : ($balance - (($mealCharge * $totalMeal) + $fixedCost))),
+            'due' => $this->getDue($totalMeal, $balance, $fixedCost, $mealCharge),
             'totalMeal' => $totalMeal,
             'totalCost' => $totalMeal === 0 ? 0 : round($totalMeal * $mealCharge, 2),
             'todaysMeal' => $mealService->getTodaysLunchAndDinner()
         ]);
+    }
+
+    private function getDue($totalMeal, $balance, $fixedCost, $mealCharge)
+    {
+        if ($totalMeal === 0) {
+            if ($balance === 0 && $fixedCost === 0) {
+                return 0;
+            }
+            else if ($balance === 0 && $fixedCost > 0) {
+                return $fixedCost;
+            }
+            else if($balance > 0 && $fixedCost > 0){
+                return $balance < $fixedCost ? $balance - $fixedCost : 0;
+            }
+        } else {
+            $cost = ($mealCharge * $totalMeal) + $fixedCost;
+
+            if ($balance === 0 && $cost > 0) {
+                return $cost;
+            }
+
+            else if($balance > 0 && $cost > 0){
+                return $balance < $cost ? $balance - $cost : 0;
+            }
+        }
+        return 0;
     }
 
 

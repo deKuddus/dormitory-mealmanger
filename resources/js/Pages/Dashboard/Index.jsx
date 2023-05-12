@@ -1,8 +1,10 @@
 import React from "react";
 import Layout from "@/Shared/Layout/AuthenticatedLayout";
-import {router, usePage} from "@inertiajs/react";
+import {Link, router, usePage} from "@inertiajs/react";
 import {isUserPermittedToPerformAction} from "@/utils";
 import Card from '@/Shared/Card'
+import moment from "moment/moment";
+import Icon from "@/Shared/Icon";
 
 
 const Dashboard = () => {
@@ -41,6 +43,22 @@ const Dashboard = () => {
                             Start New Month
                         </button>
                     )}
+                </div>
+            </div>
+            <div
+                className='rounded-lg border border-stroke bg-white mb-5 shadow-default dark:border-strokedark dark:bg-boxdark'>
+                <div className="flex items-center justify-between p-2">
+                    <div>
+                        <h6 className="mb-4 text-xl font-bold pt-4 px-4">
+                            Meal Calendar View
+                        </h6>
+                    </div>
+                    <Link
+                        href={route("meal.calender.view")}
+                        className="rounded border-gray-300 bg-background-200 shadow p-4"
+                    >
+                        <Icon name={"FaEye"} className="text-white"/>
+                    </Link>
                 </div>
             </div>
             {isUserPermittedToPerformAction('access::dashboard-show', user_permissions) ?
