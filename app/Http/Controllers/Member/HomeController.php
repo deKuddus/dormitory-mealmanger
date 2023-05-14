@@ -277,7 +277,7 @@ class HomeController extends Controller
                 return back()->with('success', 'Lunch Time over, only dinner Updated');
             }
 
-            if (now()->gte($lunchOff)) {
+            if (!now()->gte($lunchOff)) {
                 Meal::whereUserId(auth()->id())->whereId($request->id)->update([
                     'break_fast' => $request->break_fast,
                     'lunch' => $request->lunch,
