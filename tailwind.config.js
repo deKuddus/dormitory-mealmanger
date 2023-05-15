@@ -14,7 +14,7 @@ module.exports = {
     darkMode: 'class',
     theme: {
         fontFamily: {
-            satoshi: ['Josefin Sans', 'sans-serif'],
+            satoshi: ['Poppins', 'sans-serif'],
         },
         colors: {...colors,
             background: {

@@ -119,15 +119,14 @@ class MealService
     {
 
         $dormitoryId = DormitoryIdStatic::DORMITORYID;
-        $month = now();
         return Meal::query()
             ->where('status', MealStatus::PENDING)
             ->whereDormitoryId($dormitoryId)
-            ->whereDate('created_at', $month->format('Y-m-d'))
+            ->whereDate('created_at', now()->format('Y-m-d'))
             ->select(
-                DB::raw("SUM(CASE WHEN break_fast = 1 THEN break_fast ELSE 0 END) AS break_fast_total"),
-                DB::raw("SUM(CASE WHEN lunch = 1 THEN lunch ELSE 0 END) AS lunch_total"),
-                DB::raw("SUM(CASE WHEN dinner = 1 THEN dinner ELSE 0 END) AS dinner_total"),
+                DB::raw("SUM(CASE WHEN break_fast != 0 THEN break_fast ELSE 0 END) AS break_fast_total"),
+                DB::raw("SUM(CASE WHEN lunch != 0 THEN lunch ELSE 0 END) AS lunch_total"),
+                DB::raw("SUM(CASE WHEN dinner != 0 THEN dinner ELSE 0 END) AS dinner_total"),
                 'created_at',
             )
             ->groupBy('created_at')

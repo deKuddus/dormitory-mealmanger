@@ -24,7 +24,7 @@ class BazarScheduleForBazarResource extends JsonResource
     {
         $name = '';
         if($this->users->count()){
-            $name = implode('&',$this->users->pluck('full_name')->all());
+            $name = implode('&',$this->users->pluck('display_name')->all());
         }
 
         return $name ?? 'N/A';

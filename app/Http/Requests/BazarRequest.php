@@ -29,7 +29,8 @@ class BazarRequest extends FormRequest
             'amount' => 'numeric|required',
             'dormitory_id' => 'required|integer',
             'bazar_schedule_id' => 'required|numeric',
-            'status' => 'required'
+            'status' => 'required',
+            'created_at' => 'required|date'
         ];
     }
 
@@ -37,7 +38,8 @@ class BazarRequest extends FormRequest
     {
         $this->merge([
             'dormitory_id' => DormitoryIdStatic::DORMITORYID,
-            'status' => auth()->user()->isAdmin() ? 1 : 0
+            'status' => auth()->user()->isAdmin() ? 1 : 0,
+            'created_at' => $this->input('bazar_date'),
         ]);
     }
 }

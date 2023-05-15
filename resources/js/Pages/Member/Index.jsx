@@ -118,8 +118,16 @@ const Index = () => {
             <div className="col-span-full mb-5">
                 <div className='grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6 xl:grid-cols-3 2xl:gap-7.5'>
                     <Card
+                        value={`Lunch : ${todaysMeal?.lunch_total || 0} Dinner: ${todaysMeal?.dinner_total || 0}`}
+                        text="Today's Dorm Meal"
+                        icon={'FaRegSnowflake'}
+                        bgName="bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-white"
+                        iconClass="text-success"
+                    />
+
+                    <Card
                         value={totalMeal}
-                        text="Total Meal"
+                        text="My Meal"
                         icon={'FaRegSnowflake'}
                         bgName="bg-gradient-to-bl from-green-500 via-blue-500 to-purple-500 text-white"
                         iconClass="text-success"
@@ -152,13 +160,6 @@ const Index = () => {
                         bgName="bg-gradient-to-r from-pink-500  to-danger text-white"
                         iconClass="text-success"
                     />
-                    <Card
-                        value={`Lunch : ${todaysMeal?.lunch_total || 0} Dinner: ${todaysMeal?.dinner_total || 0}`}
-                        text="Today's Dorm Meal"
-                        icon={'FaRegSnowflake'}
-                        bgName="bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-white"
-                        iconClass="text-success"
-                    />
                 </div>
             </div>
             <div
@@ -186,7 +187,7 @@ const Index = () => {
                                     <tr
                                         key={key}
                                     >
-                                        <TableData value={moment(created_at).format("D MMM")}/>
+                                        <TableData value={moment(created_at).format("D MMM, dddd")}/>
                                         <TableData value={lunch}/>
                                         <TableData value={dinner}/>
 

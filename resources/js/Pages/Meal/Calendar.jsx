@@ -5,6 +5,20 @@ import Layout from "@/Shared/Layout/AuthenticatedLayout";
 const Index = () => {
     const {usersAndMeal, daysInMonth} = usePage().props;
 
+    const calculateTotalMeals = (meals) => {
+        const totals = {};
+
+        meals.forEach((meal) => {
+            if (totals[meal.created_at]) {
+                totals[meal.created_at]++;
+            } else {
+                totals[meal.created_at] = 1;
+            }
+        });
+
+        return totals;
+    };
+
 
     return (
         <>
@@ -18,18 +32,18 @@ const Index = () => {
                 <div className='max-w-full overflow-x-auto'>
                     <table className='w-full table-auto divide-y divide-gray-200'>
                         <thead>
-                        <tr className='bg-gray-2 text-left dark:bg-meta-4'>
-                            <th className='sticky left-0 z-1 bg-gray-2 border border-[#eee] p-4 font-medium text-black dark:text-white'>
+                        <tr className=' text-left dark:bg-meta-4'>
+                            <th className='sticky left-0 z-1 dark:bg-meta-4 border border-[#eee] p-4 font-medium'>
                                 Member
                             </th>
                             {Array(31).fill(0).map((v, key) => (
                                 <th key={key}
-                                    className='w-24 border border-[#eee] p-4 font-medium text-black text-center dark:text-white'>
+                                    className='w-24 border border-[#eee] p-4 font-medium  text-center'>
                                     <p className="w-full border-b border-[#eee]">{key + 1}</p>
 
                                     <table className="w-full table-auto">
                                         <thead>
-                                        <tr className='bg-gray-2 text-center dark:bg-meta-4'>
+                                        <tr className='dark:bg-meta-4 text-center'>
                                             <th className="text-sm font-normal border-r-2 p-2 border-[#eee]">Lunch</th>
                                             <th className="text-sm font-normal p-2">Dinner</th>
                                         </tr>
@@ -46,9 +60,9 @@ const Index = () => {
                                     key={index}
                                     className="text-center"
                                 >
-                                    <td className='sticky left-0 z-1 bg-gray-2 border border-[#eee] p-4 dark:border-strokedark'>
+                                    <td className='sticky left-0 z-1 dark:bg-meta-4 border border-[#eee] p-4'>
                                         <Link href={route('meals.show',row.id)}>
-                                            {row.full_name}
+                                            {row.display_name}
                                         </Link>
                                     </td>
                                     {row.meals.map((meal, meal_index) => (

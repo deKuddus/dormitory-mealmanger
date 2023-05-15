@@ -152,7 +152,7 @@ class MealController extends Controller
                         ->whereStatus(MealStatus::PENDING);
                 },
             ])
-            ->select('id', 'full_name')
+            ->select('id', 'display_name')
             ->get();
     }
 }

@@ -35,7 +35,7 @@ class BazarController extends Controller
             'bazarScheduler' => BazarScheduleForBazarResource::collection(
                 BazarSchedule::query()
                     ->whereStatus(0)
-                    ->with('users')
+                    ->with('users:id,display_name')
                     ->get()
             )
         ]);
@@ -64,7 +64,8 @@ class BazarController extends Controller
             'bazar' => $bazar,
             'bazarScheduler' => BazarScheduleForBazarResource::collection(
                 BazarSchedule::query()
-                    ->with('users')
+                    ->whereStatus(0)
+                    ->with('users:id,display_name')
                     ->get()
             )
         ]);
