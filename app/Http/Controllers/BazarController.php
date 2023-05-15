@@ -102,6 +102,8 @@ class BazarController extends Controller
 
     public function destroy(Bazar $bazar)
     {
+        $bazar->dormitory()->increment('deposit',$bazar->amount);
+
         $bazar->delete();
 
         return to_route('bazar.index');
