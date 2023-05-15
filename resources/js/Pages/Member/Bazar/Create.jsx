@@ -6,6 +6,7 @@ import LoadingButton from "@/Shared/LoadingButton";
 import TextInput from "@/Shared/TextInput";
 import SelectInput from "@/Shared/SelectInput";
 import FromPageLayout from "@/Shared/Layout/FromPageLayout";
+import Datepicker from "@/Shared/Datepicker";
 
 const Create = () => {
     const { schedules } = usePage().props;
@@ -13,6 +14,7 @@ const Create = () => {
         amount: "",
         description: "",
         bazar_schedule_id: "",
+        bazar_date:"",
         status: 0,
     });
 
@@ -20,6 +22,11 @@ const Create = () => {
         e.preventDefault();
         post(route("user.bazar.store"));
     };
+
+    const setBazarDate = (date) => {
+        setData("bazar_date", date);
+    };
+
 
     return (
             <FromPageLayout
@@ -30,6 +37,20 @@ const Create = () => {
                 button_text={'Add Bazar'}
                 handlFormSubmit={handleSubmit}
             >
+                <Datepicker
+
+                    label="Bazar Date"
+                    errors={errors.bazar_date}
+                    value={data.bazar_date}
+                    handleDateChange={setBazarDate}
+                    startDate={
+                        data.bazar_date
+                            ? new Date(data.bazar_date)
+                            : new Date()
+                    }
+                />
+
+
                 <TextInput
 
                     label="Amount"
@@ -61,6 +82,7 @@ const Create = () => {
                         setData("bazar_schedule_id", e.target.value)
                     }
                 >
+                    <option>Select Pair</option>
                     {schedules &&
                         schedules.map(({ id, pair }, key) => (
                             <option key={key} value={id}>

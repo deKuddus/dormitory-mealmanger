@@ -34,6 +34,8 @@ class HomeController extends Controller
         $month = now();
         $userId = auth()->id();
 
+//        dd($mealService->getTodaysLunchAndDinner());
+
         $dromTotalMeal = (int)$mealService->dormTotalMeal($dormitoryId, $month);
         $totalMeal = $mealService->userTotalMeal($userId, $dormitoryId, $month);
         $balance = $mealService->getUserTotalDeposit($userId, $dormitoryId);
@@ -270,14 +272,14 @@ class HomeController extends Controller
                 return back()->with('errors', 'Can not update Meal for today, time is over.');
             }
 
-            if (now()->gte($lunchOff) && !now()->gte($dinnerOff)) {
+            if (now()->gte($lunchOff) && ! now()->gte($dinnerOff)) {
                 Meal::whereUserId(auth()->id())->whereId($request->id)->update([
                     'dinner' => $request->dinner,
                 ]);
                 return back()->with('success', 'Lunch Time over, only dinner Updated');
             }
 
-            if (!now()->gte($lunchOff)) {
+            if (! now()->gte($lunchOff)) {
                 Meal::whereUserId(auth()->id())->whereId($request->id)->update([
                     'break_fast' => $request->break_fast,
                     'lunch' => $request->lunch,
@@ -293,6 +295,7 @@ class HomeController extends Controller
             ]);
             return back()->with('success', 'Meal Updated');
         }
+        return back()->with('errors', 'Something went wrong!');
     }
 
     private function isPast($date)

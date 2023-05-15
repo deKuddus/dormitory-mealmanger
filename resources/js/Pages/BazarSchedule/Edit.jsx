@@ -54,7 +54,6 @@ const Edit = () => {
             handlFormSubmit={handleSubmit}
         >
             <Datepicker
-                className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/3"
                 label="Bazar Date"
                 errors={errors.bazar_date}
                 value={data.bazar_date}

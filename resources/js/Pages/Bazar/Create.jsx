@@ -5,17 +5,23 @@ import LoadingButton from "@/Shared/LoadingButton";
 import TextInput from "@/Shared/TextInput";
 import SelectInput from "@/Shared/SelectInput";
 import FromPageLayout from "@/Shared/Layout/FromPageLayout";
+import Datepicker from "@/Shared/Datepicker";
 
 const Create = () => {
     const { bazarScheduler } = usePage().props;
     const { data, setData, errors, post, processing } = useForm({
         amount: "",
         description: "",
+        bazar_date:""
     });
 
     const handleSubmit = (e) => {
         e.preventDefault();
         post(route("bazar.store"));
+    };
+
+    const setBazarDate = (date) => {
+        setData("bazar_date", date);
     };
 
     return (
@@ -27,6 +33,20 @@ const Create = () => {
             button_text={'Create Bazar'}
             handlFormSubmit={handleSubmit}
         >
+
+            <Datepicker
+
+                label="Bazar Date"
+                errors={errors.bazar_date}
+                value={data.bazar_date}
+                handleDateChange={setBazarDate}
+                startDate={
+                    data.bazar_date
+                        ? new Date(data.bazar_date)
+                        : new Date()
+                }
+            />
+
             <TextInput
 
                 label="Amount"

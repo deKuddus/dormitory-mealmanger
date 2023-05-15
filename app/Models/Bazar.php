@@ -19,7 +19,8 @@ class Bazar extends Model
         'amount',
         'dormitory_id',
         'status',
-        'bazar_schedule_id'
+        'bazar_schedule_id',
+        'created_at'
     ];
 
     public function dormitory()

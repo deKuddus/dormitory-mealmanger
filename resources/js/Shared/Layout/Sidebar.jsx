@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react'
 import {Link, usePage} from "@inertiajs/react";
 import SidebarLinkGroup from './SidebarLinkGroup'
-import Logo from '../../../../public/Logo.svg'
+import Logo from '../../../../public/Logo-white.png'
 import Icon from "@/Shared/Icon";
 
 const Sidebar = ({sidebarOpen, setSidebarOpen}) => {
@@ -324,7 +324,7 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}) => {
 
             <div className='flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5'>
                 <Link href='/'>
-                    <img src={Logo} alt='Logo'/>
+                    <img src={Logo} alt='Logo' className="h-10"/>
                 </Link>
 
                 <button
@@ -353,7 +353,7 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}) => {
 
             <div className='no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear'>
 
-                <nav className='mt-5 py-4 px-4 lg:mt-9 lg:px-6'>
+                <nav className='mt-5  px-4 lg:mt-9 lg:px-6'>
 
                     <div>
                         <h3 className='mb-4 ml-4 text-sm  font-semibold text-black dark:text-white'>

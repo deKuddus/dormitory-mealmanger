@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react'
 import {Link, usePage} from '@inertiajs/react'
 
-import UserOne from '../../../../public/user-01.png'
+import UserOne from '../../../../public/user-icon.png'
 
 const DropdownUser = (props) => {
     const {auth, member_deposit, dormitory_deposit, routePrefix} = usePage().props;
@@ -41,23 +41,22 @@ const DropdownUser = (props) => {
 
     return (
         <div className='relative'>
-            <Link
+            <div
                 ref={trigger}
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                className='flex items-center gap-4'
-                to='#'
+                className='flex items-center gap-4 cursor-pointer'
             >
-        <span className='hidden text-right lg:block'>
-          <span className='block text-sm font-medium text-black dark:text-white'>
-            {auth.user.display_name}
-          </span>
-          <span
-              className='block text-sm sm:text-xs font-bold'>{!routePrefix ? `My Balance : ${member_deposit}` : `Dorm Balance: ${dormitory_deposit}`} BDT</span>
-        </span>
+                <span className='hidden text-right lg:block'>
+                  <span className='block text-sm font-medium text-black dark:text-white'>
+                    {auth.user.display_name}
+                  </span>
+                  <span
+                      className='block text-sm sm:text-xs font-bold'>{!routePrefix ? `My Balance : ${member_deposit}` : `Dorm Balance: ${dormitory_deposit}`} BDT</span>
+                </span>
 
-                <span className='h-12 w-12 rounded-full'>
-          <img src={UserOne} alt='User'/>
-        </span>
+                        <span className='h-12 w-12 rounded-full'>
+                  <img src={UserOne} alt='User'/>
+                </span>
 
                 <svg
                     className='hidden fill-current sm:block'
@@ -74,7 +73,7 @@ const DropdownUser = (props) => {
                         fill=''
                     />
                 </svg>
-            </Link>
+            </div>
 
             {/* <!-- Dropdown Start --> */}
             <div

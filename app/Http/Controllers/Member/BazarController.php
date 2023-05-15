@@ -30,7 +30,7 @@ class BazarController extends Controller
     public function create()
     {
         return Inertia::render('Member/Bazar/Create', [
-            'schedules' => BazarScheduleForBazarResource::collection(BazarSchedule::query()->with('users:id,full_name')->get('id'))
+            'schedules' => BazarScheduleForBazarResource::collection(BazarSchedule::query()->with('users:id,display_name')->get('id'))
         ]);
     }
 
