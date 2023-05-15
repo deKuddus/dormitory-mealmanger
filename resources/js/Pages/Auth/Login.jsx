@@ -1,8 +1,6 @@
 import React from "react";
 import {Head, Link, useForm, usePage} from "@inertiajs/react";
-import Breadcrumb from '@/Shared/Layout/Breadcrumb';
-import Logo from '../../../../public/Logo.svg'
-import LogoDark from '../../../../public/Logo.svg'
+import LogoDark from '../../../../public/Logo-white.png'
 import Checkbox from "@/Shared/Checkbox";
 
 
@@ -29,8 +27,7 @@ export default () => {
                         <div className='hidden w-full xl:block xl:w-1/2'>
                             <div className='py-17.5 px-26 text-center'>
                                 <a target="_blank" className='mb-5.5 inline-block' href='https://dormefy.com'>
-                                    <img className='hidden dark:block' src={Logo} alt='Logo'/>
-                                    <img className='dark:hidden' src={LogoDark} alt='Logo'/>
+                                    <img src={LogoDark} alt='Logo'/>
                                 </a>
 
                                 <p className='2xl:px-20'>

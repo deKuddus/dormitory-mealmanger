@@ -88,7 +88,7 @@ const Index = () => {
                                 <div className='dark:bg-[#5A616B] block h-8 w-14 rounded-full bg-meta-9'></div>
                                 <div
                                     className={`absolute left-1 top-1 h-6 w-6 rounded-full bg-white transition ${
-                                        isCheck && totalMeal !== 0  ? '!right-1 !translate-x-full !bg-background-600' : ''
+                                        isCheck && totalMeal !== 0 ? '!right-1 !translate-x-full !bg-background-600' : ''
                                     }`}
                                 ></div>
                             </div>
@@ -115,51 +115,54 @@ const Index = () => {
                     </Link>
                 </div>
             </div>
-            <div className="col-span-full mb-5">
-                <div className='grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6 xl:grid-cols-3 2xl:gap-7.5'>
-                    <Card
-                        value={`Lunch : ${todaysMeal?.lunch_total || 0} Dinner: ${todaysMeal?.dinner_total || 0}`}
-                        text="Today's Dorm Meal"
-                        icon={'FaRegSnowflake'}
-                        bgName="bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-white"
-                        iconClass="text-success"
-                    />
+            <div
+                className='rounded-lg border border-stroke bg-white mb-5 shadow-default dark:border-strokedark dark:bg-boxdark p-5'>
+                <div className="col-span-full mb-5">
+                    <div className='grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6 xl:grid-cols-3 2xl:gap-7.5'>
+                        <Card
+                            value={`Lunch : ${todaysMeal?.lunch_total || 0} Dinner: ${todaysMeal?.dinner_total || 0}`}
+                            text="Today's Dorm Meal"
+                            icon={'FaRegSnowflake'}
+                            bgName="bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-white"
+                            iconClass="text-success"
+                        />
 
-                    <Card
-                        value={totalMeal}
-                        text="My Meal"
-                        icon={'FaRegSnowflake'}
-                        bgName="bg-gradient-to-bl from-green-500 via-blue-500 to-purple-500 text-white"
-                        iconClass="text-success"
-                    />
-                    <Card
-                        value={`${mealCharge} BDT`}
-                        text="Meal Charge"
-                        icon={'FaRegSnowflake'}
-                        bgName="bg-gradient-to-r from-cyan-500 to-blue-500 text-white"
-                        iconClass="text-success"
-                    />
-                    <Card
-                        value={`${totalCost} BDT`}
-                        text="Total Cost "
-                        icon={'FaMoneyBillWave'}
-                        bgName="bg-gradient-to-tl from-green-400  from-20% to-blue-500 to-80% text-white"
-                        iconClass="text-success"
-                    />
-                    {/*<Card*/}
-                    {/*    value={`${fixedCost} BDT`}*/}
-                    {/*    text="Fixed Cost "*/}
-                    {/*    icon={'FaMoneyBillWaveAlt'}*/}
-                    {/*    bgName="bg-gradient-to-br from-green-500 via-blue-500 to-purple-500 text-white"*/}
-                    {/*    iconClass="text-success"*/}
-                    {/*/>*/}
-                    <Card
-                        value={`${due} BDT`}
-                        text="My Due"
-                        icon={'FaMoneyBillAlt'}
-                        bgName="bg-gradient-to-r from-pink-500  to-danger text-white"
-                        iconClass="text-success"
-                    />
+                        <Card
+                            value={totalMeal}
+                            text="My Meal"
+                            icon={'FaRegSnowflake'}
+                            bgName="bg-gradient-to-bl from-green-500 via-blue-500 to-purple-500 text-white"
+                            iconClass="text-success"
+                        />
+                        <Card
+                            value={`${mealCharge} BDT`}
+                            text="Meal Charge"
+                            icon={'FaRegSnowflake'}
+                            bgName="bg-gradient-to-r from-cyan-500 to-blue-500 text-white"
+                            iconClass="text-success"
+                        />
+                        <Card
+                            value={`${totalCost} BDT`}
+                            text="Total Cost "
+                            icon={'FaMoneyBillWave'}
+                            bgName="bg-gradient-to-tl from-green-400  from-20% to-blue-500 to-80% text-white"
+                            iconClass="text-success"
+                        />
+                        {/*<Card*/}
+                        {/*    value={`${fixedCost} BDT`}*/}
+                        {/*    text="Fixed Cost "*/}
+                        {/*    icon={'FaMoneyBillWaveAlt'}*/}
+                        {/*    bgName="bg-gradient-to-br from-green-500 via-blue-500 to-purple-500 text-white"*/}
+                        {/*    iconClass="text-success"*/}
+                        {/*/>*/}
+                        <Card
+                            value={`${due} BDT`}
+                            text="My Due"
+                            icon={'FaMoneyBillAlt'}
+                            bgName="bg-gradient-to-r from-pink-500  to-danger text-white"
+                            iconClass="text-success"
+                        />
+                    </div>
                 </div>
             </div>
             <div
@@ -219,7 +222,7 @@ const Index = () => {
                                         </TableAction>
                                     </tr>
                                 )
-                            ):(
+                            ) : (
                                 <tr>
                                     <TableData value={'No Data Found'} colSpan={4}
                                                className="text-center text-black dark:text-white"/>
