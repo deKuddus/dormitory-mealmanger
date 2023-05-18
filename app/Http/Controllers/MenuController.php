@@ -3,69 +3,85 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\MenuRequest;
-use App\Http\Resources\MenuCollection;
 use App\Models\Menu;
-use Illuminate\Http\Request;
+use App\Services\MenuService;
+use Exception;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class MenuController extends Controller
 {
-    public function index()
+    public function index(MenuService $menuService): Response|RedirectResponse
     {
-        $requestParam = \request()->all('search', 'trashed');
-        return Inertia::render('Menu/Index', [
-            'filters' => $requestParam,
-            'menus' => Menu::query()->get(),
-        ]);
+        try {
+            return Inertia::render('Menu/Index', [
+                'menus' => $menuService->lists(),
+            ]);
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
-    public function create()
+    public function create(): Response | RedirectResponse
     {
-        return to_route('menu.index');
-//        return Inertia::render('Menu/Create');
+        try {
+            return to_route('menu.index');
+//            return Inertia::render('Menu/Create');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
-    public function store(MenuRequest $request)
+    public function store(MenuRequest $request, MenuService $menuService): RedirectResponse
     {
-        Menu::create(
-            $request->validated()
-        );
-
-        return to_route('menu.index');
+        try {
+            $menuService->store($request);
+            return to_route('menu.index');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
-    public function show($id)
+    public function show($id): Response|RedirectResponse
     {
+        try {
+            return to_route('menu.index');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
 
     }
 
 
-    public function edit(Menu $menu)
+    public function edit(Menu $menu): Response|RedirectResponse
     {
-        return Inertia::render('Menu/Edit',[
-            'menu' => $menu
-        ]);
+        try {
+            return Inertia::render('Menu/Edit', [
+                'menu' => $menu
+            ]);
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
-    public function update(MenuRequest $request, Menu $menu)
+    public function update(MenuRequest $request, Menu $menu, MenuService $menuService): RedirectResponse
     {
-        $menu->update(
-            $request->validated()
-        );
-
-        return back()->with('success','Menu updated');
+        try {
+            $menuService->update($menu, $request);
+            return back()->with('success', 'Menu updated');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
-    public function destroy(Menu $menu)
+    public function destroy(Menu $menu): RedirectResponse
     {
-        return to_route('menu.index');
-//        $menu->delete();
-//        return to_route('menu.index');
+        try {
+            return to_route('menu.index');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
-    public function restore(Menu $menu)
-    {
-        $menu->restore();
-        return redirect()->back();
-    }
 }

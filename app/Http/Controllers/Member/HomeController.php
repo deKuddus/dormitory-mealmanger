@@ -34,8 +34,6 @@ class HomeController extends Controller
         $month = now();
         $userId = auth()->id();
 
-//        dd($mealService->getTodaysLunchAndDinner());
-
         $dromTotalMeal = (int)$mealService->dormTotalMeal($dormitoryId, $month);
         $totalMeal = $mealService->userTotalMeal($userId, $dormitoryId, $month);
         $balance = $mealService->getUserTotalDeposit($userId, $dormitoryId);
@@ -59,11 +57,9 @@ class HomeController extends Controller
         if ($totalMeal === 0) {
             if ($balance === 0 && $fixedCost === 0) {
                 return 0;
-            }
-            else if ($balance === 0 && $fixedCost > 0) {
+            } else if ($balance === 0 && $fixedCost > 0) {
                 return $fixedCost;
-            }
-            else if($balance > 0 && $fixedCost > 0){
+            } else if ($balance > 0 && $fixedCost > 0) {
                 return $balance < $fixedCost ? $balance - $fixedCost : 0;
             }
         } else {
@@ -71,9 +67,7 @@ class HomeController extends Controller
 
             if ($balance === 0 && $cost > 0) {
                 return $cost;
-            }
-
-            else if($balance > 0 && $cost > 0){
+            } else if ($balance > 0 && $cost > 0) {
                 return $balance < $cost ? $balance - $cost : 0;
             }
         }
@@ -88,11 +82,7 @@ class HomeController extends Controller
             'status' => 'required|boolean',
         ]);
 
-        $userId = $request->input('user_id');
-
-        if ($userId !== auth()->id()) {
-            return back()->with('errors', 'Unauthorized action.');
-        }
+        $userId = auth()->user()->id;
 
 
         $status = $request->input('status') ? 1 : 0;
@@ -113,13 +103,20 @@ class HomeController extends Controller
         $lastOfMonth = now()->lastOfMonth()->addDay()->format('Y-m-d');
 
 
-        $mealIds = Meal::whereUserId($userId)->whereBetween('created_at', [$startOfMonth, $lastOfMonth])->pluck('id', 'created_at')->toArray();
+        $mealIds = Meal::query()
+            ->unlocked()
+            ->whereUserId($userId)
+            ->whereBetween('created_at', [$startOfMonth, $lastOfMonth])
+            ->pluck('id')
+            ->toArray();
 
         if (now()->gte($lunchOff) && now()->gte($dinnerOff)) {
-            Meal::whereIn('id', $mealIds)->whereBetween('created_at', [now()->addDay()->format('Y-m-d 09:00'), now()->lastOfMonth()->format('Y-m-d 09:00')])
-                ->get()
-                ->map(function ($row) use ($dormitory, $status) {
-                    $row->update([
+            Meal::query()
+                ->unlocked()
+                ->whereIn('id', $mealIds)
+                ->whereBetween('created_at', [now()->addDay()->format('Y-m-d 09:00'), now()->lastOfMonth()->format('Y-m-d 09:00')])
+                ->each(function ($row) use ($dormitory, $status) {
+                    return $row->update([
                         'break_fast' => $dormitory->has_breakfast ? $status : 0,
                         'lunch' => Helper::isTodyaFridayOrSaturday($row->created_at) && $dormitory->has_lunch ? $status : 0,
                         'dinner' => $dormitory->has_dinner ? $status : 0,
@@ -128,11 +125,12 @@ class HomeController extends Controller
         }
 
         if (!now()->gte($lunchOff) && now()->gte($dinnerOff)) {
-            Meal::whereIn('id', $mealIds)
+            Meal::query()
+                ->unlocked()
+                ->whereIn('id', $mealIds)
                 ->whereBetween('created_at', [now()->format('Y-m-d 09:00'), now()->lastOfMonth()->format('Y-m-d 09:00')])
-                ->get()
-                ->map(function ($row) use ($dormitory, $status) {
-                    $row->update([
+                ->each(function ($row) use ($dormitory, $status) {
+                   return $row->update([
                         'break_fast' => $dormitory->has_breakfast ? $status : 0,
                         'lunch' => Helper::isTodyaFridayOrSaturday($row->created_at) && $dormitory->has_lunch ? $status : 0,
                         'dinner' => $dormitory->has_dinner ? $status : 0,
@@ -141,15 +139,18 @@ class HomeController extends Controller
         }
 
         if (now()->gte($lunchOff) && !now()->gte($dinnerOff)) {
-            Meal::whereIn('id', $mealIds)
+            Meal::query()
+                ->whereIn('id', $mealIds)
+                ->unlocked()
                 ->whereDate('created_at', now()->format('Y-m-d'))
                 ->update([
                     'dinner' => $dormitory->has_dinner ? $status : 0,
                 ]);
 
-            Meal::whereIn('id', $mealIds)->whereBetween('created_at', [now()->addDay()->format('Y-m-d 09:00'), now()->lastOfMonth()->format('Y-m-d 09:00')])
-                ->get()
-                ->map(function ($row) use ($dormitory, $status) {
+            Meal::query()
+            ->whereIn('id', $mealIds)
+                ->whereBetween('created_at', [now()->addDay()->format('Y-m-d 09:00'), now()->lastOfMonth()->format('Y-m-d 09:00')])
+                ->each(function ($row) use ($dormitory, $status) {
                     $row->update([
                         'break_fast' => $dormitory->has_breakfast ? $status : 0,
                         'lunch' => Helper::isTodyaFridayOrSaturday($row->created_at) && $dormitory->has_lunch ? $status : 0,
@@ -272,18 +273,20 @@ class HomeController extends Controller
                 return back()->with('errors', 'Can not update Meal for today, time is over.');
             }
 
-            if (now()->gte($lunchOff) && ! now()->gte($dinnerOff)) {
+            if (now()->gte($lunchOff) && !now()->gte($dinnerOff)) {
                 Meal::whereUserId(auth()->id())->whereId($request->id)->update([
                     'dinner' => $request->dinner,
+                    'lock_for_quick_update' => true,
                 ]);
                 return back()->with('success', 'Lunch Time over, only dinner Updated');
             }
 
-            if (! now()->gte($lunchOff)) {
+            if (!now()->gte($lunchOff)) {
                 Meal::whereUserId(auth()->id())->whereId($request->id)->update([
                     'break_fast' => $request->break_fast,
                     'lunch' => $request->lunch,
                     'dinner' => $request->dinner,
+                    'lock_for_quick_update' => true,
                 ]);
                 return back()->with('success', 'Meal Updated');
             }
@@ -292,6 +295,7 @@ class HomeController extends Controller
                 'break_fast' => $request->break_fast,
                 'lunch' => $request->lunch,
                 'dinner' => $request->dinner,
+                'lock_for_quick_update' => true,
             ]);
             return back()->with('success', 'Meal Updated');
         }

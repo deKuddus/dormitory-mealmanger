@@ -2,165 +2,136 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\DepositStatus;
 use App\Helper\Helper;
 use App\Http\Requests\DepositRequest;
 use App\Http\Requests\WithDrawRequest;
-use App\Http\Resources\DepositCollection;
 use App\Models\Deposit;
-use App\Models\Dormitory;
 use App\Models\User;
-use Illuminate\Support\Facades\DB;
+use App\Services\DepositService;
+use Exception;
 use Inertia\Inertia;
 
 class DepositController extends Controller
 {
-    public function index()
+    public function index(DepositService $depositService)
     {
         $this->authorize('showDeposit', Deposit::class);
+        try {
+            return Inertia::render('Deposit/Index', $depositService->index());
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
 
-        return Inertia::render('Deposit/Index', [
-            'usersWithDeposit' => new DepositCollection(
-                User::query()
-                    ->active()
-                    ->with(
-                        'deposits', function ($query) {
-                        $query->select(
-                            'user_id',
-                            DB::raw('SUM(CASE WHEN status = 1 THEN amount ELSE 0 END) as deposit_amount'),
-                            DB::raw('SUM(CASE WHEN status = 3 THEN amount ELSE 0 END) as withdraw_amount'),
-                            DB::raw('SUM(CASE WHEN status = 0 THEN amount ELSE 0 END) as pending_amount'),
-                        )->groupBy('user_id');
-                    })
-                    ->select('id', 'full_name', 'deposit')
-                    ->orderBy('created_at', 'desc')
-                    ->paginate()
-            ),
-        ]);
     }
 
-    public function store(DepositRequest $request)
+    public function store(DepositRequest $request, DepositService $depositService)
     {
         $this->authorize('createDeposit', Deposit::class);
 
-        $data = $request->validated();
-        $dormitory = Dormitory::find($data['dormitory_id']);
-
-        if ($data['amount'] > $dormitory->max_deposit_limit) {
-            return back()->with('error', 'Max deposit limit' . $dormitory->max_deposit_limit);
+        try {
+            $depositService->store($request);
+            return to_route('deposit.index')->with('success', 'Deposit Added');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
         }
 
-        $deposit = Deposit::create(
-            $request->validated()
-        );
 
-        $deposit->user()->increment('deposit', $deposit->amount);
-        $deposit->dormitory()->increment('deposit', $deposit->amount);
+    }
 
+    public function show($userId, DepositService $depositService)
+    {
+        $this->authorize('showDeposit', Deposit::class);
 
-        return to_route('deposit.index')->with('success', 'New Deposit Added');
+        try {
+            return Inertia::render('Deposit/Show', $depositService->show($userId));
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+
+    }
+
+    public function edit(Deposit $deposit, DepositService $depositService)
+    {
+        $this->authorize('editDeposit', Deposit::class);
+
+        try {
+            return Inertia::render('Deposit/Edit', $depositService->edit($deposit));
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+    }
+
+    public function update(DepositRequest $request, Deposit $deposit, DepositService $depositService)
+    {
+        $this->authorize('editDeposit', User::class);
+
+        try {
+            $depositService->update($deposit, $request);
+            return to_route('deposit.index');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+
+    }
+
+    public function destroy(Deposit $deposit, DepositService $depositService)
+    {
+        $this->authorize('deleteDeposit', Deposit::class);
+
+        try {
+            $depositService->delete($deposit);
+            return redirect()->back()->with('success', 'Deposit deleted successfully');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+
+    }
+
+    public function accept(Deposit $deposit, DepositService $depositService)
+    {
+        $this->authorize('approveDeposit', Deposit::class);
+
+        try {
+            $depositService->acceptDeposit($deposit);
+            return redirect()->back()->with('success', 'Deposit approved');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+    }
+
+    public function reject(Deposit $deposit, DepositService $depositService)
+    {
+        $this->authorize('rejectDeposit', Deposit::class);
+        try {
+            $depositService->reject($deposit);
+            return redirect()->back()->with('success', 'Deposit Deleted');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+    }
+
+    public function withdraw(WithDrawRequest $request, DepositService $depositService)
+    {
+        $this->authorize('withdrawDeposit', Deposit::class);
+
+        try {
+            $depositService->withdraw($request);
+            return redirect()->back()->with('success', 'New Withdrawal added');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
     public function create()
     {
         $this->authorize('createDeposit', Deposit::class);
 
-        return Inertia::render('Deposit/Create', [
-            ...Helper::usersArray()
-        ]);
-    }
-
-    public function show($userId)
-    {
-        $this->authorize('showDeposit', Deposit::class);
-
-        return Inertia::render('Deposit/Show', [
-            'user' => User::find($userId),
-            'approvedDeposit' => Deposit::whereUserId($userId)->where('status', '!=', 0)->get(),
-            'pendingDeposit' => Deposit::whereUserId($userId)->whereStatus(0)->get(),
-        ]);
-
-    }
-
-
-    public function edit(Deposit $deposit)
-    {
-        $this->authorize('editDeposit', Deposit::class);
-
-
-        return Inertia::render('Deposit/Edit', [
-            'deposit' => $deposit,
-            ...Helper::usersArray()
-        ]);
-    }
-
-    public function update(DepositRequest $request, Deposit $deposit)
-    {
-        $this->authorize('editDeposit', User::class);
-
-        $deposit->update(
-            $request->validated()
-        );
-
-        return to_route('deposit.index');
-    }
-
-    public function destroy(Deposit $deposit)
-    {
-        $this->authorize('deleteDeposit', Deposit::class);
-
-        $deposit->user()->decrement('deposit', $deposit->amount);
-        $deposit->dormitory()->decrement('deposit', $deposit->amount);
-        $deposit->delete();
-
-        return redirect()->back()->with('success', 'Deposit deleted successfully');
-    }
-
-    public function restore(Deposit $deposit)
-    {
-        $deposit->restore();
-        return redirect()->back();
-    }
-
-
-    public function accept(Deposit $deposit)
-    {
-        $this->authorize('approveDeposit', Deposit::class);
-
-
-        $deposit->status = DepositStatus::APPROVED;
-        $deposit->save();
-        $deposit->user()->increment('deposit', $deposit->amount);
-        $deposit->dormitory()->increment('deposit', $deposit->amount);
-        return redirect()->back()->with('success', 'Deposit approved');
-    }
-
-    public function reject(Deposit $deposit)
-    {
-        $this->authorize('rejectDeposit', Deposit::class);
-
-
-        $deposit->forceDelete();
-        return redirect()->back()->with('success', 'Deposit Deleted');
-    }
-
-    public function withdraw(WithDrawRequest $request)
-    {
-        $this->authorize('withdrawDeposit', Deposit::class);
-
-        $user = User::find($request->user_id);
-
-        if ($request->amount < $user->deposit) {
-            $deposit = Deposit::create(
-                $request->validated()
-            );
-
-            $user->decrement('deposit', $deposit->amount);
-            $deposit->dormitory()->decrement('deposit', $deposit->amount);
-
-            return redirect()->back()->with('success', 'New Withdrawal added');
-        } else {
-            return redirect()->back()->with('error', 'Withdraw amount can not greater than deposit amount.');
+        try {
+            return Inertia::render('Deposit/Create', [
+                ...Helper::usersArray()
+            ]);
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
         }
     }
 }

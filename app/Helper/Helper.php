@@ -4,6 +4,7 @@ namespace App\Helper;
 
 use App\Enums\DormitoryIdStatic;
 use App\Enums\MealStatus;
+use App\Http\Resources\UserResource;
 use App\Models\Dormitory;
 use App\Models\Meal;
 use App\Models\Role;
@@ -12,6 +13,7 @@ use App\Models\Rule;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 class Helper
 {
@@ -123,5 +125,29 @@ class Helper
             'count' => auth()->user()->unreadNotifications->count(),
             'data' => auth()->user()->unreadNotifications ?? [],
         ];
+    }
+
+
+    public static function getDormitoryDeposit()
+    {
+        return Auth::check() ? auth()->user()->isAdmin() ?
+            Dormitory::query()->whereId(DormitoryIdStatic::DORMITORYID)->value('deposit')
+            : 0 : 0;
+    }
+
+    public static function getUserDeposit()
+    {
+        $currentRoute = Route::current();
+        $prefix = $currentRoute->getPrefix();
+
+        if ($prefix === '/master') {
+            return auth()->check() ? auth()->user()->deposit : 0;
+        }
+        return 0;
+    }
+
+    public static function getLoggedInUser()
+    {
+        return Auth::check() ? new UserResource(Auth::user()) : null;
     }
 }

@@ -10,11 +10,11 @@ import TableAction from "@/Shared/TableAction";
 
 const Index = () => {
     const tableHeading = ['No', 'Name', 'Address', 'Status', 'Action'];
-    const {messes, user_permissions} = usePage().props;
+    const {dormitories, user_permissions} = usePage().props;
     const {
         data,
         meta: {links},
-    } = messes;
+    } = dormitories;
 
     const deleteMess = (id) => {
         if (confirm("Are you sure you want to delete this dormitory?")) {

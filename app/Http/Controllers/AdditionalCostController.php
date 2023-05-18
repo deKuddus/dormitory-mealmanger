@@ -2,117 +2,97 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\AdditionalCostType;
 use App\Helper\Helper;
 use App\Http\Requests\AdditionalCostRequest;
-use App\Http\Resources\AdditionalCostCollection;
 use App\Models\AdditionalCost;
-use App\Models\User;
-use Illuminate\Http\Request;
+use App\Services\AdditonalCostService;
+use Exception;
 use Inertia\Inertia;
 
 class AdditionalCostController extends Controller
 {
-    public function index()
+    public function index(AdditonalCostService $additonalCostService)
     {
-        $this->authorize('showAdditionalCost',AdditionalCost::class);
+        $this->authorize('showAdditionalCost', AdditionalCost::class);
 
-        $requestParam = \request()->all('search', 'trashed');
-        return Inertia::render('AdditionalCost/Index', [
-            'filters' => $requestParam,
-            'additionals' => new AdditionalCostCollection(
-                AdditionalCost::query()
-                    ->orderBy('created_at', 'desc')
-                    ->paginate()
-                    ->appends(request()->all())
-            ),
-        ]);
+        try {
+            $additonalCostService->index();
+            return Inertia::render('AdditionalCost/Index',);
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+    }
+
+    public function store(AdditionalCostRequest $request, AdditonalCostService $additonalCostService)
+    {
+        $this->authorize('createAdditionalCost', AdditionalCost::class);
+
+        try {
+            $additonalCostService->store($request);
+            return to_route('additional.index');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
     public function create()
     {
-        $this->authorize('createAdditionalCost',AdditionalCost::class);
+        $this->authorize('createAdditionalCost', AdditionalCost::class);
 
-        return Inertia::render('AdditionalCost/Create',[
-            ...Helper::messArray()
-        ]);
-    }
-
-    public function store(AdditionalCostRequest $request)
-    {
-        $this->authorize('createAdditionalCost',AdditionalCost::class);
-
-        $additional = AdditionalCost::create(
-            $request->validated()
-        );
-        if($request->status === AdditionalCostType::APPROVED){
-            $additional->dormitory()->decrement('deposit',$additional->amount);
+        try {
+            return Inertia::render('AdditionalCost/Create', [
+                ...Helper::messArray()
+            ]);
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
         }
-        return to_route('additional.index');
     }
 
     public function show($id)
     {
-
+        return back();
     }
 
 
-    public function edit(AdditionalCost $additional)
+    public function edit(AdditionalCost $additionalCost)
     {
-        $this->authorize('editAdditionalCost',AdditionalCost::class);
+        $this->authorize('editAdditionalCost', AdditionalCost::class);
 
-        return Inertia::render('AdditionalCost/Edit', [
-            'additional' => $additional
-        ]);
+        try {
+            return Inertia::render('AdditionalCost/Edit', [
+                'additional' => $additionalCost
+            ]);
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
-    public function update(AdditionalCostRequest $request, AdditionalCost $additional)
+    public function update(AdditionalCostRequest $request, AdditionalCost $additionalCost, AdditonalCostService $additonalCostService)
     {
 
-        $this->authorize('editAdditionalCost',AdditionalCost::class);
+        $this->authorize('editAdditionalCost', AdditionalCost::class);
 
-        if($additional->status === AdditionalCostType::APPROVED && $request->status === AdditionalCostType::APPROVED){
-            if($additional->amount !== $request->amount){
-                $additional->dormitory()->increment('deposit',$additional->amount);
-                $additional->dormitory()->decrement('deposit',$request->amount);
-            }
+
+        try {
+            $additonalCostService->update($additionalCost, $request);
+            return to_route('additional.index');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
         }
 
-        if($additional->status === AdditionalCostType::APPROVED && $request->status === AdditionalCostType::PENDING){
-            if($additional->amount !== $request->amount){
-                $additional->dormitory()->increment('deposit',$additional->amount);
-            }
-        }
-
-        if($additional->status === AdditionalCostType::PENDING && $request->status === AdditionalCostType::APPROVED){
-            if($additional->amount !== $request->amount){
-                $additional->dormitory()->decrement('deposit',$request->amount);
-            }
-        }
-
-        $additional->update(
-            $request->validated()
-        );
-
-        return to_route('additional.index');
     }
 
-    public function destroy(AdditionalCost $additional)
+    public function destroy(AdditionalCost $additionalCost, AdditonalCostService $additonalCostService)
     {
-        $this->authorize('deleteAdditionalCost',AdditionalCost::class);
+        $this->authorize('deleteAdditionalCost', AdditionalCost::class);
 
-        if($additional->status === AdditionalCostType::APPROVED){
-            $additional->dormitory()->increment('deposit',$additional->amount);
+        try {
+            $additonalCostService->delete($additionalCost);
+
+            return to_route('additional.index');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
         }
-
-        $additional->delete();
-
-        return to_route('additional.index');
     }
 
-    public function restore(AdditionalCost $additional)
-    {
-        $additional->restore();
-        return redirect()->back();
-    }
 }

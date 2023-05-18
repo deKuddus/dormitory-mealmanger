@@ -5,66 +5,89 @@ namespace App\Http\Controllers;
 use App\Enums\DormitoryIdStatic;
 use App\Http\Requests\StoreIssueRequest;
 use App\Http\Requests\UpdateIssueRequest;
-use App\Http\Resources\IssueCollection;
 use App\Models\Issue;
-use App\Models\User;
+use App\Services\IssueService;
+use App\Services\UserService;
+use Exception;
 use Inertia\Inertia;
 
 class IssueController extends Controller
 {
 
-    public function index()
+    public function index(IssueService $issueService)
     {
-        return Inertia::render('Issue/Index', [
-            'issues' => new IssueCollection(
-                Issue::query()->with(['issuer', 'assigner', 'resolver'])->paginate()
-            )
-        ]);
+        try {
+            return Inertia::render('Issue/Index', [
+                'issues' => $issueService->lists()
+            ]);
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
-    public function store(StoreIssueRequest $request)
+    public function store(StoreIssueRequest $request, IssueService $issueService)
     {
-        Issue::query()->create($request->validated());
-        return to_route('issue.index')->with('success', 'Issue created');
+        try {
+            $issueService->store($request);
+            return to_route('issue.index')->with('success', 'Issue created');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
     public function create()
     {
-        return Inertia::render('Issue/Create');
+        try {
+            return Inertia::render('Issue/Create');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
-    public function show(Issue $issue)
+    public function show(Issue $issue, IssueService $issueService)
     {
-        return Inertia::render('Issue/Show', [
-            'issue' => $issue->load('issuer', 'assigner', 'resolver')
-        ]);
-    }
-
-
-    public function edit(Issue $issue)
-    {
-        return Inertia::render('Issue/Edit', [
-            'issue' => $issue,
-            'resolvers' => User::query()->with(['dormitory' => function ($q) {
-                $q->whereId(DormitoryIdStatic::DORMITORYID)->select('name');
-            }])
-                ->select('id', 'full_name')
-                ->get()
-                ->toArray()
-        ]);
+        try {
+            return Inertia::render('Issue/Show', [
+                'issue' => $issueService->show($issue)
+            ]);
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
 
-    public function update(UpdateIssueRequest $request, Issue $issue)
+    public function edit(Issue $issue, UserService $userService)
     {
-        $issue->update($request->validated());
+        try {
+            return Inertia::render('Issue/Edit', [
+                'issue' => $issue,
+                'resolvers' => $userService->getBasicsOfUsers(DormitoryIdStatic::DORMITORYID)
+            ]);
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+    }
+
+
+    public function update(UpdateIssueRequest $request, Issue $issue, IssueService $issueService)
+    {
+        try {
+            $issueService->update($issue,$request);
         return to_route('issue.index')->with('success', 'Issue updated');
+        }catch (Exception $exception){
+            return back()->with('error',$exception->getMessage());
+        }
     }
 
 
-    public function destroy(Issue $issue)
+    public function destroy(Issue $issue, IssueService $issueService)
     {
-        $issue->delete();
-        return to_route('issue.index')->with('success', 'Issue deleted');
+        try {
+            $issueService->delete($issue);
+            return to_route('issue.index')->with('success', 'Issue deleted');
+        }catch (Exception $exception){
+            return back()->with('error',$exception->getMessage());
+        }
+
     }
 }

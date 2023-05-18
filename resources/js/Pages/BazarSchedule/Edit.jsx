@@ -13,7 +13,7 @@ const Edit = () => {
         users_id:
             (bazarSchedule.users &&
                 bazarSchedule.users.map(
-                    ({id, full_name}, key) => id
+                    ({id, display_name}, key) => id
                 )) ||
             [],
         status: bazarSchedule.status,
@@ -24,7 +24,7 @@ const Edit = () => {
         users && users.length
             ? users.map((row) => ({
                 value: row.id,
-                label: row.full_name,
+                label: row.display_name,
             }))
             : [];
 

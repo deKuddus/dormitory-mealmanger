@@ -50,7 +50,7 @@ const Edit = () => {
                            value={user.id}
                            defaultValue={deposit.user_id}
                        >
-                           {user.full_name}
+                           {user.display_name}
                        </option>
                    ))}
            </SelectInput>

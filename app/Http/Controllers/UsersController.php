@@ -6,111 +6,107 @@ use App\Helper\Helper;
 use App\Http\Requests\UserDeleteRequest;
 use App\Http\Requests\UserStoreRequest;
 use App\Http\Requests\UserUpdateRequest;
-use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
-use App\Models\Dormitory;
 use App\Models\User;
+use App\Services\UserService;
+use Exception;
 use Inertia\Inertia;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Redirect;
+
 
 class UsersController extends Controller
 {
-    public function index()
+    public function index(UserService $userService)
     {
-        $this->authorize('showUser',User::class);
+        $this->authorize('showUser', User::class);
 
-        return Inertia::render('Users/Index', [
-            'filters' => Request::all('search', 'role', 'trashed'),
-            'users' => new UserCollection(
-                User::query()
-                    ->orderBy('created_at','desc')
-                    ->filter(Request::only('search', 'role', 'trashed'))
-                    ->paginate()
-                    ->appends(Request::all())
-            ),
-            'totalMemberActive' => User::query()->active()->count(),
-            'totalMemberInActive' => User::query()->inActive()->count()
-        ]);
+        try {
+            return Inertia::render('Users/Index', $userService->index());
+        } catch (Exception $exception) {
+            throw_if(true,$exception->getMessage());
+        }
+
     }
 
     public function create()
     {
-        $this->authorize('createUser',User::class);
+        $this->authorize('createUser', User::class);
 
-        return Inertia::render('Users/Create', [
-            ...Helper::messArray(),
-            ...Helper::rolesArray(),
-            ...Helper::roomArray()
-        ]);
+        try {
+            return Inertia::render('Users/Create', [
+                ...Helper::rolesArray(),
+                ...Helper::roomArray()
+            ]);
+        } catch (Exception $exception) {
+            throw_if(true,$exception->getMessage());
+        }
     }
 
-    public function store(UserStoreRequest $request)
+    public function store(UserStoreRequest $request, UserService $userService)
     {
-        $this->authorize('createUser',User::class);
+        $this->authorize('createUser', User::class);
 
-        $user = User::create(
-            $request->validated()
-        );
-
-        $user->dormitory()->sync($request->dormitory_id);
-        $user->syncRoles($request->validated('roles'));
-
-        return Redirect::route('user.index')->with('success', 'User created.');
+        try {
+            $userService->store($request);
+            return to_route('user.index')->with('success', 'User created.');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
     public function edit(User $user)
     {
-        $this->authorize('editUser',User::class);
+        $this->authorize('editUser', User::class);
 
-        return Inertia::render('Users/Edit', [
-            'user' => new UserResource($user->load('roles')),
-            ...Helper::roomArray(),
-            ...Helper::rolesArray()
-        ]);
+        try {
+            return Inertia::render('Users/Edit', [
+                'user' => new UserResource($user->load('roles')),
+                ...Helper::roomArray(),
+                ...Helper::rolesArray()
+            ]);
+        } catch (Exception $exception) {
+            return back()->with('error',$exception->getMessage());
+        }
     }
 
     public function show(User $user)
     {
-        $this->authorize('showUser',User::class);
+        $this->authorize('showUser', User::class);
 
-        return Inertia::render('Users/Show', [
-            'user' => $user->load('roles','room','seat')
-        ]);
+        try {
+
+            return Inertia::render('Users/Show', [
+                'user' => $user->load('roles', 'room', 'seat')
+            ]);
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
-    public function update(User $user, UserUpdateRequest $request)
+    public function update(User $user, UserUpdateRequest $request, UserService $userService)
     {
-        $this->authorize('editUser',User::class);
+        $this->authorize('editUser', User::class);
 
-        $user->update(
-            $request->validated()
-        );
+        try {
+            $userService->update($user, $request);
 
-        $user->dormitory()->sync($request->dormitory_id);
-        $user->syncRoles($request->validated('roles'));
+            return back()->with('success', 'User updated.');
 
-        return Redirect::back()->with('success', 'User updated.');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
-    public function destroy(User $user, UserDeleteRequest $request)
+    public function destroy(User $user, UserDeleteRequest $request,UserService $userService)
     {
-        $this->authorize('deleteUser',User::class);
+        $this->authorize('deleteUser', User::class);
 
-        Dormitory::query()->whereHas('users',function($query) use($user){
-            $query->whereId($user->id);
-        })->decrement('deposit',$user->deposit);
+        try {
+            $userService->delete($user,$request);
 
-        $user->delete();
-
-        return Redirect::back()->with('success', 'User deleted.');
+            return back()->with('success', 'User deleted.');
+        }catch (Exception  $exception){
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
-    public function restore(User $user)
-    {
-        $user->restore();
-
-        return Redirect::back()->with('success', 'User restored.');
-    }
 }
