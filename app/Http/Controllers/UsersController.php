@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Helper\Helper;
 use App\Http\Requests\UserDeleteRequest;
 use App\Http\Requests\UserStoreRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Services\RoleService;
+use App\Services\RoomService;
 use App\Services\UserService;
 use Exception;
 use Inertia\Inertia;
@@ -22,22 +23,22 @@ class UsersController extends Controller
         try {
             return Inertia::render('Users/Index', $userService->index());
         } catch (Exception $exception) {
-            throw_if(true,$exception->getMessage());
+            throw_if(true, $exception->getMessage());
         }
 
     }
 
-    public function create()
+    public function create(RoomService $roomService, RoleService $roleService)
     {
         $this->authorize('createUser', User::class);
 
         try {
             return Inertia::render('Users/Create', [
-                ...Helper::rolesArray(),
-                ...Helper::roomArray()
+                'roles' => $roleService->getRoleBasic(),
+                'rooms' => $roomService->getRoomBasic()
             ]);
         } catch (Exception $exception) {
-            throw_if(true,$exception->getMessage());
+            throw_if(true, $exception->getMessage());
         }
     }
 
@@ -53,18 +54,18 @@ class UsersController extends Controller
         }
     }
 
-    public function edit(User $user)
+    public function edit(User $user, RoleService $roleService, RoomService $roomService)
     {
         $this->authorize('editUser', User::class);
 
         try {
             return Inertia::render('Users/Edit', [
                 'user' => new UserResource($user->load('roles')),
-                ...Helper::roomArray(),
-                ...Helper::rolesArray()
+                'roles' => $roleService->getRoleBasic(),
+                'rooms' => $roomService->getRoomBasic()
             ]);
         } catch (Exception $exception) {
-            return back()->with('error',$exception->getMessage());
+            return back()->with('error', $exception->getMessage());
         }
     }
 
@@ -96,15 +97,15 @@ class UsersController extends Controller
         }
     }
 
-    public function destroy(User $user, UserDeleteRequest $request,UserService $userService)
+    public function destroy(User $user, UserDeleteRequest $request, UserService $userService)
     {
         $this->authorize('deleteUser', User::class);
 
         try {
-            $userService->delete($user,$request);
+            $userService->delete($user, $request);
 
             return back()->with('success', 'User deleted.');
-        }catch (Exception  $exception){
+        } catch (Exception  $exception) {
             return back()->with('error', $exception->getMessage());
         }
     }

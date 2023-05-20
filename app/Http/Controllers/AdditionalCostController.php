@@ -6,6 +6,7 @@ use App\Helper\Helper;
 use App\Http\Requests\AdditionalCostRequest;
 use App\Models\AdditionalCost;
 use App\Services\AdditonalCostService;
+use App\Services\DormitoryService;
 use Exception;
 use Inertia\Inertia;
 
@@ -35,13 +36,13 @@ class AdditionalCostController extends Controller
         }
     }
 
-    public function create()
+    public function create(DormitoryService $dormitoryService)
     {
         $this->authorize('createAdditionalCost', AdditionalCost::class);
 
         try {
             return Inertia::render('AdditionalCost/Create', [
-                ...Helper::messArray()
+                'dormitories' => $dormitoryService->getDormitoryBasic()
             ]);
         } catch (Exception $exception) {
             return back()->with('error', $exception->getMessage());

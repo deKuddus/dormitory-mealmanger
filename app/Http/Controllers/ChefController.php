@@ -6,6 +6,7 @@ use App\Helper\Helper;
 use App\Http\Requests\ChefRequest;
 use App\Models\Chef;
 use App\Services\ChefService;
+use App\Services\DormitoryService;
 use Exception;
 use Inertia\Inertia;
 
@@ -22,13 +23,13 @@ class ChefController extends Controller
         }
     }
 
-    public function create()
+    public function create(DormitoryService $dormitoryService)
     {
         $this->authorize('createChef', Chef::class);
 
         try {
             return Inertia::render('Chef/Create', [
-                ...Helper::messArray()
+                'dormitories' => $dormitoryService->getDormitoryBasic()
             ]);
         } catch (Exception $exception) {
             return back()->with('error', $exception->getMessage());

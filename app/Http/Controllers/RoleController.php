@@ -3,80 +3,101 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RoleRequest;
-use App\Http\Resources\RoleCollection;
 use App\Models\User;
-use Spatie\Permission\Models\Role;
-use Illuminate\Http\Request;
+use App\Services\PermissionService;
+use App\Services\RoleService;
+use Exception;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
-use Spatie\Permission\Models\Permission;
+use Inertia\Response;
+use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
 {
 
-    public function index()
+    public function index(RoleService $roleService): Response|RedirectResponse
     {
         $this->authorize('showRole', User::class);
-        return Inertia::render('Role/Index', [
-            'roles' => new RoleCollection(Role::query()->withCount('users', 'permissions')->paginate())
-        ]);
+        try {
+            return Inertia::render('Role/Index', [
+                'roles' => $roleService->list()
+            ]);
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
-
-    public function create()
+    public function store(RoleRequest $request, RoleService $roleService)
     {
         $this->authorize('createRole', User::class);
 
-        return Inertia::render('Role/Create', [
-            'permissions' => Permission::query()->get(['name', 'id'])
-        ]);
+        try {
+            $roleService->store($request);
+            return to_route('role.index')->with('success', 'New role created');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
-
-    public function store(RoleRequest $request)
+    public function create(PermissionService $permissionService)
     {
         $this->authorize('createRole', User::class);
 
-        $role = Role::create($request->validated());
-        $role->syncPermissions($request->get('permissions'));
-        return to_route('role.index')->with('success', 'New role created');
-
+        try {
+            return Inertia::render('Role/Create', [
+                'permissions' => $permissionService->getPermission()
+            ]);
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
     public function show($id)
     {
-        //
+        try {
+            return back();
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
 
-    public function edit(Role $role)
+    public function edit(Role $role, PermissionService $permissionService)
     {
         $this->authorize('editRole', User::class);
 
-
-        return Inertia::render('Role/Edit', [
-            'role' => $role->load('permissions'),
-            'permissions' => Permission::query()->get(['name', 'id'])
-        ]);
+        try {
+            return Inertia::render('Role/Edit', [
+                'role' => $role->load('permissions'),
+                'permissions' => $permissionService->getPermission()
+            ]);
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
 
-    public function update(RoleRequest $request, Role $role)
+    public function update(RoleRequest $request, Role $role, RoleService $roleService)
     {
         $this->authorize('editRole', User::class);
-
-
-        $role->update($request->validated());
-        $role->syncPermissions($request->get('permissions'));
-        return to_route('role.index')->with('success', 'New role created');
+        try {
+            $roleService->update($role, $request);
+            return to_route('role.index')->with('success', 'New role created');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
 
-    public function destroy(Role $role)
+    public function destroy(Role $role, RoleService $roleService)
     {
         $this->authorize('deleteRole', User::class);
 
-        $role->delete();
-        return to_route('role.index')->with('success', 'Role Deleted Success.');
-
+        try {
+            $roleService->delete($role);
+            return to_route('role.index')->with('success', 'Role Deleted Success.');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 }

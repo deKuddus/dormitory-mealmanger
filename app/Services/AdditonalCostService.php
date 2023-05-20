@@ -88,6 +88,7 @@ class AdditonalCostService
     {
         try {
             return (float)AdditionalCost::query()
+                ->active()
                 ->where('dormitory_id', $dormitoryId)
                 ->whereMonth('created_at', now()->month)
                 ->whereYear('created_at', now()->year)

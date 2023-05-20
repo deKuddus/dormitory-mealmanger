@@ -3,86 +3,98 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RuleRequest;
-use App\Http\Resources\DormitoryCollection;
-use App\Http\Resources\RuleCollection;
 use App\Models\Rule;
-use App\Models\User;
-use Illuminate\Http\Request;
+use App\Services\RuleService;
+use Exception;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class RuleController extends Controller
 {
-    public function index()
+    public function index(RuleService $ruleService): Response|RedirectResponse
     {
         $this->authorize('showRule', Rule::class);
 
-        return Inertia::render('Rule/Index', [
-            'rules' => new RuleCollection(
-                Rule::query()
-                    ->orderBy('created_at', 'desc')
-                    ->paginate()
-            ),
-        ]);
+        try {
+            return Inertia::render('Rule/Index', [
+                'rules' => $ruleService->list()
+            ]);
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
-    public function create()
+    public function create(): Response|RedirectResponse
     {
         $this->authorize('createRule', Rule::class);
 
-        return Inertia::render('Rule/Create');
+        try {
+            return Inertia::render('Rule/Create');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
-    public function store(RuleRequest $request)
+    public function store(RuleRequest $request, RuleService $ruleService): RedirectResponse
     {
         $this->authorize('createRule', Rule::class);
 
-        Rule::create(
-            $request->validated()
-        );
-
-        return to_route('rule.index');
+        try {
+            $ruleService->store($request);
+            return to_route('rule.index');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
-    public function show(Rule $rule)
+    public function show(Rule $rule): Response|RedirectResponse
     {
-        return Inertia::render('Rule/Show', [
-            'rule' => $rule
-        ]);
+        try {
+            return Inertia::render('Rule/Show', [
+                'rule' => $rule
+            ]);
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
 
-    public function edit(Rule $rule)
-    {
-        $this->authorize('editRule', Rule::class);
-
-        return Inertia::render('Rule/Edit', [
-            'rule' => $rule,
-        ]);
-    }
-
-    public function update(RuleRequest $request, Rule $rule)
+    public function edit(Rule $rule): Response|RedirectResponse
     {
         $this->authorize('editRule', Rule::class);
 
-        $rule->update(
-            $request->validated()
-        );
-
-        return to_route('rule.index');
+        try {
+            return Inertia::render('Rule/Edit', [
+                'rule' => $rule,
+            ]);
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
-    public function destroy(Rule $rule)
+    public function update(RuleRequest $request, Rule $rule, RuleService $ruleService): RedirectResponse
+    {
+        $this->authorize('editRule', Rule::class);
+
+        try {
+            $ruleService->update($rule, $request);
+            return to_route('rule.index');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+    }
+
+    public function destroy(Rule $rule, RuleService $ruleService): RedirectResponse
     {
         $this->authorize('deleteRule', Rule::class);
 
-        $rule->delete();
-
-        return to_route('rule.index');
+        try {
+            $ruleService->delete($rule);
+            return to_route('rule.index');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
-    public function restore(Rule $rule)
-    {
-        $rule->restore();
-        return redirect()->back();
-    }
 }

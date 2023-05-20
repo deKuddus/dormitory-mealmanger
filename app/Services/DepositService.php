@@ -75,12 +75,12 @@ class DepositService
         }
     }
 
-    public function edit(Deposit $deposit)
+    public function edit(Deposit $deposit, UserService $userService)
     {
         try {
             return [
                 'deposit' => $deposit,
-                ...Helper::usersArray()
+                'users' => $userService->getUserAndDormitoryBasic()
             ];
         } catch (Exception $exception) {
             throw_if(true, $exception->getMessage());
@@ -145,6 +145,15 @@ class DepositService
 
             $user->decrement('deposit', $deposit->amount);
             $deposit->dormitory()->decrement('deposit', $deposit->amount);
+        } catch (Exception $exception) {
+            throw_if(true, $exception->getMessage());
+        }
+    }
+
+    public function totalDeposit(int $dormitoryId): float
+    {
+        try {
+            return Dormitory::query()->find($dormitoryId)->value('deposit');
         } catch (Exception $exception) {
             throw_if(true, $exception->getMessage());
         }

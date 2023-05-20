@@ -38,11 +38,11 @@ class ChefService
 
     }
 
-    public function edit(Chef $chef)
+    public function edit(Chef $chef, DormitoryService $dormitoryService)
     {
         try {
             return [
-                ...Helper::messArray(),
+               'dormitories' => $dormitoryService->getDormitoryBasic(),
                 'chef' => $chef,
             ];
         } catch (Exception $exception) {

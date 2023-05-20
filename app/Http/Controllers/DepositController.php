@@ -8,6 +8,7 @@ use App\Http\Requests\WithDrawRequest;
 use App\Models\Deposit;
 use App\Models\User;
 use App\Services\DepositService;
+use App\Services\UserService;
 use Exception;
 use Inertia\Inertia;
 
@@ -122,13 +123,13 @@ class DepositController extends Controller
         }
     }
 
-    public function create()
+    public function create(UserService $userService)
     {
         $this->authorize('createDeposit', Deposit::class);
 
         try {
             return Inertia::render('Deposit/Create', [
-                ...Helper::usersArray()
+                'users' => $userService->getUserAndDormitoryBasic()
             ]);
         } catch (Exception $exception) {
             return back()->with('error', $exception->getMessage());

@@ -20,7 +20,10 @@ use App\Models\Menu;
 use App\Models\Notice;
 use App\Models\Rule;
 use App\Models\User;
+use App\Services\AdditonalCostService;
+use App\Services\BazarService;
 use App\Services\MealService;
+use App\Services\UserService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -34,13 +37,14 @@ class HomeController extends Controller
         $month = now();
         $userId = auth()->id();
 
+        $totalFixedCost = (new AdditonalCostService())->getTotalCost($dormitoryId);
         $dromTotalMeal = (int)$mealService->dormTotalMeal($dormitoryId, $month);
         $totalMeal = $mealService->userTotalMeal($userId, $dormitoryId, $month);
-        $balance = $mealService->getUserTotalDeposit($userId, $dormitoryId);
-        $bazar = $mealService->getTotalBazar($month, $dormitoryId);
+        $balance = (new UserService())->getUser($userId, 'deposit');
+        $bazar = (new BazarService())->getBazarsListOrSum($dormitoryId, true);
         $mealCharge = $dromTotalMeal === 0 ? 0 : round($bazar / $dromTotalMeal, 2);
-        $totalUser = $mealService->getTotalUser($dormitoryId);
-        $fixedCost = $totalUser === 0 ? $mealService->getTotalAdditionalCost($month, $dormitoryId) : $mealService->getTotalAdditionalCost($month, $dormitoryId) / $totalUser;
+        $totalUser = (new UserService())->getBasicsOfUsers($dormitoryId, true);
+        $fixedCost = $totalUser === 0 ? $totalFixedCost : $totalFixedCost / $totalUser;
         return Inertia::render('Member/Index', [
             'mealCharge' => $mealCharge,
             'meals' => $mealService->getUserAllMealForSelectedMonthToCurrentDate($userId, $dormitoryId, $month),
@@ -130,7 +134,7 @@ class HomeController extends Controller
                 ->whereIn('id', $mealIds)
                 ->whereBetween('created_at', [now()->format('Y-m-d 09:00'), now()->lastOfMonth()->format('Y-m-d 09:00')])
                 ->each(function ($row) use ($dormitory, $status) {
-                   return $row->update([
+                    return $row->update([
                         'break_fast' => $dormitory->has_breakfast ? $status : 0,
                         'lunch' => Helper::isTodyaFridayOrSaturday($row->created_at) && $dormitory->has_lunch ? $status : 0,
                         'dinner' => $dormitory->has_dinner ? $status : 0,
@@ -148,7 +152,7 @@ class HomeController extends Controller
                 ]);
 
             Meal::query()
-            ->whereIn('id', $mealIds)
+                ->whereIn('id', $mealIds)
                 ->whereBetween('created_at', [now()->addDay()->format('Y-m-d 09:00'), now()->lastOfMonth()->format('Y-m-d 09:00')])
                 ->each(function ($row) use ($dormitory, $status) {
                     $row->update([
@@ -229,17 +233,17 @@ class HomeController extends Controller
                 ->first() ?? 0;
 
             $userTotalMeal = $meal ? $meal->total_meals : 0;
-            $bazar = $mealService->getTotalBazar($month, $dormitoryId);
+            $bazar = (new BazarService())->getBazarsListOrSum($dormitoryId, true);
             $totalMealOfMess = $mealService->getTotalMeal($dormitoryId, $month);
             $mealCost = $bazar === 0 ? 0 : ($userTotalMeal === 0 ? 0 : round($bazar / $totalMealOfMess, 2));
-            $additional = $mealService->getTotalAdditionalCost($month, $dormitoryId);
-            $member = $mealService->getTotalUser($dormitoryId);
-            $balance = $mealService->getUserTotalDeposit($user, $dormitoryId);
+            $additional = (new AdditonalCostService())->getTotalCost($dormitoryId);
+            $member = (new UserService())->getBasicsOfUsers($dormitoryId, true);
+            $balance = (new UserService())->getUser($user, 'deposit');
             $totalMealCost = $bazar === 0 ? 0 : round($mealCost * $userTotalMeal, 2);
             $fixedCost = $additional == 0 ? 0 : round($additional / $member, 2);
 
             return Inertia::render('Member/Meal/Show', [
-                'user' => $mealService->getUserWithMeal($user, $month, $dormitoryId),
+                'user' => (new UserService())->getUserWithMeal($user, $month, $dormitoryId),
                 'balance' => $balance,
                 'additional' => $additional,
                 'member' => $member,

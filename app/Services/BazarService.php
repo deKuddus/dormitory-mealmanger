@@ -102,7 +102,7 @@ class BazarService
         }
     }
 
-    public function getBazarsListOrCount(int $dormitoryId, bool $sum = false): float|Collection
+    public function getBazarsListOrSum(int $dormitoryId, bool $sum = false): float|Collection
     {
         try {
             $query = Bazar::query()

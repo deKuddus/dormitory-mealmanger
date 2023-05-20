@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\DormitoryIdStatic;
 use App\Http\Resources\DormitoryCollection;
 use App\Models\Dormitory;
 use Exception;
@@ -31,7 +32,7 @@ class DormitoryService
                 $request->validated()
             );
         } catch (Exception $exception) {
-            throw_if(true,$exception->getMessage());
+            throw_if(true, $exception->getMessage());
         }
     }
 
@@ -43,7 +44,7 @@ class DormitoryService
             );
             return $dormitory;
         } catch (Exception $exception) {
-            throw_if(true,$exception->getMessage());
+            throw_if(true, $exception->getMessage());
         }
     }
 
@@ -53,7 +54,25 @@ class DormitoryService
             $dormitory->delete();
             return $dormitory;
         } catch (Exception $exception) {
-            throw_if(true,$exception->getMessage());
+            throw_if(true, $exception->getMessage());
+        }
+    }
+
+    public function getDormitoryBasic(): array
+    {
+        try {
+            return Dormitory::get(['id', 'name'])->toArray();
+        } catch (Exception $exception) {
+            throw_if(true, $exception->getMessage());
+        }
+    }
+
+    public function getDormitoryInfo($domitoryId, $column): string|float
+    {
+        try {
+            return Dormitory::query()->whereId($domitoryId)->value($column);
+        } catch (Exception $exception) {
+            throw_if(true, $exception->getMessage());
         }
     }
 

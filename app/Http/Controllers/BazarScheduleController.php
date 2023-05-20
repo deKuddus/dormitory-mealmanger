@@ -6,6 +6,7 @@ use App\Helper\Helper;
 use App\Http\Requests\BazarScheduleRequest;
 use App\Models\BazarSchedule;
 use App\Services\ScheduleService;
+use App\Services\UserService;
 use Exception;
 use Inertia\Inertia;
 
@@ -20,11 +21,11 @@ class BazarScheduleController extends Controller
         }
     }
 
-    public function create()
+    public function create(UserService $userService)
     {
         try {
             return Inertia::render('BazarSchedule/Create', [
-                ...Helper::usersArray()
+               'users' => $userService->getUserAndDormitoryBasic()
             ]);
         } catch (Exception $exception) {
             return back()->with('error', $exception->getMessage());

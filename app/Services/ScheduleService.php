@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Helper\Helper;
 use App\Http\Resources\BazarScheduleCollection;
 use App\Http\Resources\BazarScheduleForBazarResource;
 use App\Models\BazarSchedule;
@@ -42,12 +41,12 @@ class ScheduleService
         }
     }
 
-    public function edit(BazarSchedule $bazarSchedule)
+    public function edit(BazarSchedule $bazarSchedule, UserService $userService)
     {
         try {
             return [
                 'bazarSchedule' => $bazarSchedule->load('users:id,display_name'),
-                ...Helper::usersArray()
+                'users' => $userService->getUserAndDormitoryBasic()
             ];
         } catch (Exception $exception) {
             throw_if(true, $exception->getMessage());
@@ -91,7 +90,7 @@ class ScheduleService
                 )
             ];
         } catch (Exception $exception) {
-            throw_if(true,$exception->getMessage());
+            throw_if(true, $exception->getMessage());
         }
     }
 }

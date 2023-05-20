@@ -7,7 +7,7 @@ import {APPROVED, APPROVED_TEXT, PENDING, PENDING_TEXT,} from "@/Shared/const/ad
 import FromPageLayout from "@/Shared/Layout/FromPageLayout";
 
 const Create = () => {
-    const {messes} = usePage().props;
+    const {dormitories} = usePage().props;
     const {data, setData, errors, post, processing} = useForm({
         amount: "",
         description: "",

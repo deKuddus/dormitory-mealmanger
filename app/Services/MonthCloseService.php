@@ -26,7 +26,7 @@ class MonthCloseService
 
             $dormitoryId = DormitoryIdStatic::DORMITORYID;
 
-            $bazar = $bazarService->getBazarsListOrCount($dormitoryId, true);
+            $bazar = $bazarService->getBazarsListOrSum($dormitoryId, true);
 
             $additional = $additionalCostService->getTotalCost($dormitoryId);
 
