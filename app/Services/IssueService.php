@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Http\Requests\StoreIssueRequest;
 use App\Http\Resources\IssueCollection;
 use App\Models\Issue;
 use Exception;
@@ -10,7 +11,7 @@ use Illuminate\Http\Request;
 class IssueService
 {
 
-    public function lists()
+    public function list()
     {
         try {
             return new IssueCollection(
@@ -21,7 +22,7 @@ class IssueService
         }
     }
 
-    public function store(Request $request)
+    public function store(StoreIssueRequest $request)
     {
         try {
             return Issue::query()->create($request->validated());

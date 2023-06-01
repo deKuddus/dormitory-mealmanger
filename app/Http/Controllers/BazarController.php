@@ -15,7 +15,9 @@ class BazarController extends Controller
     public function index(BazarService $bazarService)
     {
         try {
-            return Inertia::render('Bazar/Index', $bazarService->index());
+            return Inertia::render('Bazar/Index', [
+                'bazars' => $bazarService->list()
+            ]);
         } catch (Exception $exception) {
             return back()->with('error', $exception->getMessage());
         }
@@ -70,24 +72,23 @@ class BazarController extends Controller
         }
     }
 
-    public function destroy(Bazar $bazar,BazarService $bazarService)
+    public function destroy(Bazar $bazar, BazarService $bazarService)
     {
         try {
             $bazarService->delete($bazar);
             return to_route('bazar.index');
-        }catch (Exception $exception){
+        } catch (Exception $exception) {
             return back()->with('error', $exception->getMessage());
         }
     }
 
 
-    public function approveBazar(Request $request,BazarService $bazarService)
+    public function approveBazar(Request $request, BazarService $bazarService)
     {
-        try
-        {
+        try {
             $bazarService->approveBazar($request);
             return back()->with('success', 'Bazar approved and deposit decreases');
-        }catch (Exception $exception){
+        } catch (Exception $exception) {
             return back()->with('error', $exception->getMessage());
         }
     }

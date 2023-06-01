@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Member;
 use App\Enums\DormitoryIdStatic;
 use App\Enums\NoticeStatus;
 use App\Enums\RuleStatus;
-use App\Helper\Helper;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\QuickMealOnOFFRequest;
 use App\Http\Requests\UserDepositCreateRequest;
 use App\Http\Requests\UserMealUpdateRequest;
 use App\Http\Requests\UserProfileUpdateRequest;
@@ -19,26 +19,30 @@ use App\Models\Meal;
 use App\Models\Menu;
 use App\Models\Notice;
 use App\Models\Rule;
-use App\Models\User;
 use App\Services\AdditonalCostService;
 use App\Services\BazarService;
+use App\Services\CalculationService;
+use App\Services\DepositService;
 use App\Services\MealService;
 use App\Services\UserService;
 use Carbon\Carbon;
+use Exception;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class HomeController extends Controller
 {
-    public function index(MealService $mealService)
+    public function index(MealService $mealService, CalculationService $calculationService)
     {
         $dormitoryId = DormitoryIdStatic::DORMITORYID;
         $month = now();
         $userId = auth()->id();
 
         $totalFixedCost = (new AdditonalCostService())->getTotalCost($dormitoryId);
-        $dromTotalMeal = (int)$mealService->dormTotalMeal($dormitoryId, $month);
+        $dromTotalMeal = $mealService->dormTotalMeal($dormitoryId, $month);
         $totalMeal = $mealService->userTotalMeal($userId, $dormitoryId, $month);
         $balance = (new UserService())->getUser($userId, 'deposit');
         $bazar = (new BazarService())->getBazarsListOrSum($dormitoryId, true);
@@ -49,153 +53,26 @@ class HomeController extends Controller
             'mealCharge' => $mealCharge,
             'meals' => $mealService->getUserAllMealForSelectedMonthToCurrentDate($userId, $dormitoryId, $month),
             'fixedCost' => $fixedCost,
-            'due' => $this->getDue($totalMeal, $balance, $fixedCost, $mealCharge),
+            'due' => $calculationService->getDue($totalMeal, $balance, $fixedCost, $mealCharge),
             'totalMeal' => $totalMeal,
             'totalCost' => $totalMeal === 0 ? 0 : round($totalMeal * $mealCharge, 2),
             'todaysMeal' => $mealService->getTodaysLunchAndDinner()
         ]);
     }
 
-    private function getDue($totalMeal, $balance, $fixedCost, $mealCharge)
+
+    public function quickMealOnOff(QuickMealOnOFFRequest $request, MealService $mealService): RedirectResponse
     {
-        if ($totalMeal === 0) {
-            if ($balance === 0 && $fixedCost === 0) {
-                return 0;
-            } else if ($balance === 0 && $fixedCost > 0) {
-                return $fixedCost;
-            } else if ($balance > 0 && $fixedCost > 0) {
-                return $balance < $fixedCost ? $balance - $fixedCost : 0;
-            }
-        } else {
-            $cost = ($mealCharge * $totalMeal) + $fixedCost;
 
-            if ($balance === 0 && $cost > 0) {
-                return $cost;
-            } else if ($balance > 0 && $cost > 0) {
-                return $balance < $cost ? $balance - $cost : 0;
-            }
+        try {
+            $userId = auth()->id();
+
+            $status = $mealService->quickMealOnOff($userId, $request);
+
+            return back()->with('success', $status ? 'Meal on from today to end of month' : 'Meal off from today to end of month');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
         }
-        return 0;
-    }
-
-
-    public function updateMealStatus(Request $request)
-    {
-        $request->validate([
-            'user_id' => 'required|numeric',
-            'status' => 'required|boolean',
-        ]);
-
-        $userId = auth()->user()->id;
-
-
-        $status = $request->input('status') ? 1 : 0;
-
-        $dormitory = Dormitory::with(['users' => function ($query) use ($userId) {
-            $query->whereId($userId);
-        }])->first();
-
-
-        $lunchOffStrToTime = strtotime($dormitory->lunch_close);
-        $dinnerOffStrToTime = strtotime($dormitory->dinner_close);
-
-        $lunchOff = Carbon::parse(date('Y-m-d H:i', $lunchOffStrToTime))->format('Y-m-d H:i');
-        $dinnerOff = Carbon::parse(date('Y-m-d H:i', $dinnerOffStrToTime))->format('Y-m-d H:i');
-
-
-        $startOfMonth = now()->format('Y-m-d');
-        $lastOfMonth = now()->lastOfMonth()->addDay()->format('Y-m-d');
-
-
-        $mealIds = Meal::query()
-            ->unlocked()
-            ->whereUserId($userId)
-            ->whereBetween('created_at', [$startOfMonth, $lastOfMonth])
-            ->pluck('id')
-            ->toArray();
-
-        if (now()->gte($lunchOff) && now()->gte($dinnerOff)) {
-            Meal::query()
-                ->unlocked()
-                ->whereIn('id', $mealIds)
-                ->whereBetween('created_at', [now()->addDay()->format('Y-m-d 09:00'), now()->lastOfMonth()->format('Y-m-d 09:00')])
-                ->each(function ($row) use ($dormitory, $status) {
-                    return $row->update([
-                        'break_fast' => $dormitory->has_breakfast ? $status : 0,
-                        'lunch' => Helper::isTodyaFridayOrSaturday($row->created_at) && $dormitory->has_lunch ? $status : 0,
-                        'dinner' => $dormitory->has_dinner ? $status : 0,
-                    ]);
-                });
-        }
-
-        if (!now()->gte($lunchOff) && now()->gte($dinnerOff)) {
-            Meal::query()
-                ->unlocked()
-                ->whereIn('id', $mealIds)
-                ->whereBetween('created_at', [now()->format('Y-m-d 09:00'), now()->lastOfMonth()->format('Y-m-d 09:00')])
-                ->each(function ($row) use ($dormitory, $status) {
-                    return $row->update([
-                        'break_fast' => $dormitory->has_breakfast ? $status : 0,
-                        'lunch' => Helper::isTodyaFridayOrSaturday($row->created_at) && $dormitory->has_lunch ? $status : 0,
-                        'dinner' => $dormitory->has_dinner ? $status : 0,
-                    ]);
-                });
-        }
-
-        if (now()->gte($lunchOff) && !now()->gte($dinnerOff)) {
-            Meal::query()
-                ->whereIn('id', $mealIds)
-                ->unlocked()
-                ->whereDate('created_at', now()->format('Y-m-d'))
-                ->update([
-                    'dinner' => $dormitory->has_dinner ? $status : 0,
-                ]);
-
-            Meal::query()
-                ->whereIn('id', $mealIds)
-                ->whereBetween('created_at', [now()->addDay()->format('Y-m-d 09:00'), now()->lastOfMonth()->format('Y-m-d 09:00')])
-                ->each(function ($row) use ($dormitory, $status) {
-                    $row->update([
-                        'break_fast' => $dormitory->has_breakfast ? $status : 0,
-                        'lunch' => Helper::isTodyaFridayOrSaturday($row->created_at) && $dormitory->has_lunch ? $status : 0,
-                        'dinner' => $dormitory->has_dinner ? $status : 0,
-                    ]);
-                });
-        }
-
-        User::whereId($userId)->update(['meal_status' => $status]);
-
-        return back()->with('success', $status ? 'Meal on from today to end of month' : 'Meal off from today to end of month');
-    }
-
-    public function deposits()
-    {
-        $dormitoryId = DormitoryIdStatic::DORMITORYID;
-        return Inertia::render('Member/Deposit/Index', [
-            'deposits' => Deposit::whereUserId(auth()->id())
-                ->whereDormitoryId($dormitoryId)
-                ->orderBy('created_at', 'desc')
-                ->paginate()
-        ]);
-    }
-
-    public function createDeposit()
-    {
-        return Inertia::render('Member/Deposit/Create');
-    }
-
-    public function storeDeposit(UserDepositCreateRequest $request)
-    {
-        $data = $request->validated();
-
-        $dormitory = Dormitory::find($data['dormitory_id']);
-
-        if ($data['amount'] > $dormitory->max_deposit_limit) {
-            return back()->with('error', 'Max deposit limit ' . $dormitory->max_deposit_limit . ' BDT');
-        }
-
-        Deposit::create($request->validated());
-        return to_route('user.deposits.index');
     }
 
     public function editProfile()
@@ -254,7 +131,7 @@ class HomeController extends Controller
                 'fixedCost' => $fixedCost,
                 'due' => ($fixedCost + $totalMealCost) > $balance ? round(($fixedCost + $totalMealCost) - $balance, 2) : 0
             ]);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             return redirect()->back()->with('errors', $exception->getMessage());
         }
     }

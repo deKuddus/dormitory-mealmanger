@@ -18,7 +18,7 @@ class IssueController extends Controller
     {
         try {
             return Inertia::render('Issue/Index', [
-                'issues' => $issueService->lists()
+                'issues' => $issueService->list()
             ]);
         } catch (Exception $exception) {
             return back()->with('error', $exception->getMessage());

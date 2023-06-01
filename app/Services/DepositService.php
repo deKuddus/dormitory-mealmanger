@@ -158,4 +158,16 @@ class DepositService
             throw_if(true, $exception->getMessage());
         }
     }
+
+    public function userDeposits(int $userId,$dormitoryId)
+    {
+        try {
+            return Deposit::whereUserId($userId)
+                ->whereDormitoryId($dormitoryId)
+                ->orderBy('created_at', 'desc')
+                ->paginate();
+        }catch (Exception $exception) {
+            throw_if(true, $exception->getMessage());
+        }
+    }
 }

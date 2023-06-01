@@ -11,20 +11,18 @@ use Illuminate\Support\Collection;
 
 class BazarService
 {
-    public function index()
+    public function list():BazarCollection
     {
         try {
-            return [
-                'bazars' => new BazarCollection(
-                    Bazar::query()
-                        ->with('bazarSchedule', function ($q) {
-                            $q->select('id')->with('users:id,full_name,display_name');
-                        })
-                        ->orderBy('created_at', 'desc')
-                        ->orderBy('id', 'desc')
-                        ->paginate()
-                ),
-            ];
+           return new BazarCollection(
+               Bazar::query()
+                   ->with('bazarSchedule', function ($q) {
+                       $q->select('id')->with('users:id,full_name,display_name');
+                   })
+                   ->orderBy('created_at', 'desc')
+                   ->orderBy('id', 'desc')
+                   ->paginate()
+           );
         } catch (Exception $exception) {
             throw_if(true,$exception->getMessage());
         }
