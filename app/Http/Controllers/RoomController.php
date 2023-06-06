@@ -2,87 +2,97 @@
 
 namespace App\Http\Controllers;
 
-use App\Helper\Helper;
 use App\Http\Requests\RoomRequest;
-use App\Http\Resources\RoomCollection;
 use App\Models\Room;
-use App\Models\User;
-use Illuminate\Http\Request;
+use App\Services\RoomService;
+use Exception;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class RoomController extends Controller
 {
-    public function index()
+    public function index(RoomService $roomService): Response|RedirectResponse
     {
-        $this->authorize('showRoom',Room::class);
+        $this->authorize('showRoom', Room::class);
 
-        return Inertia::render('Room/Index', [
-            'rooms' => new RoomCollection(
-                Room::query()
-                    ->orderBy('created_at', 'desc')
-                    ->paginate()
-                    ->appends(request()->all())
-            ),
-        ]);
+        try {
+            return Inertia::render('Room/Index', [
+                'rooms' => $roomService->list()
+            ]);
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
-    public function create()
+    public function store(RoomRequest $request, RoomService $roomService): RedirectResponse
     {
-        $this->authorize('createRoom',Room::class);
+        $this->authorize('createRoom', Room::class);
 
-
-        return Inertia::render('Room/Create');
-    }
-
-    public function store(RoomRequest $request)
-    {
-        $this->authorize('createRoom',Room::class);
-
-        Room::create(
-            $request->validated()
-        );
-
-        return to_route('room.index');
-    }
-
-    public function show($id)
-    {
+        try {
+            $roomService->store($request);
+            return to_route('room.index');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
 
     }
 
-
-    public function edit(Room $room)
+    public function create(): Response|RedirectResponse
     {
-        $this->authorize('editRoom',Room::class);
-
-        return Inertia::render('Room/Edit',[
-            'room' => $room
-        ]);
+        $this->authorize('createRoom', Room::class);
+        try {
+            return Inertia::render('Room/Create');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
-    public function update(RoomRequest $request, Room $room)
+    public function show($id): RedirectResponse
     {
-        $this->authorize('editRoom',Room::class);
-
-        $room->update(
-            $request->validated()
-        );
-
-        return to_route('room.index');
+        try {
+            return back();
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
-    public function destroy(Room $room)
+
+    public function edit(Room $room): Response|RedirectResponse
     {
-        $this->authorize('deleteRoom',Room::class);
+        $this->authorize('editRoom', Room::class);
 
-        $room->delete();
-
-        return to_route('room.index');
+        try {
+            return Inertia::render('Room/Edit', [
+                'room' => $room
+            ]);
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
-    public function restore(Room $room)
+    public function update(RoomRequest $request, Room $room, RoomService $roomService): Response|RedirectResponse
     {
-        $room->restore();
-        return redirect()->back();
+        $this->authorize('editRoom', Room::class);
+
+        try {
+            $roomService->update($room, $request);
+            return to_route('room.index');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+    }
+
+    public function destroy(Room $room, RoomService $roomService): RedirectResponse
+    {
+        $this->authorize('deleteRoom', Room::class);
+
+        try {
+            $roomService->delete($room);
+            return to_route('room.index');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Enums\DormitoryInfoStatic;
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -38,7 +39,7 @@ class MemberMealShowResource extends JsonResource
         if ($this->isPast($this->created_at)) {
             return false;
         } else if (Carbon::parse($this->created_at)->isToday()) {
-            if (now()->gte($lunchOff) && now()->gte($dinnerOff)) {
+            if ((new DormitoryInfoStatic())->getMonth()->gte($lunchOff) && (new DormitoryInfoStatic())->getMonth()->gte($dinnerOff)) {
                 return false;
             }
             return true;
@@ -50,7 +51,7 @@ class MemberMealShowResource extends JsonResource
     private function isPast($date)
     {
 
-        return strtotime(Carbon::parse($date)->endOfDay()->format('Y-m-d H:i:s')) < strtotime(now()->format('Y-m-d H:i:s'));
+        return strtotime(Carbon::parse($date)->endOfDay()->format('Y-m-d H:i:s')) < strtotime((new DormitoryInfoStatic())->getMonth()->format('Y-m-d H:i:s'));
 
     }
 }

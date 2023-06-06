@@ -2,97 +2,97 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\NoticeStatus;
-use App\Events\SendNoticeNotificationEvent;
 use App\Http\Requests\NoticeCreateRequest;
-use App\Http\Resources\NoticeCollection;
 use App\Models\Notice;
+use App\Services\NoticeService;
+use Exception;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Inertia\Response;
+use Mockery\Matcher\Not;
 
 class NoticeController extends Controller
 {
-    public function index()
+    public function index(NoticeService $noticeService): Response
     {
         $this->authorize('showNotice', Notice::class);
 
         return Inertia::render('Notice/Index', [
-            'notices' => new NoticeCollection(
-                Notice::query()
-                    ->orderBy('created_at', 'desc')
-                    ->paginate()
-                    ->appends(request()->all())
-            ),
+            'notices' => $noticeService->lists(),
         ]);
     }
 
-    public function store(NoticeCreateRequest $request)
+    public function store(NoticeCreateRequest $request, NoticeService $noticeService):RedirectResponse
     {
         $this->authorize('showNotice', Notice::class);
-
-
-        $notice = Notice::create(
-            $request->validated()
-        );
-
-        if ($notice->status == NoticeStatus::ACTIVE) {
-            event(new SendNoticeNotificationEvent($notice));
+        try {
+            $noticeService->store($request);
+            return to_route('notice.index');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
         }
-
-
-        return to_route('notice.index');
     }
 
-    public function create()
+    public function create() :Response | RedirectResponse
     {
         $this->authorize('createNotice', Notice::class);
 
-        return Inertia::render('Notice/Create');
-    }
-
-    public function show(Notice $notice,Request $request)
-    {
-        if($request->has('nid') && !blank($request->get('nid'))){
-            auth()->user()->unreadNotifications->where('id', $request->get('nid'))->markAsRead();
+        try {
+            return Inertia::render('Notice/Create');
+        }catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
         }
-        return Inertia::render('Notice/Show', [
-            'notice' => $notice
-        ]);
+    }
+
+    public function show(Notice $notice, Request $request,NoticeService $noticeService):Response | RedirectResponse
+    {
+        try {
+            return Inertia::render('Notice/Show', [
+                'notice' => $noticeService->show($notice,$request)
+            ]);
+        }catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
 
-    public function edit(Notice $notice)
+    public function edit(Notice $notice) :Response | RedirectResponse
     {
         $this->authorize('editNotice', Notice::class);
 
-        return Inertia::render('Notice/Edit', [
-            'notice' => $notice,
-        ]);
+        try {
+            return Inertia::render('Notice/Edit', [
+                'notice' => $notice,
+            ]);
+        }catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
-    public function update(NoticeCreateRequest $request, Notice $notice)
+    public function update(NoticeCreateRequest $request, Notice $notice,NoticeService $noticeService)
     {
         $this->authorize('editNotice', Notice::class);
 
-        $notice->update(
-            $request->validated()
-        );
+        try {
+            $noticeService->update($notice, $request);
+            return to_route('notice.index');
+        }catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
 
-        return to_route('notice.index');
     }
 
-    public function destroy(Notice $notice)
+    public function destroy(Notice $notice , NoticeService $noticeService)
     {
         $this->authorize('deleteNotice', Notice::class);
 
-        $notice->delete();
+        try {
+            $noticeService->delete($notice);
 
-        return to_route('notice.index');
-    }
-
-    public function restore(Notice $notice)
-    {
-        $notice->restore();
-        return redirect()->back();
+            return to_route('notice.index');
+        }catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 }

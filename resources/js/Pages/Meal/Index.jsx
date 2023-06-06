@@ -19,13 +19,14 @@ const Index = () => {
     const dateOptions = currentYearMontList();
 
     const handleDateChange = (value) => {
-        // if(value){
-        //    return router.get(route('meals.show',user.id), {month:value}, {
-        //         replace: true,
-        //         preserveState: true,
-        //     });
-        //
-        // }
+        console.log(value)
+        if(value){
+           return router.get(route('meals.index'), {month:value}, {
+                replace: true,
+                preserveState: true,
+            });
+
+        }
     };
 
     const addMealForTheUser = (userId) => {
@@ -122,7 +123,7 @@ const Index = () => {
                     (
                         {
                             id,
-                            full_name,
+                            display_name,
                             meals,
                             status,
                             email,
@@ -134,7 +135,7 @@ const Index = () => {
                                 key={id}
                             >
                                 <TableData value={key + 1}/>
-                                <TableData value={full_name}/>
+                                <TableData value={display_name}/>
 
                                 <TableData value={
                                     status === 1

@@ -2,16 +2,11 @@
 
 namespace App\Http\Middleware;
 
-use App\Enums\DormitoryIdStatic;
 use App\Helper\Helper;
-use App\Models\Deposit;
-use App\Models\Dormitory;
-use App\Models\User;
-use Illuminate\Http\Request;
-use Inertia\Middleware;
 use App\Http\Resources\UserResource;
-
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -45,26 +40,20 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         return array_merge(parent::share($request), [
-            'auth' => function () {
-                return [
-                    'user' => Auth::check() ? new UserResource(Auth::user()) : null
-                ];
-            },
-            'flash' => function () use ($request) {
-                return [
-                    'success' => $request->session()->pull('success'),
-                    'error' => $request->session()->pull('error'),
-                    'registration_success' => $request->session()->get('registration_success')
-                ];
-            },
+            'auth' => [
+                'user' => Helper::getLoggedInUser()
+            ],
+            'flash' => [
+                'success' => $request->session()->pull('success') ?? null,
+                'error' => $request->session()->pull('error') ?? null,
+                'registration_success' => $request->session()->get('registration_success')  ?? null
+            ],
             'notification' => Helper::getUserUnreadNotification(),
-            'user_permissions' =>  Helper::getUserPermission(),
+            'user_permissions' => Helper::getUserPermission(),
             'app_url' => env('APP_URL'),
             'routePrefix' => $request->route()->getPrefix(),
-            'dormitory_deposit' => Auth::check() ? auth()->user()->isAdmin() ?
-                Dormitory::query()->whereId(DormitoryIdStatic::DORMITORYID)->value('deposit')
-                : 0 : 0,
-            'member_deposit' => \auth()->check() ? \auth()->user()->deposit : 0
+            'dormitory_deposit' => Helper::getDormitoryDeposit(),
+            'member_deposit' => Helper::getUserDeposit()
         ]);
     }
 }

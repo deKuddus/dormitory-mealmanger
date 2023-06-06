@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\DormitoryIdStatic;
+use App\Enums\DormitoryInfoStatic;
 use App\Services\MealService;
 use App\Trait\Stats;
 use Inertia\Inertia;
@@ -13,8 +13,8 @@ class DashboardController extends Controller
 
     public function __invoke(MealService $mealService)
     {
-        $dormitoryId = DormitoryIdStatic::DORMITORYID;
-        $month = now();
+        $dormitoryId = DormitoryInfoStatic::DORMITORYID;
+        $month = (new DormitoryInfoStatic())->getMonth();
 
         $data = [
             'users' => $this->getUsersByStatus($dormitoryId),

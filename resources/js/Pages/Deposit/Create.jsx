@@ -45,7 +45,7 @@ const Create = () => {
                             key={user.id}
                             value={user.id}
                         >
-                            {user.full_name}
+                            {user.display_name}
                         </option>
                     ))}
             </SelectInput>

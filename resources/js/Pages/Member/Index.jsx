@@ -11,6 +11,7 @@ import TableAction from "@/Shared/TableAction";
 
 const Index = () => {
     const {
+        member_deposit,
         auth,
         meals,
         mealCharge,
@@ -58,6 +59,18 @@ const Index = () => {
         setOpen(false);
         setMealData(mealEditInitialObject);
     };
+
+    const handleAvailableBalance = () => {
+        if (member_deposit <= 0) {
+            return 0;
+        }
+
+        let balance = parseFloat(member_deposit - totalCost, 2);
+        if (balance > 0) {
+            return balance;
+        }
+        return 0;
+    }
 
     return (
         <>
@@ -148,13 +161,13 @@ const Index = () => {
                             bgName="bg-gradient-to-tl from-green-400  from-20% to-blue-500 to-80% text-white"
                             iconClass="text-success"
                         />
-                        {/*<Card*/}
-                        {/*    value={`${fixedCost} BDT`}*/}
-                        {/*    text="Fixed Cost "*/}
-                        {/*    icon={'FaMoneyBillWaveAlt'}*/}
-                        {/*    bgName="bg-gradient-to-br from-green-500 via-blue-500 to-purple-500 text-white"*/}
-                        {/*    iconClass="text-success"*/}
-                        {/*/>*/}
+                        <Card
+                            value={`${handleAvailableBalance()} BDT`}
+                            text="Available Balance"
+                            icon={'FaMoneyBillWaveAlt'}
+                            bgName="bg-gradient-to-br from-green-500 via-blue-500 to-purple-500 text-white"
+                            iconClass="text-success"
+                        />
                         <Card
                             value={`${due} BDT`}
                             text="My Due"

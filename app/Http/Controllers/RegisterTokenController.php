@@ -2,49 +2,50 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\RegisterTokenCollection;
+use App\Http\Requests\RegisterTokenDeleteRequest;
 use App\Models\RegisterToken;
-use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use App\Services\RegisterTokenService;
+use Exception;
+use Illuminate\Http\RedirectResponse;
+use Inertia\Response;
 
 class RegisterTokenController extends Controller
 {
-    public function index()
+    public function index(RegisterToken $registerToken): Response|RedirectResponse
     {
         $this->authorize('showToken', RegisterToken::class);
 
-        return inertia('RegisterToken', [
-            'tokens' => new RegisterTokenCollection(
-                RegisterToken::query()
-                    ->orderBy('created_at', 'desc')
-                    ->paginate(10)
-            )
-        ]);
+        try {
+            return inertia('RegisterToken', [
+                'tokens' => $registerToken->list()
+            ]);
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
-    public function create()
+    public function create(RegisterTokenService $registerTokenService)
     {
         $this->authorize('createToken', RegisterToken::class);
 
-        $uuid = Str::uuid();
-        if (!RegisterToken::query()->where('uuid', $uuid)->exists()) {
-            RegisterToken::query()->create([
-                'uuid' => $uuid,
-                'expire_at' => now()->addDay()
-            ]);
-        } else {
-            self::create();
+        try {
+            $registerTokenService->generateNewToken();
+            return back()->with('success', 'New Token Created');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
         }
-        return back()->with('success', 'New Token Created');
     }
 
-    public function destroy(Request $request)
+    public function destroy(RegisterTokenDeleteRequest $request, RegisterTokenService $registerTokenService)
     {
         $this->authorize('deleteToken', RegisterToken::class);
 
-        $request->validate(['id' => 'required']);
-        RegisterToken::query()->whereId($request->id)->delete();
-        return back()->with('success', 'Token Delete');
+        try {
+            $registerTokenService->delete($request);
+            return back()->with('success', 'Token Delete');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+
     }
 }

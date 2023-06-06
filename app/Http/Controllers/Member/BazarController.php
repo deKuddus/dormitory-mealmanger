@@ -4,44 +4,40 @@ namespace App\Http\Controllers\Member;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BazarRequest;
-use App\Http\Resources\BazarCollection;
-use App\Http\Resources\BazarScheduleForBazarResource;
-use App\Models\Bazar;
-use App\Models\BazarSchedule;
-use Illuminate\Http\Request;
+use App\Services\BazarService;
+use App\Services\ScheduleService;
+use Exception;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class BazarController extends Controller
 {
-    public function index()
+    public function index(\App\Services\BazarService $bazarService): Response
     {
         return Inertia::render('Member/Bazar/Index', [
-            'bazars' => new BazarCollection(
-                Bazar::query()
-                    ->with('bazarSchedule', function ($q) {
-                        $q->select('id')->with('users:id,full_name');
-                    })
-                    ->orderBy('created_at', 'desc')
-                    ->paginate()
-            ),
+            'bazars' => $bazarService->list(),
         ]);
     }
 
-    public function create()
+    public function create(ScheduleService $scheduleService): Response|RedirectResponse
     {
-        return Inertia::render('Member/Bazar/Create', [
-            'schedules' => BazarScheduleForBazarResource::collection(BazarSchedule::query()->with('users:id,display_name')->get('id'))
-        ]);
+        try {
+            return Inertia::render('Member/Bazar/Create', [
+                'schedules' => $scheduleService->prepareBazarSchedule()
+            ]);
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
-    public function store(BazarRequest $request)
+    public function store(BazarRequest $request, BazarService $bazarService): RedirectResponse
     {
-        $bazar = Bazar::create(
-            $request->validated()
-        );
-
-        $bazar->dormitory()->decrement('deposit', $bazar->amount);
-
-        return to_route('user.bazar.index');
+        try {
+            $bazarService->store($request);
+            return to_route('user.bazar.index');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 }

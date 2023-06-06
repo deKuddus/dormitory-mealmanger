@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\DormitoryIdStatic;
+use App\Enums\DormitoryInfoStatic;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AdditionalCostRequest extends FormRequest
@@ -35,7 +35,7 @@ class AdditionalCostRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'dormitory_id' => DormitoryIdStatic::DORMITORYID,
+            'dormitory_id' => DormitoryInfoStatic::DORMITORYID,
             'status' => (int)$this->status
         ]);
     }

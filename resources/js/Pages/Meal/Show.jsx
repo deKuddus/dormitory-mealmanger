@@ -24,6 +24,7 @@ const Index = () => {
         totalMeal,
         user_permissions,
     } = usePage().props;
+
     const [currentMonth, setCurrentMonth] = useState(
         moment().format("MMMM-YYYY")
     );
@@ -41,8 +42,11 @@ const Index = () => {
 
     const dateOptions = currentYearMontList();
 
+
     const handleDateChange = (value) => {
+
         if (value) {
+
             return router.get(
                 route("meals.show", user.id),
                 {month: value},

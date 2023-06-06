@@ -154,7 +154,7 @@ const Index = () => {
 };
 const BazarScheduleUSer = ({users}) => {
     return (
-        <p className="flex items-center px-6 py-4 text-center ">
+        <span className="flex items-center px-6 py-4 text-center ">
             {users && users.length > 0
                 ? users.map(({full_name}, index) => (
                     <span
@@ -163,7 +163,7 @@ const BazarScheduleUSer = ({users}) => {
                     >{full_name}</span>
                 ))
                 : "N/A"}
-        </p>
+        </span>
     );
 };
 

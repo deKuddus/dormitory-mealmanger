@@ -2,128 +2,94 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\BazarStatus;
 use App\Http\Requests\BazarRequest;
-use App\Http\Resources\BazarCollection;
-use App\Http\Resources\BazarScheduleForBazarResource;
 use App\Models\Bazar;
-use App\Models\BazarSchedule;
+use App\Services\BazarService;
+use App\Services\ScheduleService;
+use Exception;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class BazarController extends Controller
 {
-    public function index()
+    public function index(BazarService $bazarService)
     {
-        $requestParam = \request()->all('search', 'trashed');
-        return Inertia::render('Bazar/Index', [
-            'bazars' => new BazarCollection(
-                Bazar::query()
-                    ->with('bazarSchedule', function ($q) {
-                        $q->select('id')->with('users:id,full_name,display_name');
-                    })
-                    ->orderBy('created_at', 'desc')
-                    ->orderBy('id', 'desc')
-                    ->paginate()
-            ),
-        ]);
+        try {
+            return Inertia::render('Bazar/Index', [
+                'bazars' => $bazarService->list()
+            ]);
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
-    public function create()
+    public function create(ScheduleService $scheduleService)
     {
-        return Inertia::render('Bazar/Create', [
-            'bazarScheduler' => BazarScheduleForBazarResource::collection(
-                BazarSchedule::query()
-                    ->whereStatus(0)
-                    ->with('users:id,display_name')
-                    ->get()
-            )
-        ]);
+        try {
+            return Inertia::render('Bazar/Create', $scheduleService->prepareBazarSchedule());
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
-    public function store(BazarRequest $request)
+    public function store(BazarRequest $request, BazarService $bazarService)
     {
-        $bazar = Bazar::create(
-            $request->validated()
-        );
-
-        $bazar->dormitory()->decrement('deposit', $bazar->amount);
-
-        return to_route('bazar.index');
+        try {
+            $bazarService->store($request);
+            return to_route('bazar.index');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
     public function show($id)
     {
+        return back(301);
 
     }
 
 
-    public function edit(Bazar $bazar)
+    public function edit(Bazar $bazar, ScheduleService $scheduleService)
     {
-        return Inertia::render('Bazar/Edit', [
-            'bazar' => $bazar,
-            'bazarScheduler' => BazarScheduleForBazarResource::collection(
-                BazarSchedule::query()
-                    ->whereStatus(0)
-                    ->with('users:id,display_name')
-                    ->get()
-            )
-        ]);
-    }
-
-    public function update(BazarRequest $request, Bazar $bazar)
-    {
-
-        if ($bazar->status === BazarStatus::APPROVED && $request->status === BazarStatus::APPROVED) {
-            if ($bazar->amount !== $request->amount) {
-                $bazar->dormitory()->increment('deposit', $bazar->amount);
-                $bazar->dormitory()->decrement('deposit', $request->amount);
-            }
+        try {
+            return Inertia::render('Bazar/Edit', [
+                'bazar' => $bazar,
+                $scheduleService->prepareBazarSchedule()
+            ]);
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
         }
+    }
 
-        if ($bazar->status === BazarStatus::APPROVED && $request->status === BazarStatus::PENDING) {
-            if ($bazar->amount !== $request->amount) {
-                $bazar->dormitory()->increment('deposit', $bazar->amount);
-            }
+    public function update(BazarRequest $request, Bazar $bazar, BazarService $bazarService)
+    {
+
+        try {
+            $bazarService->update($bazar, $request);
+            return to_route('bazar.index');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
         }
+    }
 
-        if ($bazar->status === BazarStatus::PENDING && $request->status === BazarStatus::APPROVED) {
-            if ($bazar->amount !== $request->amount) {
-                $bazar->dormitory()->decrement('deposit', $request->amount);
-            }
+    public function destroy(Bazar $bazar, BazarService $bazarService)
+    {
+        try {
+            $bazarService->delete($bazar);
+            return to_route('bazar.index');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
         }
-
-        $bazar->update(
-            $request->validated()
-        );
-
-        return to_route('bazar.index');
-    }
-
-    public function destroy(Bazar $bazar)
-    {
-        $bazar->dormitory()->increment('deposit',$bazar->amount);
-
-        $bazar->delete();
-
-        return to_route('bazar.index');
-    }
-
-    public function restore(Bazar $bazar)
-    {
-        $bazar->restore();
-        return redirect()->back();
     }
 
 
-    public function approveBazar(Request $request)
+    public function approveBazar(Request $request, BazarService $bazarService)
     {
-        $request->validate(['id' => 'required']);
-
-        $bazar = Bazar::find($request->id);
-        $bazar->status = 1;
-        $bazar->save();
-        $bazar->dormitory()->decrement('deposit', $bazar->amount);
-        return back()->with('success', 'Bazar approved and deposit decreases');
+        try {
+            $bazarService->approveBazar($request);
+            return back()->with('success', 'Bazar approved and deposit decreases');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 }

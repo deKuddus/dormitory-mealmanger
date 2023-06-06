@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\DormitoryIdStatic;
+use App\Enums\DormitoryInfoStatic;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -53,7 +53,7 @@ class UserUpdateRequest extends FormRequest
     public function prepareForValidation()
     {
         return $this->merge([
-            'dormitory_id' => DormitoryIdStatic::DORMITORYID,
+            'dormitory_id' => DormitoryInfoStatic::DORMITORYID,
             'password' => auth()->user()->can('access::password-change') ? $this->input('password') : null
         ]);
     }

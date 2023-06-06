@@ -3,83 +3,88 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\DormitoryCreateRequest;
-use App\Http\Resources\DormitoryCollection;
 use App\Models\Dormitory;
-use App\Models\User;
-use Illuminate\Http\Request;
+use App\Services\DepositService;
+use App\Services\DormitoryService;
+use App\Services\UserService;
+use Exception;
 use Inertia\Inertia;
 
 class DormitoryController extends Controller
 {
-    public function index()
+    public function index(DepositService $depositService)
     {
-        $requestParam = \request()->all('search', 'trashed');
-        return Inertia::render('Dormitory/Index', [
-            'filters' => $requestParam,
-            'messes' => new DormitoryCollection(
-                Dormitory::query()
-                    ->orderBy('created_at', 'desc')
-                    ->filter($requestParam)
-                    ->paginate()
-                    ->appends(request()->all())
-            ),
-        ]);
+        try {
+            $depositService->index();
+            return Inertia::render('Dormitory/Index', $depositService->index());
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
-    public function create()
+    public function create(UserService $userService)
     {
         return back();
-        return Inertia::render('Dormitory/Create', [
-            'users' => User::get(['id', 'full_name'])->toArray(),
-        ]);
+        try {
+            return Inertia::render('Dormitory/Create', [
+                'users' => $userService->getUserBasics()
+            ]);
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+
     }
 
-    public function store(DormitoryCreateRequest $request)
+    public function store(DormitoryCreateRequest $request, DormitoryService $dormitoryService)
     {
         return back();
 
-        Dormitory::create(
-            $request->validated()
-        );
-
-        return to_route('dormitory.index');
+        try {
+            $dormitoryService->store();
+            return to_route('dormitory.index');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
     public function show($id)
     {
+        return back();
     }
 
 
-    public function edit(Dormitory $dormitory)
+    public function edit(Dormitory $dormitory, UserService $userService)
     {
-
-        return Inertia::render('Dormitory/Edit', [
-            'users' => User::get(['id', 'full_name'])->toArray(),
-            'dormitory' => $dormitory,
-        ]);
+        try {
+            return Inertia::render('Dormitory/Edit', [
+                'users' => $userService->getBasicsOfUsers(),
+                'dormitory' => $dormitory,
+            ]);
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
-    public function update(DormitoryCreateRequest $request, Dormitory $dormitory)
+    public function update(DormitoryCreateRequest $request, Dormitory $dormitory, DormitoryService $dormitoryService)
     {
-        $dormitory->update(
-            $request->validated()
-        );
-
-        return to_route('dormitory.index');
+        try {
+            $dormitoryService->update($dormitory, $request);
+            return to_route('dormitory.index');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
-    public function destroy(Dormitory $dormitory)
+    public function destroy(Dormitory $dormitory, DormitoryService $dormitoryService)
     {
         return back();
 
-        $dormitory->delete();
+        try {
+            $dormitoryService->delete($dormitory);
+            return to_route('dormitory.index');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
 
-        return to_route('dormitory.index');
-    }
-
-    public function restore(Dormitory $dormitory)
-    {
-        $dormitory->restore();
-        return redirect()->back();
     }
 }

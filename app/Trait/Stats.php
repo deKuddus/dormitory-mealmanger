@@ -2,7 +2,7 @@
 
 namespace App\Trait;
 
-use App\Enums\DormitoryIdStatic;
+use App\Enums\DormitoryInfoStatic;
 use App\Enums\MealStatus;
 use App\Models\AdditionalCost;
 use App\Models\Bazar;
@@ -58,7 +58,7 @@ trait Stats
 
     private function getTotalDeposit($dormitoryId)
     {
-        return Dormitory::query()->whereId(DormitoryIdStatic::DORMITORYID)->value('deposit');
+        return Dormitory::query()->whereId(DormitoryInfoStatic::DORMITORYID)->value('deposit');
     }
 
     private function todaysMeal($dormitoryId)

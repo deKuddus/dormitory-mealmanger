@@ -3,86 +3,92 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AssetRequest;
-use App\Http\Resources\AssetCollection;
 use App\Models\Asset;
-use App\Models\User;
-use Illuminate\Http\Request;
+use App\Services\AssetService;
+use Exception;
 use Inertia\Inertia;
 
 class AssetController extends Controller
 {
-    public function index()
+    public function index(AssetService $assetService)
     {
-        $this->authorize('showAsset',Asset::class);
+        $this->authorize('showAsset', Asset::class);
 
-        $requestParam = \request()->all('search', 'trashed');
-        return Inertia::render('Asset/Index', [
-            'filters' => $requestParam,
-            'assets' => new AssetCollection(
-                Asset::query()
-                    ->orderBy('created_at', 'desc')
-                    ->paginate()
-                    ->appends(request()->all())
-            ),
-        ]);
+        try {
+            $assetService->index();
+            return Inertia::render('Asset/Index',);
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+    }
+
+    public function store(AssetRequest $request, AssetService $assetService)
+    {
+        $this->authorize('createAsset', Asset::class);
+
+        try {
+            $assetService->store($request);
+
+            return to_route('asset.index');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
     public function create()
     {
-        $this->authorize('createAsset',Asset::class);
+        $this->authorize('createAsset', Asset::class);
 
-        return Inertia::render('Asset/Create');
-    }
-
-    public function store(AssetRequest $request)
-    {
-        $this->authorize('createAsset',Asset::class);
-
-        Asset::create(
-            $request->validated()
-        );
-
-        return to_route('asset.index');
+        try {
+            return Inertia::render('Asset/Create');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
     public function show($id)
     {
-
+        return back();
     }
 
 
     public function edit(Asset $asset)
     {
-        $this->authorize('editAsset',Asset::class);
+        $this->authorize('editAsset', Asset::class);
 
-        return Inertia::render('Asset/Edit',[
-            'asset' => $asset
-        ]);
+        try {
+            return Inertia::render('Asset/Edit', [
+                'asset' => $asset
+            ]);
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
-    public function update(AssetRequest $request, Asset $asset)
+    public function update(AssetRequest $request, Asset $asset, AssetService $assetService)
     {
-        $this->authorize('editAsset',Asset::class);
+        $this->authorize('editAsset', Asset::class);
 
-        $asset->update(
-            $request->validated()
-        );
+        try {
+            $assetService->update($asset, $request);
+            return to_route('asset.index');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
 
-        return to_route('asset.index');
     }
 
-    public function destroy(Asset $asset)
+    public function destroy(Asset $asset, AssetService $assetService)
     {
-        $this->authorize('deleteAsset',Asset::class);
+        $this->authorize('deleteAsset', Asset::class);
 
-        $asset->delete();
+        try {
+            $assetService->delete($asset);
+            return to_route('asset.index');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
 
-        return to_route('asset.index');
     }
 
-    public function restore(Asset $asset)
-    {
-        $asset->restore();
-        return redirect()->back();
-    }
 }

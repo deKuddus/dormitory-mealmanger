@@ -4,18 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\PermissionCollection;
 use App\Models\User;
-use Illuminate\Http\Request;
+use Exception;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
+use Inertia\Response;
 use Spatie\Permission\Models\Permission;
 
 class PermissionController extends Controller
 {
 
-    public function index(){
-        $this->authorize('showPermission',User::class);
+    public function index(): Response|RedirectResponse
+    {
+        $this->authorize('showPermission', User::class);
 
-       return Inertia::render('Permission/Index',[
-           'permissions' => new PermissionCollection(Permission::query()->paginate())
-        ]);
+        try {
+            return Inertia::render('Permission/Index', [
+                'permissions' => new PermissionCollection(Permission::query()->paginate())
+            ]);
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 }

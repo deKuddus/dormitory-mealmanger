@@ -2,135 +2,307 @@
 
 namespace App\Services;
 
-use App\Enums\DormitoryIdStatic;
+use App\Enums\DormitoryInfoStatic;
 use App\Enums\MealStatus;
-use App\Http\Resources\MealDetailsResource;
+use App\Helper\Helper;
 use App\Http\Resources\MemberMealShowCollection;
 use App\Http\Resources\MemberMealShowResource;
-use App\Models\AdditionalCost;
-use App\Models\Bazar;
-use App\Models\Deposit;
+use App\Http\Resources\UserMealShowResource;
+use App\Models\Dormitory;
 use App\Models\Meal;
 use App\Models\User;
+use Carbon\Carbon;
+use Exception;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
 
 class MealService
 {
-    public function userTotalMeal($userId, $mssId, $month)
-    {
-        $totalMeal = Meal::whereUserId($userId)
-            ->whereStatus(MealStatus::PENDING)
-            ->whereDormitoryId($mssId)
-            ->whereBetween(DB::raw('DATE(`created_at`)'), [$month->startOfMonth()->format('Y-m-d'), $month->today()->format('Y-m-d')])
-            ->select(DB::raw("SUM(break_fast + lunch + dinner) as total_meals"))
-            ->first();
 
-        return $totalMeal->total_meals ?? 0;
+    public function getUsersWithMeal($dormitoryId)
+    {
+        try {
+            return UserMealShowResource::collection(
+                User::query()->with(['dormitory' => function ($q) use ($dormitoryId) {
+                    $q->where('dormitory_id', $dormitoryId);
+                },
+                    'meals' => function ($query) use ($dormitoryId) {
+                        $query->where('dormitory_id', $dormitoryId)
+                            ->whereStatus(MealStatus::PENDING)
+                            ->whereMonth('created_at', (new DormitoryInfoStatic())->getMonth()->month)
+                            ->whereYear('created_at', (new DormitoryInfoStatic())->getMonth()->year)
+                            ->select('user_id', DB::raw("SUM(break_fast + lunch + dinner) as total_meals"))
+                            ->groupBy('user_id');
+                    }
+                ])
+                    ->select('id', 'display_name', 'email', 'status')
+                    ->orderBy('created_at', 'desc')
+                    ->get()
+            );
+        } catch (Exception $exception) {
+            throw_if(true, $exception->getMessage());
+        }
     }
 
-    public function dormTotalMeal($dormId,$month){
-        $totalMeal = Meal::query()
-            ->whereStatus(MealStatus::PENDING)
-            ->whereDormitoryId($dormId)
-            ->whereBetween(DB::raw('DATE(`created_at`)'), [$month->startOfMonth()->format('Y-m-d'), $month->today()->format('Y-m-d')])
-            ->select(DB::raw("SUM(break_fast + lunch + dinner) as total_meals"))
-            ->first();
-
-        return $totalMeal->total_meals ?? 0;
+    public function addNewMealToUser(Request $request)
+    {
+        try {
+            $dormitory = Dormitory::query()->find(DormitoryInfoStatic::DORMITORYID);
+            $user = User::query()->findOrFail($request->get('userId'));
+            Helper::insertMeal($user, $dormitory);
+            return $user;
+        } catch (Exception $exception) {
+            throw_if(true, $exception->getMessage());
+        }
     }
 
-    public function allUserTotalMeal($mssId, $month)
+    public function show($userId, Request $request)
     {
-        $totalMeal = Meal::query()
-            ->whereDormitoryId($mssId)
-            ->whereBetween(DB::raw('DATE(`created_at`)'), [$month->startOfMonth()->format('Y-m-d'), $month->lastOfMonth()->format('Y-m-d')])
-            ->select(DB::raw("SUM(break_fast + lunch + dinner) as total_meals"))
-            ->first();
+        try {
 
-        return $totalMeal->total_meals ?? 0;
-    }
+            $dormitoryId = DormitoryInfoStatic::DORMITORYID;
+            $bazarService = new BazarService();
+            $userService = new UserService();
 
-    public function getUserAllMealForSelectedMonthToCurrentDate($userId, $mssId, $month)
-    {
-        return MemberMealShowResource::collection(
-            Meal::query()
-                ->whereStatus(MealStatus::PENDING)
-                ->with('dormitory')
+            if ($request->has('month')) {
+                $month = Carbon::parse($request->get('month'));
+            } else {
+                $month = (new DormitoryInfoStatic())->getMonth();
+            }
+
+            $meal = Meal::query()
+                ->where('dormitory_id', $dormitoryId)
                 ->whereUserId($userId)
-                ->whereDormitoryId($mssId)
+                ->whereStatus(MealStatus::PENDING)
+                ->whereMonth('created_at', (new DormitoryInfoStatic())->getMonth()->month)
+                ->whereYear('created_at', (new DormitoryInfoStatic())->getMonth()->year)
+                ->select('user_id', DB::raw("SUM(break_fast + lunch + dinner) as total_meals"))
+                ->groupBy('user_id')
+                ->first() ?? 0;
+
+
+            $userTotalMeal = $meal ? $meal->total_meals : 0;
+            $bazar = $bazarService->getBazarsListOrSum($dormitoryId, true);
+            $totalMealOfMess = $this->getTotalMeal($dormitoryId, $month);
+            $mealCost = $bazar === 0 ? 0 : ($userTotalMeal === 0 ? 0 : round($bazar / $totalMealOfMess, 2));
+            $additional = (new AdditonalCostService())->getTotalCost($dormitoryId);
+            $member = $userService->getBasicsOfUsers($dormitoryId, true);
+            $balance = $userService->getUserInfo($userId, 'deposit');
+            $totalMealCost = $bazar === 0 ? 0 : round($mealCost * $userTotalMeal, 2);
+            $fixedCost = $additional == 0 ? 0 : round($additional / $member, 2);
+
+            return [
+                'user' => $userService->getUserWithMeal($userId, $month, $dormitoryId),
+                'balance' => $balance,
+                'additional' => $additional,
+                'member' => $member,
+                'totalMeal' => $userTotalMeal,
+                'bazar' => $bazar,
+                'mealCost' => $mealCost,
+                'totalMealCost' => $totalMealCost,
+                'fixedCost' => $fixedCost,
+                'due' => ($fixedCost + $totalMealCost) > $balance ? round(($fixedCost + $totalMealCost) - $balance, 2) : 0
+            ];
+        } catch (Exception $exception) {
+            throw_if(true, $exception->getMessage());
+        }
+    }
+
+    public function getTotalMeal($dormitoryId, $month): int
+    {
+        try {
+            $totalMeal = Meal::whereDormitoryId($dormitoryId)
                 ->whereBetween(DB::raw('DATE(`created_at`)'), [$month->startOfMonth()->format('Y-m-d'), $month->lastOfMonth()->format('Y-m-d')])
-                ->get()
-        );
+                ->select(DB::raw("SUM(break_fast + lunch + dinner) as total_meals"))
+                ->first();
+            return $totalMeal->total_meals ?? 0;
+        } catch (Exception $exception) {
+            throw_if(true, $exception->getMessage());
+        }
     }
 
-    public function getUserTotalDeposit($user, $dormitoryId)
+    public function userTotalMeal($userId, $mssId, $month): int
     {
-        return auth()->user()->deposit;
+        try {
+            $totalMeal = Meal::whereUserId($userId)
+                ->whereStatus(MealStatus::PENDING)
+                ->whereDormitoryId($mssId)
+                ->whereBetween(DB::raw('DATE(`created_at`)'), [$month->startOfMonth()->format('Y-m-d'), $month->today()->format('Y-m-d')])
+                ->select(DB::raw("SUM(break_fast + lunch + dinner) as total_meals"))
+                ->first();
+
+            return $totalMeal->total_meals ?? 0;
+        } catch (Exception $exception) {
+            throw_if(true, $exception->getMessage());
+        }
     }
 
-    public function getTotalAdditionalCost($month, $dormitoryId)
+    public function dormTotalMeal($dormId, $month): int
     {
-        return AdditionalCost::query()->whereDormitoryId($dormitoryId)->whereBetween(DB::raw('DATE(`created_at`)'), [$month->startOfMonth()->format('Y-m-d'), $month->lastOfMonth()->format('Y-m-d')])->active()->sum('amount');
+        try {
+            $totalMeal = Meal::query()
+                ->whereStatus(MealStatus::PENDING)
+                ->whereDormitoryId($dormId)
+                ->whereBetween(DB::raw('DATE(`created_at`)'), [$month->startOfMonth()->format('Y-m-d'), $month->today()->format('Y-m-d')])
+                ->select(DB::raw("SUM(break_fast + lunch + dinner) as total_meals"))
+                ->first();
+
+            return (int)$totalMeal->total_meals ?? 0;
+        } catch (Exception $exception) {
+            throw_if(true, $exception->getMessage());
+        }
     }
 
-    public function getTotalUser($dormitoryId)
+    public function getUserAllMealForSelectedMonthToCurrentDate($userId, $mssId, $month): AnonymousResourceCollection
     {
-        return User::query()->with('dormitory', function ($q) use ($dormitoryId) {
-            $q->where('dormitory_id', $dormitoryId);
-        })->active()->count();
-    }
-
-    public function getTotalMeal($dormitoryId, $month)
-    {
-        $totalMeal = Meal::whereDormitoryId($dormitoryId)
-            ->whereBetween(DB::raw('DATE(`created_at`)'), [$month->startOfMonth()->format('Y-m-d'), $month->lastOfMonth()->format('Y-m-d')])
-            ->select(DB::raw("SUM(break_fast + lunch + dinner) as total_meals"))
-            ->first();
-        return $totalMeal->total_meals ?? 0;
-    }
-
-
-    public function getUserWithMeal($user, $month, $dormitoryId)
-    {
-        return new MealDetailsResource(
-            User::with([
-                'meals' => function ($query) use ($month, $dormitoryId) {
-                    $query->whereDormitoryId($dormitoryId)
-                        ->with('dormitory')
-                        ->whereStatus(MealStatus::PENDING)
-                        ->whereMonth('created_at', '=', $month->month)
-                        ->whereYear('created_at', '=', $month->year);
-
-                }
-            ])
-                ->select('id', 'full_name', 'email', 'status')
-                ->findOrFail($user)
-        );
-    }
-
-    public function getTotalBazar($month, $dormitoryId)
-    {
-        return Bazar::query()->active()->whereDormitoryId($dormitoryId)
-            ->whereBetween(DB::raw('DATE(`created_at`)'), [$month->startOfMonth()->format('Y-m-d'), $month->lastOfMonth()->format('Y-m-d')])
-            ->sum('amount');
+        try {
+            return MemberMealShowResource::collection(
+                Meal::query()
+                    ->whereStatus(MealStatus::PENDING)
+                    ->with('dormitory')
+                    ->whereUserId($userId)
+                    ->whereDormitoryId($mssId)
+                    ->whereBetween(DB::raw('DATE(`created_at`)'), [$month->startOfMonth()->format('Y-m-d'), $month->lastOfMonth()->format('Y-m-d')])
+                    ->get()
+            );
+        } catch (Exception $exception) {
+            throw_if(true, $exception->getMessage());
+        }
     }
 
     public function getTodaysLunchAndDinner()
     {
 
-        $dormitoryId = DormitoryIdStatic::DORMITORYID;
-        return Meal::query()
-            ->where('status', MealStatus::PENDING)
-            ->whereDormitoryId($dormitoryId)
-            ->whereDate('created_at', now()->format('Y-m-d'))
-            ->select(
-                DB::raw("SUM(CASE WHEN break_fast != 0 THEN break_fast ELSE 0 END) AS break_fast_total"),
-                DB::raw("SUM(CASE WHEN lunch != 0 THEN lunch ELSE 0 END) AS lunch_total"),
-                DB::raw("SUM(CASE WHEN dinner != 0 THEN dinner ELSE 0 END) AS dinner_total"),
-                'created_at',
-            )
-            ->groupBy('created_at')
-            ->first();
+        try {
+            $dormitoryId = DormitoryInfoStatic::DORMITORYID;
+            return Meal::query()
+                ->where('status', MealStatus::PENDING)
+                ->whereDormitoryId($dormitoryId)
+                ->whereDate('created_at', (new DormitoryInfoStatic())->getMonth()->format('Y-m-d'))
+                ->select(
+                    DB::raw("SUM(CASE WHEN break_fast != 0 THEN break_fast ELSE 0 END) AS break_fast_total"),
+                    DB::raw("SUM(CASE WHEN lunch != 0 THEN lunch ELSE 0 END) AS lunch_total"),
+                    DB::raw("SUM(CASE WHEN dinner != 0 THEN dinner ELSE 0 END) AS dinner_total"),
+                    'created_at',
+                )
+                ->groupBy('created_at')
+                ->first();
+        } catch (Exception $exception) {
+            throw_if(true, $exception->getMessage());
+        }
+    }
+
+    public function getMealsWithCount(int $dormitoryId): Model
+    {
+        try {
+            return Meal::query()
+                ->where('dormitory_id', $dormitoryId)
+                ->whereMonth('created_at', (new DormitoryInfoStatic())->getMonth()->month)
+                ->whereYear('created_at', (new DormitoryInfoStatic())->getMonth()->year)
+                ->select(DB::raw("SUM(break_fast + lunch + dinner) as total_meals"))
+                ->first();
+        } catch (Exception $exception) {
+            throw_if(true, $exception->getMessage());
+        }
+    }
+
+    public function quickMealOnOff(int $userId, Request $request): bool
+    {
+        $status = $request->input('status') ? 1 : 0;
+
+        $dormitory = Dormitory::with(['users' => function ($query) use ($userId) {
+            $query->whereId($userId);
+        }])->first();
+
+
+        $lunchOffStrToTime = strtotime($dormitory->lunch_close);
+        $dinnerOffStrToTime = strtotime($dormitory->dinner_close);
+
+        $lunchOff = Carbon::parse(date('Y-m-d H:i', $lunchOffStrToTime))->format('Y-m-d H:i');
+        $dinnerOff = Carbon::parse(date('Y-m-d H:i', $dinnerOffStrToTime))->format('Y-m-d H:i');
+
+
+        $startOfMonth = now()->format('Y-m-d');
+        $lastOfMonth = now()->lastOfMonth()->addDay()->format('Y-m-d');
+
+
+        $mealIds = Meal::query()
+            ->unlocked()
+            ->whereUserId($userId)
+            ->whereBetween('created_at', [$startOfMonth, $lastOfMonth])
+            ->pluck('id')
+            ->toArray();
+
+        if (now()->gte($lunchOff) && now()->gte($dinnerOff)) {
+            Meal::query()
+                ->unlocked()
+                ->whereIn('id', $mealIds)
+                ->whereBetween('created_at', [now()->addDay()->format('Y-m-d 09:00'), now()->lastOfMonth()->format('Y-m-d 09:00')])
+                ->each(function ($row) use ($dormitory, $status) {
+                    return $row->update([
+                        'break_fast' => $dormitory->has_breakfast ? $status : 0,
+                        'lunch' => Helper::isTodyaFridayOrSaturday($row->created_at) && $dormitory->has_lunch ? $status : 0,
+                        'dinner' => $dormitory->has_dinner ? $status : 0,
+                    ]);
+                });
+        }
+
+        if (!now()->gte($lunchOff) && now()->gte($dinnerOff)) {
+            Meal::query()
+                ->unlocked()
+                ->whereIn('id', $mealIds)
+                ->whereBetween('created_at', [now()->format('Y-m-d 09:00'), now()->lastOfMonth()->format('Y-m-d 09:00')])
+                ->each(function ($row) use ($dormitory, $status) {
+                    return $row->update([
+                        'break_fast' => $dormitory->has_breakfast ? $status : 0,
+                        'lunch' => Helper::isTodyaFridayOrSaturday($row->created_at) && $dormitory->has_lunch ? $status : 0,
+                        'dinner' => $dormitory->has_dinner ? $status : 0,
+                    ]);
+                });
+        }
+
+        if (now()->gte($lunchOff) && !now()->gte($dinnerOff)) {
+            Meal::query()
+                ->whereIn('id', $mealIds)
+                ->unlocked()
+                ->whereDate('created_at', now()->format('Y-m-d'))
+                ->update([
+                    'dinner' => $dormitory->has_dinner ? $status : 0,
+                ]);
+
+            Meal::query()
+                ->whereIn('id', $mealIds)
+                ->whereBetween('created_at', [now()->addDay()->format('Y-m-d 09:00'), now()->lastOfMonth()->format('Y-m-d 09:00')])
+                ->each(function ($row) use ($dormitory, $status) {
+                    $row->update([
+                        'break_fast' => $dormitory->has_breakfast ? $status : 0,
+                        'lunch' => Helper::isTodyaFridayOrSaturday($row->created_at) && $dormitory->has_lunch ? $status : 0,
+                        'dinner' => $dormitory->has_dinner ? $status : 0,
+                    ]);
+                });
+        }
+
+        User::whereId($userId)->update(['meal_status' => $status]);
+
+        return $status;
+
+    }
+
+    public function update(Request $request)
+    {
+        try {
+            $data = $request->validated();
+            $meal = Meal::where(['user_id' => $data['user_id'], 'id' => $data['id']])->update([
+                'break_fast' => $data['break_fast'],
+                'lunch' => $data['lunch'],
+                'dinner' => $data['dinner']
+            ]);
+            return [$meal, $data['id']];
+        } catch (Exception $exception) {
+            throw_if(true, $exception->getMessage());
+        }
     }
 
 }

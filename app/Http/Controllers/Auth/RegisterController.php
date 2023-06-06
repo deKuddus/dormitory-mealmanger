@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Enums\DormitoryIdStatic;
+use App\Enums\DormitoryInfoStatic;
 use App\Models\RegisterToken;
 use App\User;
 use App\Http\Controllers\Controller;
@@ -65,7 +65,7 @@ class RegisterController extends Controller
 
     protected function create(array $data)
     {
-        $dormitoryId = DormitoryIdStatic::DORMITORYID;
+        $dormitoryId = DormitoryInfoStatic::DORMITORYID;
 
         $user = \App\Models\User::create([
             'full_name' => $data['full_name'],
@@ -116,7 +116,7 @@ class RegisterController extends Controller
 
     private function isValidRegisterToken($uuid)
     {
-        $uuid = RegisterToken::where('uuid', $uuid)->whereDate('expire_at', '>', now())->first();
+        $uuid = RegisterToken::where('uuid', $uuid)->whereDate('expire_at', '>', (new DormitoryInfoStatic())->getMonth())->first();
         if ($uuid) {
             return true;
         } else {

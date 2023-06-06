@@ -2,59 +2,27 @@
 
 namespace App\Helper;
 
-use App\Enums\DormitoryIdStatic;
+use App\Enums\DormitoryInfoStatic;
 use App\Enums\MealStatus;
+use App\Http\Resources\UserResource;
 use App\Models\Dormitory;
 use App\Models\Meal;
-use App\Models\Role;
-use App\Models\Room;
-use App\Models\Rule;
-use App\Models\User;
+use App\Services\DormitoryService;
+use App\Services\PermissionService;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 class Helper
 {
-    public static function messArray()
-    {
-        return [
-            'messes' => Dormitory::get(['id', 'name'])->toArray(),
-        ];
-    }
-
-    public static function roomArray()
-    {
-        return [
-            'rooms' => Room::query()->where('dormitory_id', DormitoryIdStatic::DORMITORYID)->get(['id', 'name'])->toArray(),
-        ];
-    }
-
-    public static function usersArray()
-    {
-        return [
-            'users' => User::query()->with(['dormitory' => function ($q) {
-                $q->whereId(DormitoryIdStatic::DORMITORYID)->select('name');
-            }])->get(['id', 'full_name', 'display_name'])->toArray(),
-        ];
-    }
-
-    public static function rulesArray()
-    {
-        return [
-            'rules' => Rule::get(['id', 'title'])->toArray(),
-        ];
-    }
-
-    public static function rolesArray()
-    {
-        return [
-            'roles' => Role::get(['id', 'name'])->toArray(),
-        ];
-    }
-
     public static function createMeal()
     {
-        $autoMealGenerationForMess = Dormitory::query()->whereId(DormitoryIdStatic::DORMITORYID)->with('users:id,dormitory_id')->active()->get();
+        $autoMealGenerationForMess = Dormitory::query()
+            ->whereId(DormitoryInfoStatic::DORMITORYID)
+            ->with('users:id,dormitory_id')
+            ->active()
+            ->get();
 
 
         $autoMealGenerationForMess->each(function ($dormitory) {
@@ -68,8 +36,7 @@ class Helper
 
     public static function insertMeal($user, $dormitory)
     {
-//        $today = (int)date('d');
-        $today = 1;
+        $today = (int)date('d');
         $lastDayOfMonth = (int)date('t');
         $dataArray = [];
         for ($i = $today; $i <= $lastDayOfMonth; $i++) {
@@ -98,17 +65,13 @@ class Helper
         return false;
     }
 
-    public static function getUserPermission()
+    public static function getUserPermission(): array
     {
-        if (auth::check() && auth()->user()->isAdmin()) {
-            $permissions = auth()->user()->load('roles.permissions')->roles->flatMap(function ($role) {
-                return $role->permissions;
-            })->pluck('name')->toArray();
-        } else {
-            $permissions = [];
+        try {
+            return (new PermissionService())->getUserPermissionAsArray();
+        } catch (Exception $exception) {
+            throw_if(true, $exception->getMessage());
         }
-
-        return $permissions;
     }
 
     public static function getUserUnreadNotification()
@@ -123,5 +86,29 @@ class Helper
             'count' => auth()->user()->unreadNotifications->count(),
             'data' => auth()->user()->unreadNotifications ?? [],
         ];
+    }
+
+
+    public static function getDormitoryDeposit()
+    {
+        return Auth::check() ? auth()->user()->isAdmin() ?
+            (new DormitoryService())->getDormitoryInfo(DormitoryInfoStatic::DORMITORYID,'deposit')
+            : 0 : 0;
+    }
+
+    public static function getUserDeposit()
+    {
+        $currentRoute = Route::current();
+        $prefix = $currentRoute->getPrefix();
+
+        if ($prefix === '/master') {
+            return auth()->check() ? auth()->user()->deposit : 0;
+        }
+        return 0;
+    }
+
+    public static function getLoggedInUser()
+    {
+        return Auth::check() ? new UserResource(Auth::user()) : null;
     }
 }

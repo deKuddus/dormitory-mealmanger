@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\DormitoryInfoStatic;
 use App\Enums\MealStatus;
 use App\Http\Resources\MealCollection;
 use App\Models\Meal;
@@ -28,7 +29,7 @@ class CalendarController extends Controller
         if ($request->get('month')) {
             $month = Carbon::parse($request->get('month'));
         } else {
-            $month = now();
+            $month = (new DormitoryInfoStatic())->getMonth();
         }
         return new MealCollection(
             Meal::query()

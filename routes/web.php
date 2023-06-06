@@ -37,10 +37,10 @@ Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 Route::group(['middleware' => 'auth'],function (){
     Route::get('dashboard',[\App\Http\Controllers\Member\HomeController::class,'index'])->name('user.dashboard');
     Route::get('meal/show',[\App\Http\Controllers\Member\HomeController::class,'mealDetails'])->name('user.meal.show');
-    Route::post('meal-status/update',[\App\Http\Controllers\Member\HomeController::class,'updateMealStatus'])->name('user.meal.update');
+    Route::post('meal-status/update',[\App\Http\Controllers\Member\HomeController::class,'quickMealOnOff'])->name('user.meal.update');
     Route::post('meal/update',[\App\Http\Controllers\Member\HomeController::class,'mealUpdate'])->name('user.meal.update.each');
-    Route::get('deposits',[\App\Http\Controllers\Member\HomeController::class,'deposits'])->name('user.deposits.index');
-    Route::get('deposits/create',[\App\Http\Controllers\Member\HomeController::class,'createDeposit'])->name('user.deposits.create');
+    Route::get('deposits',[\App\Http\Controllers\Member\DepositController::class,'deposits'])->name('user.deposits.index');
+    Route::get('deposits/create',[\App\Http\Controllers\Member\DepositController::class,'createDeposit'])->name('user.deposits.create');
     Route::post('deposits/store',[\App\Http\Controllers\Member\HomeController::class,'storeDeposit'])->name('user.deposits.store');
     Route::get('profile/edit',[\App\Http\Controllers\Member\HomeController::class,'editProfile'])->name('user.profile.edit');
     Route::post('profile/update',[\App\Http\Controllers\Member\HomeController::class,'updateProfile'])->name('user.profile.update');

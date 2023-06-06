@@ -3,94 +3,100 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SeatRequest;
-use App\Http\Resources\SeatCollection;
-use App\Models\Room;
 use App\Models\Seat;
-use App\Models\User;
-use Illuminate\Http\Request;
+use App\Services\RoomService;
+use App\Services\SeatService;
+use Exception;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class SeatController extends Controller
 {
-    public function index()
+    public function index(SeatService $seatService): Response|RedirectResponse
     {
-        $this->authorize('showSeat',Seat::class);
+        $this->authorize('showSeat', Seat::class);
 
-        return Inertia::render('Seat/Index', [
-            'seats' => new SeatCollection(
-                Seat::query()
-                    ->orderBy('created_at', 'desc')
-                    ->paginate()
-                    ->appends(request()->all())
-            ),
-        ]);
+        try {
+            return Inertia::render('Seat/Index', [
+                'seats' => $seatService->list()
+            ]);
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
-    public function create()
+    public function store(SeatRequest $request, SeatService $seatService): RedirectResponse
     {
-        $this->authorize('createSeat',Seat::class);
-
-        return Inertia::render('Seat/Create',[
-            ...$this->getRoom()
-        ]);
-    }
-
-    public function store(SeatRequest $request)
-    {
-        $this->authorize('createSeat',Seat::class);
-
-        Seat::create(
-            $request->validated()
-        );
-
-        return to_route('seat.index');
-    }
-
-    public function show($id)
-    {
+        $this->authorize('createSeat', Seat::class);
+        try {
+            $seatService->store($request);
+            return to_route('seat.index');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
 
     }
 
-
-    public function edit(Seat $seat)
+    public function create(RoomService $roomService): Response|RedirectResponse
     {
-        $this->authorize('editSeat',Seat::class);
+        $this->authorize('createSeat', Seat::class);
 
-        return Inertia::render('Seat/Edit', [
-            'seat' => $seat,
-            ...$this->getRoom()
-        ]);
+        try {
+            return Inertia::render('Seat/Create', [
+                'rooms' => $roomService->getRoomBasic()
+            ]);
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
-    public function update(SeatRequest $request, Seat $seat)
+
+    public function show($id): RedirectResponse
     {
-        $this->authorize('editSeat',Seat::class);
+        try {
+            return back();
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
 
-        $seat->update(
-            $request->validated()
-        );
-
-        return to_route('seat.index');
     }
 
-    public function destroy(Seat $seat)
+    public function edit(Seat $seat, RoomService $roomService): Response|RedirectResponse
     {
-        $this->authorize('deleteSeat',Seat::class);
+        $this->authorize('editSeat', Seat::class);
 
-        $seat->delete();
-
-        return to_route('seat.index');
+        try {
+            return Inertia::render('Seat/Edit', [
+                'seat' => $seat,
+                'rooms' => $roomService->getRoomBasic()
+            ]);
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
-    public function restore(Seat $seat)
+    public function update(SeatRequest $request, Seat $seat, SeatService $seatService): RedirectResponse
     {
-        $seat->restore();
-        return redirect()->back();
+        $this->authorize('editSeat', Seat::class);
+
+        try {
+            $seatService->update($seat, $request);
+            return to_route('seat.index');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
-    private function getRoom(){
-        return [
-            'rooms' => Room::get(['id', 'name'])->toArray(),
-        ];
+    public function destroy(Seat $seat, SeatService $seatService): RedirectResponse
+    {
+        $this->authorize('deleteSeat', Seat::class);
+
+        try {
+            $seatService->delete($seat);
+            return to_route('seat.index');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 }

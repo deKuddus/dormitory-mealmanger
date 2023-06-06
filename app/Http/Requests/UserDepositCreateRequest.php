@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Enums\DepositStatus;
-use App\Enums\DormitoryIdStatic;
+use App\Enums\DormitoryInfoStatic;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UserDepositCreateRequest extends FormRequest
@@ -36,12 +36,12 @@ class UserDepositCreateRequest extends FormRequest
 
     protected function prepareForValidation()
     {
-        $dormitoryId = DormitoryIdStatic::DORMITORYID;
+        $dormitoryId = DormitoryInfoStatic::DORMITORYID;
         $this->merge([
             'user_id' => auth()->id(),
             'status' => DepositStatus::PENDING,
             'dormitory_id' => $dormitoryId,
-            'deposit_date' => now()->format('Y-m-d 09:00:00')
+            'deposit_date' => (new DormitoryInfoStatic())->getMonth()->format('Y-m-d 09:00:00')
         ]);
     }
 }

@@ -4,80 +4,79 @@ namespace App\Http\Controllers;
 
 use App\Helper\Helper;
 use App\Http\Requests\BazarScheduleRequest;
-use App\Http\Resources\BazarScheduleCollection;
 use App\Models\BazarSchedule;
-use Illuminate\Http\Request;
+use App\Services\ScheduleService;
+use App\Services\UserService;
+use Exception;
 use Inertia\Inertia;
 
 class BazarScheduleController extends Controller
 {
-    public function index()
+    public function index(ScheduleService $scheduleService)
     {
-        $requestParam = \request()->all('search', 'trashed');
-        return Inertia::render('BazarSchedule/Index', [
-            'filters' => $requestParam,
-            'bazarSchedules' => new BazarScheduleCollection(
-                BazarSchedule::query()
-                    ->with('users:id,full_name,display_name')
-                    ->orderBy('status','asc')
-                    ->paginate()
-            ),
-        ]);
+        try {
+            return Inertia::render('BazarSchedule/Index', $scheduleService->index());
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
-    public function create()
+    public function create(UserService $userService)
     {
-        return Inertia::render('BazarSchedule/Create',[
-            ...Helper::usersArray()
-        ]);
+        try {
+            return Inertia::render('BazarSchedule/Create', [
+               'users' => $userService->getUserAndDormitoryBasic()
+            ]);
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
-    public function store(BazarScheduleRequest $request)
+    public function store(BazarScheduleRequest $request, ScheduleService $scheduleService)
     {
-        $bazarSchedule = BazarSchedule::create(
-            $request->validated()
-        );
-
-        $bazarSchedule->users()->sync($request->validated()['users_id']);
-
-        return to_route('bazar-schedule.index');
+        try {
+            $scheduleService->store($request);
+            return to_route('bazar-schedule.index');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
     public function show($id)
     {
-
+        return back();
     }
 
 
-    public function edit(BazarSchedule $bazarSchedule)
+    public function edit(BazarSchedule $bazarSchedule, ScheduleService $scheduleService)
     {
-        return Inertia::render('BazarSchedule/Edit',[
-            'bazarSchedule' => $bazarSchedule->load('users:id,full_name'),
-            ...Helper::usersArray()
-        ]);
+        try {
+            return Inertia::render('BazarSchedule/Edit', $scheduleService->edit($bazarSchedule));
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 
-    public function update(BazarScheduleRequest $request, BazarSchedule $bazarSchedule)
+    public function update(BazarScheduleRequest $request, BazarSchedule $bazarSchedule, ScheduleService $scheduleService)
     {
-        $bazarSchedule->update(
-            $request->validated()
-        );
+        try {
+            $scheduleService->update($bazarSchedule, $request);
+            return to_route('bazar-schedule.index');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
 
-        $bazarSchedule->users()->sync($request->validated()['users_id']);
 
-        return to_route('bazar-schedule.index');
     }
 
-    public function destroy(BazarSchedule $bazarSchedule)
+    public function destroy(BazarSchedule $bazarSchedule, ScheduleService $scheduleService)
     {
-        $bazarSchedule->delete();
+        try {
+            $scheduleService->delete($bazarSchedule);
+            return to_route('bazar-schedule.index');
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
 
-        return to_route('bazar-schedule.index');
-    }
-
-    public function restore(BazarSchedule $bazarSchedule)
-    {
-        $bazarSchedule->restore();
-        return redirect()->back();
     }
 }
