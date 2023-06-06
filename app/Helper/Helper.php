@@ -2,7 +2,7 @@
 
 namespace App\Helper;
 
-use App\Enums\DormitoryIdStatic;
+use App\Enums\DormitoryInfoStatic;
 use App\Enums\MealStatus;
 use App\Http\Resources\UserResource;
 use App\Models\Dormitory;
@@ -19,7 +19,7 @@ class Helper
     public static function createMeal()
     {
         $autoMealGenerationForMess = Dormitory::query()
-            ->whereId(DormitoryIdStatic::DORMITORYID)
+            ->whereId(DormitoryInfoStatic::DORMITORYID)
             ->with('users:id,dormitory_id')
             ->active()
             ->get();
@@ -92,7 +92,7 @@ class Helper
     public static function getDormitoryDeposit()
     {
         return Auth::check() ? auth()->user()->isAdmin() ?
-            (new DormitoryService())->getDormitoryInfo(DormitoryIdStatic::DORMITORYID)
+            (new DormitoryService())->getDormitoryInfo(DormitoryInfoStatic::DORMITORYID,'deposit')
             : 0 : 0;
     }
 

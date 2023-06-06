@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\DormitoryIdStatic;
+use App\Enums\DormitoryInfoStatic;
 use App\Http\Requests\MealUpdateRequest;
 use App\Http\Requests\NewMealAddToUserRequest;
 use App\Models\Meal;
@@ -19,7 +19,8 @@ class MealController extends Controller
         $this->authorize('showMeal', Meal::class);
 
 
-        $dormitoryId = DormitoryIdStatic::DORMITORYID;
+        $dormitoryId = DormitoryInfoStatic::DORMITORYID;
+
         try {
             return Inertia::render('Meal/Index', [
                 'users' => $mealService->getUsersWithMeal($dormitoryId)
@@ -66,11 +67,11 @@ class MealController extends Controller
     public function calendarView(UserService $userService)
     {
         try {
-            $dormitoryId = DormitoryIdStatic::DORMITORYID;
+            $dormitoryId = DormitoryInfoStatic::DORMITORYID;
 
             return Inertia::render('Meal/Calendar', [
                 'usersAndMeal' => $userService->getUsersWithMeal($dormitoryId),
-                'daysInMonth' => now()->daysInMonth
+                'daysInMonth' => (new DormitoryInfoStatic())->getMonth()->daysInMonth
             ]);
         } catch (Exception $exception) {
             return back()->with('error', $exception->getMessage());

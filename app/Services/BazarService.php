@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enums\BazarStatus;
+use App\Enums\DormitoryInfoStatic;
 use App\Http\Resources\BazarCollection;
 use App\Models\Bazar;
 use Exception;
@@ -105,13 +106,13 @@ class BazarService
         try {
             $query = Bazar::query()
                 ->where('dormitory_id', $dormitoryId)
-                ->whereMonth('created_at', now()->month)
-                ->whereYear('created_at', now()->year);
+                ->whereMonth('created_at', (new DormitoryInfoStatic())->getMonth()->month)
+                ->whereYear('created_at', (new DormitoryInfoStatic())->getMonth()->year);
             if ($sum) {
-                (float)$query->sum('amount');
+                return (float)$query->sum('amount');
             }
 
-            $query->get();
+            return $query->get();
         } catch (Exception $exception) {
             throw_if(true,$exception->getMessage());
         }

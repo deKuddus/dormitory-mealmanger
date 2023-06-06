@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Enums\DormitoryInfoStatic;
 use App\Helper\Helper;
 use Illuminate\Console\Command;
 
@@ -29,9 +30,9 @@ class MealCreateCommand extends Command
     public function handle()
     {
         $this->info('Meal create task started');
-        if (now()->format('Y-m-d') !== date('Y-m-01')) {
+        if ((new DormitoryInfoStatic())->getMonth()->format('Y-m-d') !== date('Y-m-01')) {
             Helper::createMeal();
-            $this->info("Meal successfully created for the month of " . now()->format('F, Y'));
+            $this->info("Meal successfully created for the month of " . (new DormitoryInfoStatic())->getMonth()->format('F, Y'));
             return Command::SUCCESS;
         }
         $this->error('No auto meal generated');

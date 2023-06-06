@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Member;
 
-use App\Enums\DormitoryIdStatic;
+use App\Enums\DormitoryInfoStatic;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserDepositCreateRequest;
 use App\Models\Deposit;
@@ -18,7 +18,7 @@ class DepositController extends Controller
     public function deposits(DepositService $depositService): Response|RedirectResponse
     {
         try {
-            $dormitoryId = DormitoryIdStatic::DORMITORYID;
+            $dormitoryId = DormitoryInfoStatic::DORMITORYID;
             $userId = auth()->id();
             return Inertia::render('Member/Deposit/Index', [
                 'deposits' => $depositService->userDeposits($userId, $dormitoryId)

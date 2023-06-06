@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\DepositStatus;
 use App\Enums\MealStatus;
-use App\Enums\DormitoryIdStatic;
+use App\Enums\DormitoryInfoStatic;
 use App\Http\Resources\ClosedCalculationCollection;
 use App\Http\Resources\ReportCollection;
 use App\Models\AdditionalCost;
@@ -31,6 +31,8 @@ class ReportController extends Controller
 
         try {
             $reportService->getReport($request);
+
+            return Inertia::render('Report/Index', $reportService->getReport($request));
 
         } catch (Exception $exception) {
             return redirect()->back()->with('errors', $exception->getMessage());

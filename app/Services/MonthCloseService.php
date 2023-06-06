@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Enums\AdditionalCostType;
 use App\Enums\BazarStatus;
-use App\Enums\DormitoryIdStatic;
+use App\Enums\DormitoryInfoStatic;
 use App\Enums\MealStatus;
 use App\Models\AdditionalCost;
 use App\Models\Bazar;
@@ -24,7 +24,7 @@ class MonthCloseService
             $mealService = new MealService();
             $userService = new UserService();
 
-            $dormitoryId = DormitoryIdStatic::DORMITORYID;
+            $dormitoryId = DormitoryInfoStatic::DORMITORYID;
 
             $bazar = $bazarService->getBazarsListOrSum($dormitoryId, true);
 

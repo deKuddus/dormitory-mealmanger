@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Enums\DormitoryIdStatic;
+use App\Enums\DormitoryInfoStatic;
 use App\Enums\MealStatus;
 use App\Helper\Helper;
 use App\Http\Resources\MemberMealShowCollection;
@@ -31,8 +31,8 @@ class MealService
                     'meals' => function ($query) use ($dormitoryId) {
                         $query->where('dormitory_id', $dormitoryId)
                             ->whereStatus(MealStatus::PENDING)
-                            ->whereMonth('created_at', now()->month)
-                            ->whereYear('created_at', now()->year)
+                            ->whereMonth('created_at', (new DormitoryInfoStatic())->getMonth()->month)
+                            ->whereYear('created_at', (new DormitoryInfoStatic())->getMonth()->year)
                             ->select('user_id', DB::raw("SUM(break_fast + lunch + dinner) as total_meals"))
                             ->groupBy('user_id');
                     }
@@ -49,7 +49,7 @@ class MealService
     public function addNewMealToUser(Request $request)
     {
         try {
-            $dormitory = Dormitory::query()->find(DormitoryIdStatic::DORMITORYID);
+            $dormitory = Dormitory::query()->find(DormitoryInfoStatic::DORMITORYID);
             $user = User::query()->findOrFail($request->get('userId'));
             Helper::insertMeal($user, $dormitory);
             return $user;
@@ -62,22 +62,22 @@ class MealService
     {
         try {
 
-            $dormitoryId = DormitoryIdStatic::DORMITORYID;
+            $dormitoryId = DormitoryInfoStatic::DORMITORYID;
             $bazarService = new BazarService();
             $userService = new UserService();
 
             if ($request->has('month')) {
                 $month = Carbon::parse($request->get('month'));
             } else {
-                $month = Carbon::parse(now());
+                $month = (new DormitoryInfoStatic())->getMonth();
             }
 
             $meal = Meal::query()
                 ->where('dormitory_id', $dormitoryId)
                 ->whereUserId($userId)
                 ->whereStatus(MealStatus::PENDING)
-                ->whereMonth('created_at', now()->month)
-                ->whereYear('created_at', now()->year)
+                ->whereMonth('created_at', (new DormitoryInfoStatic())->getMonth()->month)
+                ->whereYear('created_at', (new DormitoryInfoStatic())->getMonth()->year)
                 ->select('user_id', DB::raw("SUM(break_fast + lunch + dinner) as total_meals"))
                 ->groupBy('user_id')
                 ->first() ?? 0;
@@ -89,7 +89,7 @@ class MealService
             $mealCost = $bazar === 0 ? 0 : ($userTotalMeal === 0 ? 0 : round($bazar / $totalMealOfMess, 2));
             $additional = (new AdditonalCostService())->getTotalCost($dormitoryId);
             $member = $userService->getBasicsOfUsers($dormitoryId, true);
-            $balance = $userService->getUser($userId, 'deposit');
+            $balance = $userService->getUserInfo($userId, 'deposit');
             $totalMealCost = $bazar === 0 ? 0 : round($mealCost * $userTotalMeal, 2);
             $fixedCost = $additional == 0 ? 0 : round($additional / $member, 2);
 
@@ -176,11 +176,11 @@ class MealService
     {
 
         try {
-            $dormitoryId = DormitoryIdStatic::DORMITORYID;
+            $dormitoryId = DormitoryInfoStatic::DORMITORYID;
             return Meal::query()
                 ->where('status', MealStatus::PENDING)
                 ->whereDormitoryId($dormitoryId)
-                ->whereDate('created_at', now()->format('Y-m-d'))
+                ->whereDate('created_at', (new DormitoryInfoStatic())->getMonth()->format('Y-m-d'))
                 ->select(
                     DB::raw("SUM(CASE WHEN break_fast != 0 THEN break_fast ELSE 0 END) AS break_fast_total"),
                     DB::raw("SUM(CASE WHEN lunch != 0 THEN lunch ELSE 0 END) AS lunch_total"),
@@ -199,8 +199,8 @@ class MealService
         try {
             return Meal::query()
                 ->where('dormitory_id', $dormitoryId)
-                ->whereMonth('created_at', now()->month)
-                ->whereYear('created_at', now()->year)
+                ->whereMonth('created_at', (new DormitoryInfoStatic())->getMonth()->month)
+                ->whereYear('created_at', (new DormitoryInfoStatic())->getMonth()->year)
                 ->select(DB::raw("SUM(break_fast + lunch + dinner) as total_meals"))
                 ->first();
         } catch (Exception $exception) {

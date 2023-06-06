@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Enums\DepositStatus;
-use App\Enums\DormitoryIdStatic;
+use App\Enums\DormitoryInfoStatic;
 use App\Enums\MealStatus;
 use App\Http\Resources\ReportCollection;
 use App\Models\User;
@@ -18,7 +18,7 @@ class ReportService
 
     public function getReport(Request $request)
     {
-        $dormitoryId = DormitoryIdStatic::DORMITORYID;
+        $dormitoryId = DormitoryInfoStatic::DORMITORYID;
         $userService = new UserService();
 
 
@@ -26,7 +26,7 @@ class ReportService
             if ($request->has('month')) {
                 $month = Carbon::parse($request->get('month'));
             } else {
-                $month = Carbon::parse(now());
+                $month = (new DormitoryInfoStatic())->getMonth();
             }
 
             $bazar = (new BazarService())->getBazarsListOrSum($dormitoryId, true);
@@ -35,7 +35,7 @@ class ReportService
             $members = $userService->getBasicsOfUsers($dormitoryId, true);
 
 
-            return Inertia::render('Report/Index', [
+            return [
                 'users' => $userService->getUsersWithDepositAndMeal($dormitoryId, $month),
                 'balance' => (new DepositService())->totalDeposit($dormitoryId),
                 'additional' => $additional,
@@ -44,7 +44,7 @@ class ReportService
                 'bazar' => $bazar,
                 'fixedCost' => $additional <= 0 ? 0 : round($additional / $members, 2),
                 'mealCost' => $bazar === 0 ? 0 : round($bazar / $totalMeal, 2),
-            ]);
+            ];
         } catch (Exception $exception) {
             throw_if(true, $exception->getMessage());
         }

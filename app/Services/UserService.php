@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Enums\DepositStatus;
-use App\Enums\DormitoryIdStatic;
+use App\Enums\DormitoryInfoStatic;
 use App\Enums\MealStatus;
 use App\Http\Resources\MealDetailsResource;
 use App\Http\Resources\ReportCollection;
@@ -89,7 +89,7 @@ class UserService
     {
         try {
             $query = User::query()
-                ->when($dormitoryId, function ($query) use ($dormitoryId) {
+                ->whereHas('dormitory', function ($query) use ($dormitoryId) {
                     $query->whereId($dormitoryId)->select('id', 'name');
                 });
 
@@ -106,7 +106,7 @@ class UserService
     public function getUsersWithMeal(int $dormitoryId,)
     {
         try {
-            $month = now();
+            $month = (new DormitoryInfoStatic())->getMonth();
             return User::query()
                 ->with([
                     'meals' => function ($query) use ($month) {
@@ -125,7 +125,7 @@ class UserService
         }
     }
 
-    public function getUserWithMeal($userId, $dormitoryId, $month)
+    public function getUserWithMeal($userId, $month,$dormitoryId)
     {
         try {
             return new MealDetailsResource(
@@ -164,9 +164,9 @@ class UserService
                                 ->whereStatus(MealStatus::PENDING)
                                 ->select(
                                     'user_id',
-                                    DB::raw("SUM(CASE WHEN break_fast = 1 THEN break_fast ELSE 0 END) AS break_fast_total"),
-                                    DB::raw("SUM(CASE WHEN lunch = 1 THEN lunch ELSE 0 END) AS lunch_total"),
-                                    DB::raw("SUM(CASE WHEN dinner = 1 THEN dinner ELSE 0 END) AS dinner_total"),
+                                    DB::raw("SUM(CASE WHEN break_fast != 0 THEN break_fast ELSE 0 END) AS break_fast_total"),
+                                    DB::raw("SUM(CASE WHEN lunch != 0 THEN lunch ELSE 0 END) AS lunch_total"),
+                                    DB::raw("SUM(CASE WHEN dinner != 0 THEN dinner ELSE 0 END) AS dinner_total"),
                                 )
                                 ->groupBy('user_id');
                         },
@@ -180,7 +180,7 @@ class UserService
         }
     }
 
-    public function getUser($userId, $column): string|float
+    public function getUserInfo($userId, $column): string|float
     {
         try {
             return User::query()->find($userId)->value($column);
@@ -194,7 +194,7 @@ class UserService
         try {
             return User::query()
                 ->with(['dormitory' => function ($q) {
-                    $q->whereId(DormitoryIdStatic::DORMITORYID)->select('name');
+                    $q->whereId(DormitoryInfoStatic::DORMITORYID)->select('name');
                 }])
                 ->get(['id', 'full_name', 'display_name'])
                 ->toArray();

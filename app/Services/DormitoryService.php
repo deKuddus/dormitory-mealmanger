@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Enums\DormitoryIdStatic;
+use App\Enums\DormitoryInfoStatic;
 use App\Http\Resources\DormitoryCollection;
 use App\Models\Dormitory;
 use Exception;

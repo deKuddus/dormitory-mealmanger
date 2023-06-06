@@ -36,7 +36,7 @@ const Index = () => {
                             <th className='sticky left-0 z-1 dark:bg-meta-4 border border-[#eee] p-4 font-medium'>
                                 Member
                             </th>
-                            {Array(31).fill(0).map((v, key) => (
+                            {Array(parseInt(daysInMonth, 10)).fill(0).map((v, key) => (
                                 <th key={key}
                                     className='w-24 border border-[#eee] p-4 font-medium  text-center'>
                                     <p className="w-full border-b border-[#eee]">{key + 1}</p>
@@ -61,7 +61,7 @@ const Index = () => {
                                     className="text-center"
                                 >
                                     <td className='sticky left-0 z-1 dark:bg-meta-4 border border-[#eee] p-4'>
-                                        <Link href={route('meals.show',row.id)}>
+                                        <Link href={route('meals.show', row.id)}>
                                             {row.display_name}
                                         </Link>
                                     </td>

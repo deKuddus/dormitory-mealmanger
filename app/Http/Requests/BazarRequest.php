@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\DormitoryIdStatic;
+use App\Enums\DormitoryInfoStatic;
 use Illuminate\Foundation\Http\FormRequest;
 
 class BazarRequest extends FormRequest
@@ -37,7 +37,7 @@ class BazarRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'dormitory_id' => DormitoryIdStatic::DORMITORYID,
+            'dormitory_id' => DormitoryInfoStatic::DORMITORYID,
             'status' => auth()->user()->isAdmin() ? 1 : 0,
             'created_at' => $this->input('bazar_date'),
         ]);

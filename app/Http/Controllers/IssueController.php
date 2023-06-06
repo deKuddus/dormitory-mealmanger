@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\DormitoryIdStatic;
+use App\Enums\DormitoryInfoStatic;
 use App\Http\Requests\StoreIssueRequest;
 use App\Http\Requests\UpdateIssueRequest;
 use App\Models\Issue;
@@ -61,7 +61,7 @@ class IssueController extends Controller
         try {
             return Inertia::render('Issue/Edit', [
                 'issue' => $issue,
-                'resolvers' => $userService->getBasicsOfUsers(DormitoryIdStatic::DORMITORYID)
+                'resolvers' => $userService->getBasicsOfUsers(DormitoryInfoStatic::DORMITORYID)
             ]);
         } catch (Exception $exception) {
             return back()->with('error', $exception->getMessage());

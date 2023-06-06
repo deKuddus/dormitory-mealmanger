@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enums\AdditionalCostType;
+use App\Enums\DormitoryInfoStatic;
 use App\Http\Resources\AdditionalCostCollection;
 use App\Models\AdditionalCost;
 use Exception;
@@ -90,8 +91,8 @@ class AdditonalCostService
             return (float)AdditionalCost::query()
                 ->active()
                 ->where('dormitory_id', $dormitoryId)
-                ->whereMonth('created_at', now()->month)
-                ->whereYear('created_at', now()->year)
+                ->whereMonth('created_at', (new DormitoryInfoStatic())->getMonth()->month)
+                ->whereYear('created_at', (new DormitoryInfoStatic())->getMonth()->year)
                 ->sum('amount');
         } catch (Exception $exception) {
             throw_if(true, $exception->getMessage());

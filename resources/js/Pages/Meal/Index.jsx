@@ -19,13 +19,14 @@ const Index = () => {
     const dateOptions = currentYearMontList();
 
     const handleDateChange = (value) => {
-        // if(value){
-        //    return router.get(route('meals.show',user.id), {month:value}, {
-        //         replace: true,
-        //         preserveState: true,
-        //     });
-        //
-        // }
+        console.log(value)
+        if(value){
+           return router.get(route('meals.index'), {month:value}, {
+                replace: true,
+                preserveState: true,
+            });
+
+        }
     };
 
     const addMealForTheUser = (userId) => {

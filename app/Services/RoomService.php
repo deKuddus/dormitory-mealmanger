@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Enums\DormitoryIdStatic;
+use App\Enums\DormitoryInfoStatic;
 use App\Http\Resources\RoomCollection;
 use App\Models\Room;
 use Exception;
@@ -61,7 +61,7 @@ class RoomService
     public function getRoomBasic()
     {
         try {
-            return Room::query()->where('dormitory_id', DormitoryIdStatic::DORMITORYID)->get(['id', 'name'])->toArray();
+            return Room::query()->where('dormitory_id', DormitoryInfoStatic::DORMITORYID)->get(['id', 'name'])->toArray();
         }catch (Exception $exception) {
             throw_if(true, $exception->getMessage());
         }

@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\DormitoryIdStatic;
+use App\Enums\DormitoryInfoStatic;
 use Illuminate\Foundation\Http\FormRequest;
 
 class NoticeCreateRequest extends FormRequest
@@ -35,7 +35,7 @@ class NoticeCreateRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'dormitory_id' => DormitoryIdStatic::DORMITORYID
+            'dormitory_id' => DormitoryInfoStatic::DORMITORYID
         ]);
     }
 }

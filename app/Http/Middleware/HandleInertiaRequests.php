@@ -44,9 +44,9 @@ class HandleInertiaRequests extends Middleware
                 'user' => Helper::getLoggedInUser()
             ],
             'flash' => [
-                'success' => $request->session()->pull('success'),
-                'error' => $request->session()->pull('error'),
-                'registration_success' => $request->session()->get('registration_success')
+                'success' => $request->session()->pull('success') ?? null,
+                'error' => $request->session()->pull('error') ?? null,
+                'registration_success' => $request->session()->get('registration_success')  ?? null
             ],
             'notification' => Helper::getUserUnreadNotification(),
             'user_permissions' => Helper::getUserPermission(),

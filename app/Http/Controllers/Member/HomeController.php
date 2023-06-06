@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Member;
 
-use App\Enums\DormitoryIdStatic;
+use App\Enums\DormitoryInfoStatic;
 use App\Enums\NoticeStatus;
 use App\Enums\RuleStatus;
 use App\Http\Controllers\Controller;
@@ -37,14 +37,14 @@ class HomeController extends Controller
 {
     public function index(MealService $mealService, CalculationService $calculationService)
     {
-        $dormitoryId = DormitoryIdStatic::DORMITORYID;
-        $month = now();
+        $dormitoryId = DormitoryInfoStatic::DORMITORYID;
+        $month = (new DormitoryInfoStatic())->getMonth();
         $userId = auth()->id();
 
         $totalFixedCost = (new AdditonalCostService())->getTotalCost($dormitoryId);
         $dromTotalMeal = $mealService->dormTotalMeal($dormitoryId, $month);
         $totalMeal = $mealService->userTotalMeal($userId, $dormitoryId, $month);
-        $balance = (new UserService())->getUser($userId, 'deposit');
+        $balance = (new UserService())->getUserInfo($userId, 'deposit');
         $bazar = (new BazarService())->getBazarsListOrSum($dormitoryId, true);
         $mealCharge = $dromTotalMeal === 0 ? 0 : round($bazar / $dromTotalMeal, 2);
         $totalUser = (new UserService())->getBasicsOfUsers($dormitoryId, true);
@@ -53,7 +53,7 @@ class HomeController extends Controller
             'mealCharge' => $mealCharge,
             'meals' => $mealService->getUserAllMealForSelectedMonthToCurrentDate($userId, $dormitoryId, $month),
             'fixedCost' => $fixedCost,
-            'due' => $calculationService->getDue($totalMeal, $balance, $fixedCost, $mealCharge),
+            'due' => round($calculationService->getDue($totalMeal, $balance, $fixedCost, $mealCharge),2),
             'totalMeal' => $totalMeal,
             'totalCost' => $totalMeal === 0 ? 0 : round($totalMeal * $mealCharge, 2),
             'todaysMeal' => $mealService->getTodaysLunchAndDinner()
@@ -90,21 +90,21 @@ class HomeController extends Controller
 
     public function mealDetails(Request $request, MealService $mealService)
     {
-        $dormitoryId = DormitoryIdStatic::DORMITORYID;
+        $dormitoryId = DormitoryInfoStatic::DORMITORYID;
 
         $user = auth()->id();
         try {
             if ($request->has('month')) {
                 $month = Carbon::parse($request->get('month'));
             } else {
-                $month = Carbon::parse(now());
+                $month = (new DormitoryInfoStatic())->getMonth();
             }
 
             $meal = Meal::query()
                 ->where('dormitory_id', $dormitoryId)
                 ->whereUserId($user)
-                ->whereMonth('created_at', now()->month)
-                ->whereYear('created_at', now()->year)
+                ->whereMonth('created_at', (new DormitoryInfoStatic())->getMonth()->month)
+                ->whereYear('created_at', (new DormitoryInfoStatic())->getMonth()->year)
                 ->select('user_id', DB::raw("SUM(break_fast + lunch + dinner) as total_meals"))
                 ->groupBy('user_id')
                 ->first() ?? 0;
@@ -115,7 +115,7 @@ class HomeController extends Controller
             $mealCost = $bazar === 0 ? 0 : ($userTotalMeal === 0 ? 0 : round($bazar / $totalMealOfMess, 2));
             $additional = (new AdditonalCostService())->getTotalCost($dormitoryId);
             $member = (new UserService())->getBasicsOfUsers($dormitoryId, true);
-            $balance = (new UserService())->getUser($user, 'deposit');
+            $balance = (new UserService())->getUserInfo($user, 'deposit');
             $totalMealCost = $bazar === 0 ? 0 : round($mealCost * $userTotalMeal, 2);
             $fixedCost = $additional == 0 ? 0 : round($additional / $member, 2);
 
@@ -150,11 +150,11 @@ class HomeController extends Controller
         if ($this->isPast($request->created_at)) {
             return back()->with('errors', 'Can not update previous meal');
         } elseif (Carbon::parse($request->created_at)->isToday()) {
-            if (now()->gte($lunchOff) && now()->gte($dinnerOff)) {
+            if ((new DormitoryInfoStatic())->getMonth()->gte($lunchOff) && (new DormitoryInfoStatic())->getMonth()->gte($dinnerOff)) {
                 return back()->with('errors', 'Can not update Meal for today, time is over.');
             }
 
-            if (now()->gte($lunchOff) && !now()->gte($dinnerOff)) {
+            if ((new DormitoryInfoStatic())->getMonth()->gte($lunchOff) && !(new DormitoryInfoStatic())->getMonth()->gte($dinnerOff)) {
                 Meal::whereUserId(auth()->id())->whereId($request->id)->update([
                     'dinner' => $request->dinner,
                     'lock_for_quick_update' => true,
@@ -162,7 +162,7 @@ class HomeController extends Controller
                 return back()->with('success', 'Lunch Time over, only dinner Updated');
             }
 
-            if (!now()->gte($lunchOff)) {
+            if (!(new DormitoryInfoStatic())->getMonth()->gte($lunchOff)) {
                 Meal::whereUserId(auth()->id())->whereId($request->id)->update([
                     'break_fast' => $request->break_fast,
                     'lunch' => $request->lunch,
@@ -185,7 +185,7 @@ class HomeController extends Controller
 
     private function isPast($date)
     {
-        return strtotime(Carbon::parse($date)->endOfDay()->format('Y-m-d H:i:s')) < strtotime(now()->format('Y-m-d H:i:s'));
+        return strtotime(Carbon::parse($date)->endOfDay()->format('Y-m-d H:i:s')) < strtotime((new DormitoryInfoStatic())->getMonth()->format('Y-m-d H:i:s'));
     }
 
 
