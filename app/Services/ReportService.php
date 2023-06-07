@@ -43,7 +43,7 @@ class ReportService
                 'totalMeal' => $totalMeal,
                 'bazar' => $bazar,
                 'fixedCost' => $additional <= 0 ? 0 : round($additional / $members, 2),
-                'mealCost' => $bazar === 0 ? 0 : round($bazar / $totalMeal, 2),
+                'mealCost' => $bazar === 0 || $totalMeal === 0 ? 0 : round($bazar / $totalMeal, 2),
             ];
         } catch (Exception $exception) {
             throw_if(true, $exception->getMessage());
