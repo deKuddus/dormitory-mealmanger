@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\DormitoryInfoStatic;
 use App\Http\Requests\RegisterTokenDeleteRequest;
 use App\Http\Resources\RegisterTokenCollection;
 use App\Models\RegisterToken;
@@ -31,7 +32,7 @@ class RegisterTokenService
             if (!RegisterToken::query()->where('uuid', $uuid)->exists()) {
                 RegisterToken::query()->create([
                     'uuid' => $uuid,
-                    'expire_at' => now()->addDay()
+                    'expire_at' => (new DormitoryInfoStatic())->getMonth()->addDay()
                 ]);
             } else {
                 $this->generateNewToken();

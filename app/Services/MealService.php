@@ -224,8 +224,8 @@ class MealService
         $dinnerOff = Carbon::parse(date('Y-m-d H:i', $dinnerOffStrToTime))->format('Y-m-d H:i');
 
 
-        $startOfMonth = now()->format('Y-m-d');
-        $lastOfMonth = now()->lastOfMonth()->addDay()->format('Y-m-d');
+        $startOfMonth = (new DormitoryInfoStatic())->getMonth()->format('Y-m-d');
+        $lastOfMonth = (new DormitoryInfoStatic())->getMonth()->lastOfMonth()->addDay()->format('Y-m-d');
 
 
         $mealIds = Meal::query()
@@ -235,11 +235,11 @@ class MealService
             ->pluck('id')
             ->toArray();
 
-        if (now()->gte($lunchOff) && now()->gte($dinnerOff)) {
+        if ((new DormitoryInfoStatic())->getMonth()->gte($lunchOff) && (new DormitoryInfoStatic())->getMonth()->gte($dinnerOff)) {
             Meal::query()
                 ->unlocked()
                 ->whereIn('id', $mealIds)
-                ->whereBetween('created_at', [now()->addDay()->format('Y-m-d 09:00'), now()->lastOfMonth()->format('Y-m-d 09:00')])
+                ->whereBetween('created_at', [(new DormitoryInfoStatic())->getMonth()->addDay()->format('Y-m-d 09:00'), (new DormitoryInfoStatic())->getMonth()->lastOfMonth()->format('Y-m-d 09:00')])
                 ->each(function ($row) use ($dormitory, $status) {
                     return $row->update([
                         'break_fast' => $dormitory->has_breakfast ? $status : 0,
@@ -249,11 +249,11 @@ class MealService
                 });
         }
 
-        if (!now()->gte($lunchOff) && now()->gte($dinnerOff)) {
+        if (!(new DormitoryInfoStatic())->getMonth()->gte($lunchOff) && (new DormitoryInfoStatic())->getMonth()->gte($dinnerOff)) {
             Meal::query()
                 ->unlocked()
                 ->whereIn('id', $mealIds)
-                ->whereBetween('created_at', [now()->format('Y-m-d 09:00'), now()->lastOfMonth()->format('Y-m-d 09:00')])
+                ->whereBetween('created_at', [(new DormitoryInfoStatic())->getMonth()->format('Y-m-d 09:00'), (new DormitoryInfoStatic())->getMonth()->lastOfMonth()->format('Y-m-d 09:00')])
                 ->each(function ($row) use ($dormitory, $status) {
                     return $row->update([
                         'break_fast' => $dormitory->has_breakfast ? $status : 0,
@@ -263,18 +263,18 @@ class MealService
                 });
         }
 
-        if (now()->gte($lunchOff) && !now()->gte($dinnerOff)) {
+        if ((new DormitoryInfoStatic())->getMonth()->gte($lunchOff) && !(new DormitoryInfoStatic())->getMonth()->gte($dinnerOff)) {
             Meal::query()
                 ->whereIn('id', $mealIds)
                 ->unlocked()
-                ->whereDate('created_at', now()->format('Y-m-d'))
+                ->whereDate('created_at', (new DormitoryInfoStatic())->getMonth()->format('Y-m-d'))
                 ->update([
                     'dinner' => $dormitory->has_dinner ? $status : 0,
                 ]);
 
             Meal::query()
                 ->whereIn('id', $mealIds)
-                ->whereBetween('created_at', [now()->addDay()->format('Y-m-d 09:00'), now()->lastOfMonth()->format('Y-m-d 09:00')])
+                ->whereBetween('created_at', [(new DormitoryInfoStatic())->getMonth()->addDay()->format('Y-m-d 09:00'), (new DormitoryInfoStatic())->getMonth()->lastOfMonth()->format('Y-m-d 09:00')])
                 ->each(function ($row) use ($dormitory, $status) {
                     $row->update([
                         'break_fast' => $dormitory->has_breakfast ? $status : 0,

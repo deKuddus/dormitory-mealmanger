@@ -69,8 +69,8 @@ class MonthCloseService
             'meals' => function ($query) use ($dormitoryId) {
                 $query->where('dormitory_id', $dormitoryId)
                     ->whereStatus(MealStatus::PENDING)
-                    ->whereMonth('created_at', now()->month)
-                    ->whereYear('created_at', now()->year)
+                    ->whereMonth('created_at', (new DormitoryInfoStatic())->getMonth()->month)
+                    ->whereYear('created_at', (new DormitoryInfoStatic())->getMonth()->year)
                     ->select('user_id', DB::raw("SUM(break_fast + lunch + dinner) as total_meals"))
                     ->groupBy('user_id');
             }
@@ -84,9 +84,9 @@ class MonthCloseService
                     'dormitory_id' => $dormitoryId,
                     'user_id' => $user->id,
                     'amount' => $cost,
-                    'description' => 'month closed for ' . now()->format('F, d Y') . '. Meal cost ' . $mealCost . ' and Additional cost ' . $additionalCost,
+                    'description' => 'month closed for ' . (new DormitoryInfoStatic())->getMonth()->format('F, d Y') . '. Meal cost ' . $mealCost . ' and Additional cost ' . $additionalCost,
                     'total_meal' => count($user->meals) ? $user->meals[0]->total_meals : 0,
-                    'calculate_date' => now(),
+                    'calculate_date' => (new DormitoryInfoStatic())->getMonth(),
                     'carry' => $cost > $user->deposit ? $user->deposit - $cost : $user->deposit,
                     'meal_rate' => $mealCost,
                 ];
@@ -100,8 +100,8 @@ class MonthCloseService
         AdditionalCost::query()
             ->where('dormitory_id', $dormitoryId)
             ->whereStatus(AdditionalCostType::APPROVED)
-            ->whereMonth('created_at', now()->month)
-            ->whereYear('created_at', now()->year)
+            ->whereMonth('created_at', (new DormitoryInfoStatic())->getMonth()->month)
+            ->whereYear('created_at', (new DormitoryInfoStatic())->getMonth()->year)
             ->update(['status' => AdditionalCostType::CLOSED]);
     }
 
@@ -110,8 +110,8 @@ class MonthCloseService
         Meal::query()
             ->where('dormitory_id', $dormitoryId)
             ->whereStatus(MealStatus::PENDING)
-            ->whereMonth('created_at', now()->month)
-            ->whereYear('created_at', now()->year)
+            ->whereMonth('created_at', (new DormitoryInfoStatic())->getMonth()->month)
+            ->whereYear('created_at', (new DormitoryInfoStatic())->getMonth()->year)
             ->update(['status' => MealStatus::CLOSED]);
     }
 
@@ -120,8 +120,8 @@ class MonthCloseService
         Bazar::query()
             ->where('dormitory_id', $dormitoryId)
             ->whereStatus(BazarStatus::APPROVED)
-            ->whereMonth('created_at', now()->month)
-            ->whereYear('created_at', now()->year)
+            ->whereMonth('created_at', (new DormitoryInfoStatic())->getMonth()->month)
+            ->whereYear('created_at', (new DormitoryInfoStatic())->getMonth()->year)
             ->update(['status' => BazarStatus::CLOSED]);
     }
 }
