@@ -36,7 +36,8 @@ class Helper
 
     public static function insertMeal($user, $dormitory)
     {
-        $today = (int)date('d');
+//        $today = (int)date('d');
+        $today = 1;
         $lastDayOfMonth = (int)date('t');
         $dataArray = [];
         for ($i = $today; $i <= $lastDayOfMonth; $i++) {
