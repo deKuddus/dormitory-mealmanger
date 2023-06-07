@@ -98,13 +98,13 @@ class Helper
 
     public static function getUserDeposit()
     {
-        $currentRoute = Route::current();
-        $prefix = $currentRoute->getPrefix();
+//        $currentRoute = Route::current();
+//        $prefix = $currentRoute->getPrefix();
 
-        if ($prefix === '/master') {
-            return auth()->check() ? auth()->user()->deposit : 0;
-        }
-        return 0;
+//        if ($prefix === '/master') {
+//            return auth()->check() ? auth()->user()->deposit : 0;
+//        }
+        return auth()->check() ? auth()->user()->deposit : 0;
     }
 
     public static function getLoggedInUser()
