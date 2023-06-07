@@ -299,7 +299,7 @@ class MealService
                 'lunch' => $data['lunch'],
                 'dinner' => $data['dinner']
             ]);
-            return [$meal, $data['id']];
+            return [$meal, $data['user_id']];
         } catch (Exception $exception) {
             throw_if(true, $exception->getMessage());
         }
