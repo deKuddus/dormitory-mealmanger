@@ -87,7 +87,7 @@ class MonthCloseService
                     'description' => 'month closed for ' . (new DormitoryInfoStatic())->getMonth()->format('F, d Y') . '. Meal cost ' . $mealCost . ' and Additional cost ' . $additionalCost,
                     'total_meal' => count($user->meals) ? $user->meals[0]->total_meals : 0,
                     'calculate_date' => (new DormitoryInfoStatic())->getMonth(),
-                    'carry' => $cost > $user->deposit ? $user->deposit - $cost : $user->deposit,
+                    'carry' => $user->deposit - $cost,
                     'meal_rate' => $mealCost,
                 ];
                 Calculation::query()->create($insert);
