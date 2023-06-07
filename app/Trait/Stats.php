@@ -65,7 +65,7 @@ trait Stats
     {
         $meals = Meal::whereDormitoryId($dormitoryId)
             ->whereStatus(MealStatus::PENDING)
-            ->whereDate('created_at', '=', now())
+            ->whereDate('created_at', '=', (new DormitoryInfoStatic())->getMonth())
             ->select(
                 DB::raw("SUM(break_fast + lunch + dinner) as total_meals")
             )->first();
