@@ -62,7 +62,8 @@ class MonthCloseService
 
     private function getUserAndMealCount($dormitoryId, $mealCost, $additionalCost): void
     {
-        User::query()->with([
+        User::query()
+            ->with([
             'dormitory' => function ($q) use ($dormitoryId) {
                 $q->where('dormitory_id', $dormitoryId);
             },
@@ -75,7 +76,7 @@ class MonthCloseService
                     ->groupBy('user_id');
             }
         ])
-            ->select('id')
+            ->select('id','deposit')
             ->orderBy('created_at', 'desc')
             ->each(function ($user) use ($dormitoryId, $mealCost, $additionalCost) {
                 $cost = count($user->meals) ? round((($mealCost * (int)$user->meals[0]->total_meals) + $additionalCost), 2) : $additionalCost;
