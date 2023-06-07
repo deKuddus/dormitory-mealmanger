@@ -183,7 +183,7 @@ class UserService
     public function getUserInfo($userId, $column): string|float
     {
         try {
-            return User::query()->find($userId)->value($column);
+            return User::query()->whereId($userId)->value($column);
         } catch (Exception $exception) {
             throw_if(true, $exception->getMessage());
         }

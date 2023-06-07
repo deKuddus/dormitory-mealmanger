@@ -11,13 +11,13 @@ use Inertia\Response;
 
 class RegisterTokenController extends Controller
 {
-    public function index(RegisterToken $registerToken): Response|RedirectResponse
+    public function index(RegisterTokenService $registerTokenService): Response|RedirectResponse
     {
         $this->authorize('showToken', RegisterToken::class);
 
         try {
             return inertia('RegisterToken', [
-                'tokens' => $registerToken->list()
+                'tokens' => $registerTokenService->list()
             ]);
         } catch (Exception $exception) {
             return back()->with('error', $exception->getMessage());
