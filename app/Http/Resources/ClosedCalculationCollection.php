@@ -23,7 +23,7 @@ class ClosedCalculationCollection extends ResourceCollection
             'total_meal',
             'calculate_date',
             'carry',
-            'user'
+            'user',
         );
     }
 }

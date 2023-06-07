@@ -8,8 +8,8 @@ class DormitoryInfoStatic
 
     public function getMonth()
     {
-        return now()->subMonth();
-//        return now();
+//        return now()->subMonth();
+        return now();
 
     }
 
