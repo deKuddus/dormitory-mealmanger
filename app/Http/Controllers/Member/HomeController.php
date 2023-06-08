@@ -258,6 +258,7 @@ class HomeController extends Controller
         $notice = Rule::query()
             ->whereStatus(RuleStatus::ACTIVE)
             ->findOrFail($id);
+
         return Inertia::render('Member/Rule/Show', [
             'rule' => $notice
         ]);

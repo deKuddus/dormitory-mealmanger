@@ -41,7 +41,7 @@ Route::group(['middleware' => 'auth'],function (){
     Route::post('meal/update',[\App\Http\Controllers\Member\HomeController::class,'mealUpdate'])->name('user.meal.update.each');
     Route::get('deposits',[\App\Http\Controllers\Member\DepositController::class,'deposits'])->name('user.deposits.index');
     Route::get('deposits/create',[\App\Http\Controllers\Member\DepositController::class,'createDeposit'])->name('user.deposits.create');
-    Route::post('deposits/store',[\App\Http\Controllers\Member\HomeController::class,'storeDeposit'])->name('user.deposits.store');
+    Route::post('deposits/store',[\App\Http\Controllers\Member\DepositController::class,'storeDeposit'])->name('user.deposits.store');
     Route::get('profile/edit',[\App\Http\Controllers\Member\HomeController::class,'editProfile'])->name('user.profile.edit');
     Route::post('profile/update',[\App\Http\Controllers\Member\HomeController::class,'updateProfile'])->name('user.profile.update');
     Route::get('bazar', [\App\Http\Controllers\Member\BazarController::class,'index'])->name('user.bazar.index');
