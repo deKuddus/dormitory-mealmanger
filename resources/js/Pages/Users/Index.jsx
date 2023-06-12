@@ -24,9 +24,9 @@ const Index = () => {
         return true;
     };
 
-    const loginAsUser = (id,name) =>{
-        if(confirm(`Are you sure to login as ${name}?`)){
-            return router.get(route('login.as.user',id));
+    const loginAsUser = (id, name) => {
+        if (confirm(`Are you sure to login as ${name}?`)) {
+            return router.get(route('login.as.user', id));
         }
     }
 
@@ -143,18 +143,23 @@ const Index = () => {
                                         />
                                     </button>
                                 )}
-                                <button
-                                    onClick={() =>
-                                        loginAsUser(id,name)
-                                    }
-                                    className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
+                                {isUserPermittedToPerformAction(
+                                    "access::login-as-user",
+                                    user_permissions
+                                ) && (
+                                    <button
+                                        onClick={() =>
+                                            loginAsUser(id, name)
+                                        }
+                                        className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
 
-                                >
-                                    <Icon
-                                        name="FaSignInAlt"
-                                        className="w-6 h-4 text-gray-400 hover:text-red-600 fill-current"
-                                    />
-                                </button>
+                                    >
+                                        <Icon
+                                            name="FaSignInAlt"
+                                            className="w-6 h-4 text-gray-400 hover:text-red-600 fill-current"
+                                        />
+                                    </button>
+                                )}
                             </TableAction>
                         </tr>
                     );

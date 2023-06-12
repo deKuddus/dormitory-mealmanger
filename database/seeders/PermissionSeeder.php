@@ -93,6 +93,7 @@ class PermissionSeeder extends Seeder
             'access::issue-create',
             'access::issue-edit',
             'access::issue-delete',
+            'access::login-as-user'
         ];
 
         foreach ($permissions as $permission) {
