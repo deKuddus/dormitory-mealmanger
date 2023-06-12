@@ -7,7 +7,7 @@ import TablePageLayout from "@/Shared/Layout/TablePageLayout";
 import TableData from "@/Shared/TableData";
 
 const Report = () => {
-    const tableHeading =['No', 'Closed Month', 'Meal', 'Amount','Carry'];
+    const tableHeading =['No', 'Closed Month', 'Meal','Meal Charge', 'Amount','Remaining balance / Due'];
     const { reports } = usePage().props;
     const {
         data,
@@ -28,22 +28,23 @@ const Report = () => {
                 data.map(
                     (
                         {
-                            id,
                             amount,
                             description,
                             calculate_date,
                             carry,
                             total_meal,
+                            meal_rate
                         },
                         key
                     ) => {
                         return (
                             <tr
-                                key={id}
+                                key={key}
                             >
                                 <TableData value={key+1}/>
                                 <TableData value={moment(calculate_date).format("Do MMMM YYYY")}/>
                                 <TableData value={total_meal}/>
+                                <TableData value={meal_rate}/>
                                 <TableData value={amount}/>
                                 <TableData value={carry}/>
                             </tr>

@@ -1,1 +1,0 @@
-import"./dayjs.min-680a953a.js";import{m as n}from"./AuthenticatedLayout-c8df8b4d.js";const c=()=>{const t=n().year(),e=[];for(let o=0;o<12;o++){let s=n([t,o,1]);e.push(s.format("MMMM-YYYY"))}return e},i=(r,t)=>t.includes(r);export{c,i};
