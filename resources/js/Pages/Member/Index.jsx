@@ -65,7 +65,7 @@ const Index = () => {
             return 0;
         }
 
-        let balance = parseFloat(member_deposit - totalCost, 2);
+        let balance = parseFloat(member_deposit - totalCost, 2).toFixed(2);
         if (balance > 0) {
             return balance;
         }

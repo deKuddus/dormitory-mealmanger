@@ -261,6 +261,12 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}) => {
                 icon: "FaPoll",
             },
             {
+                name: "Reports",
+                link: route("user.report.index"),
+                uri_root: "report",
+                icon: "FaRegChartBar",
+            },
+            {
                 name: "Term & C",
                 link: route("user.rules.index"),
                 uri_root: "rule",

@@ -58,13 +58,15 @@ Route::group(['middleware' => 'auth'],function (){
     Route::get('notice/{id}',[\App\Http\Controllers\Member\HomeController::class,'noticeDetails'])->name('user.notices.details');
 
     Route::as('user')->resource('issue',\App\Http\Controllers\Member\IssueController::class);
+
+    Route::get('report',[\App\Http\Controllers\Member\HomeController::class,'reports'])->name('user.report.index');
 });
 
 
 
 
 
-Route::group(['middleware' => ['auth', 'remember','hasAccessInDashboard'],'prefix' => 'master'], function () {
+Route::group(['middleware' => ['auth', 'remember','hasAccessInDashboard'],'prefix' => 'admin'], function () {
     Route::get('/', DashboardController::class);
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
     Route::get('/calender/{mess_id?}', [\App\Http\Controllers\CalendarController::class, 'showCalender'])->name('calender.view.meal');
@@ -113,5 +115,5 @@ Route::group(['middleware' => ['auth', 'remember','hasAccessInDashboard'],'prefi
     Route::get('report/closed',[\App\Http\Controllers\ReportController::class,'closedCalculation'])->name('report.closed.index');
     Route::post('start-new-month',[\App\Http\Controllers\MonthCloseController::class,'startNewMonth'])->name('new.month.start');
 
-
+    Route::get('login-as-user/{id}',[\App\Http\Controllers\HomeController::class,'loginAsUser'])->name('login.as.user');
 });

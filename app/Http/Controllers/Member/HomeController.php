@@ -7,13 +7,13 @@ use App\Enums\NoticeStatus;
 use App\Enums\RuleStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\QuickMealOnOFFRequest;
-use App\Http\Requests\UserDepositCreateRequest;
 use App\Http\Requests\UserMealUpdateRequest;
 use App\Http\Requests\UserProfileUpdateRequest;
 use App\Http\Resources\BazarScheduleCollection;
+use App\Http\Resources\MemberCloseReportCollection;
 use App\Http\Resources\NoticeCollection;
 use App\Models\BazarSchedule;
-use App\Models\Deposit;
+use App\Models\Calculation;
 use App\Models\Dormitory;
 use App\Models\Meal;
 use App\Models\Menu;
@@ -22,7 +22,6 @@ use App\Models\Rule;
 use App\Services\AdditonalCostService;
 use App\Services\BazarService;
 use App\Services\CalculationService;
-use App\Services\DepositService;
 use App\Services\MealService;
 use App\Services\UserService;
 use Carbon\Carbon;
@@ -31,7 +30,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
-use Inertia\Response;
 
 class HomeController extends Controller
 {
@@ -53,7 +51,7 @@ class HomeController extends Controller
             'mealCharge' => $mealCharge,
             'meals' => $mealService->getUserAllMealForSelectedMonthToCurrentDate($userId, $dormitoryId, $month),
             'fixedCost' => $fixedCost,
-            'due' => round($calculationService->getDue($totalMeal, $balance, $fixedCost, $mealCharge),2),
+            'due' => round($calculationService->getDue($totalMeal, $balance, $fixedCost, $mealCharge), 2),
             'totalMeal' => $totalMeal,
             'totalCost' => $totalMeal === 0 ? 0 : round($totalMeal * $mealCharge, 2),
             'todaysMeal' => $mealService->getTodaysLunchAndDinner()
@@ -262,5 +260,16 @@ class HomeController extends Controller
         return Inertia::render('Member/Rule/Show', [
             'rule' => $notice
         ]);
+    }
+
+    public function reports(Request $request)
+    {
+        try {
+            return Inertia::render('Member/Report', [
+                'reports' => new MemberCloseReportCollection(Calculation::whereUserId(auth()->id())->paginate())
+            ]);
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
     }
 }

@@ -34,7 +34,8 @@ import {
     FaCoins,
     FaFingerprint,
     FaGlasses,
-    FaCogs
+    FaCogs,
+    FaSignInAlt
 } from "react-icons/fa";
 const IconComponentArray = {
     FaRegClock,
@@ -71,7 +72,8 @@ const IconComponentArray = {
     FaCoins,
     FaFingerprint,
     FaGlasses,
-    FaCogs
+    FaCogs,
+    FaSignInAlt
 };
 
 export default ({ name, className }) => {
