@@ -65,18 +65,7 @@ const Index = () => {
 
     const Additional = () => {
         return (
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
-                <div className="flex items-center">
-                    <span className="text-xl p-3">
-                        Today's Meal: <span className="font-bold">50</span>
-                    </span>
-                    <span className="text-xl p-3">
-                        Total Meal :{" "}
-                        <span className="font-bold text-buttonColor-400">
-                            50
-                        </span>
-                    </span>
-                </div>
+            <div className="flex items-center justify-end gap-3">
                 <div className="flex items-center">
                     <div className="relative z-30 w-64 px-4 py-6 mt-2">
                         <SelectInput
