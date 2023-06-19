@@ -36,16 +36,20 @@ class Helper
 
     public static function insertMeal($user, $dormitory)
     {
-        $today = (int)date('d');
+
+        $today = 1;
         $lastDayOfMonth = (int)date('t');
         $dataArray = [];
         for ($i = $today; $i <= $lastDayOfMonth; $i++) {
+
+            $isZeroMeal = now()->gte(Carbon::parse(date('Y-m-' . $i)));
+
             $dataArray[] = [
                 'user_id' => $user->id,
                 'dormitory_id' => $dormitory->id,
-                'break_fast' => $dormitory->has_breakfast ? $dormitory->default_meal : 0,
-                'lunch' => self::isTodyaFridayOrSaturday(date('Y-m-' . $i)) && $dormitory->has_lunch ? $dormitory->default_meal : 0,
-                'dinner' => $dormitory->has_dinner ? $dormitory->default_meal : 0,
+                'break_fast' => $dormitory->has_breakfast ? $isZeroMeal ? 0 : $dormitory->default_meal: 0,
+                'lunch' => self::isTodyaFridayOrSaturday(date('Y-m-' . $i)) && $dormitory->has_lunch ? $isZeroMeal ? 0  : $dormitory->default_meal : 0,
+                'dinner' => $dormitory->has_dinner ? $isZeroMeal ? 0 : $dormitory->default_meal : 0,
                 'status' => MealStatus::PENDING,
                 'created_at' => Carbon::parse(date('Y-m-' . $i . ' 09:00'))->format('Y-m-d h:i'),
                 'updated_at' => Carbon::parse(date('Y-m-' . $i . ' 09:00'))->format('Y-m-d h:i'),
