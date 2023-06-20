@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Helper\Helper;
 use App\Http\Requests\AdditionalCostRequest;
 use App\Models\AdditionalCost;
 use App\Services\AdditonalCostService;
@@ -17,8 +16,9 @@ class AdditionalCostController extends Controller
         $this->authorize('showAdditionalCost', AdditionalCost::class);
 
         try {
-            $additonalCostService->index();
-            return Inertia::render('AdditionalCost/Index',);
+            return Inertia::render('AdditionalCost/Index', [
+                'additionals' => $additonalCostService->index()
+            ]);
         } catch (Exception $exception) {
             return back()->with('error', $exception->getMessage());
         }

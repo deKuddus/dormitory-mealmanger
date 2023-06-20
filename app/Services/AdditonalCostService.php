@@ -14,13 +14,11 @@ class AdditonalCostService
     public function index()
     {
         try {
-            return [
-                'additionals' => new AdditionalCostCollection(
-                    AdditionalCost::query()
-                        ->orderBy('created_at', 'desc')
-                        ->paginate()
-                ),
-            ];
+            return new AdditionalCostCollection(
+                AdditionalCost::query()
+                    ->orderBy('created_at', 'desc')
+                    ->paginate()
+            );
         } catch (Exception $exception) {
             throw_if(true,$exception->getMessage());
         }
