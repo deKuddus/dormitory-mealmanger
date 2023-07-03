@@ -234,7 +234,7 @@ class MealService
             ->whereBetween('created_at', [$startOfMonth, $lastOfMonth])
             ->pluck('id')
             ->toArray();
-        dd($mealIds);
+
 
         if ((new DormitoryInfoStatic())->getMonth()->gte($lunchOff) && (new DormitoryInfoStatic())->getMonth()->gte($dinnerOff)) {
             Meal::query()
@@ -248,6 +248,7 @@ class MealService
                         'dinner' => $dormitory->has_dinner ? $status : 0,
                     ]);
                 });
+            dd('block one');
         }
 
         if (!(new DormitoryInfoStatic())->getMonth()->gte($lunchOff) && (new DormitoryInfoStatic())->getMonth()->gte($dinnerOff)) {
@@ -262,6 +263,7 @@ class MealService
                         'dinner' => $dormitory->has_dinner ? $status : 0,
                     ]);
                 });
+            dd('block two');
         }
 
         if ((new DormitoryInfoStatic())->getMonth()->gte($lunchOff) && !(new DormitoryInfoStatic())->getMonth()->gte($dinnerOff)) {
@@ -283,6 +285,7 @@ class MealService
                         'dinner' => $dormitory->has_dinner ? $status : 0,
                     ]);
                 });
+            dd('block three');
         }
 
         User::whereId($userId)->update(['meal_status' => $status]);
