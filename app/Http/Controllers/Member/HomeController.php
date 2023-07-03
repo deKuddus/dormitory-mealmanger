@@ -267,7 +267,7 @@ class HomeController extends Controller
     {
         try {
             return Inertia::render('Member/Report', [
-                'reports' => new MemberCloseReportCollection(Calculation::whereUserId(auth()->id())->paginate())
+                'reports' => new MemberCloseReportCollection(Calculation::whereUserId(auth()->id())->orderBy('id','desc')->paginate())
             ]);
         } catch (Exception $exception) {
             return back()->with('error', $exception->getMessage());

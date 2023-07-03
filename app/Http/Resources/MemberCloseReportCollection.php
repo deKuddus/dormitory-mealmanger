@@ -23,6 +23,7 @@ class MemberCloseReportCollection extends ResourceCollection
             'total_meal',
             'calculate_date',
             'carry',
+            'meal_rate'
         );
     }
 }
