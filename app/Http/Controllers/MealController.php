@@ -20,10 +20,11 @@ class MealController extends Controller
 
 
         $dormitoryId = DormitoryInfoStatic::DORMITORYID;
+        $month = (new DormitoryInfoStatic())->getMonth();
 
         try {
             return Inertia::render('Meal/Index', [
-                'users' => $mealService->getUsersWithMeal($dormitoryId)
+                'users' => $mealService->getUsersWithMeal($dormitoryId,$month)
             ]);
         } catch (Exception $exception) {
             return back()->with('error', $exception->getMessage());

@@ -40,13 +40,14 @@ class HomeController extends Controller
         $userId = auth()->id();
 
         $totalFixedCost = (new AdditonalCostService())->getTotalCost($dormitoryId);
-        $dromTotalMeal = $mealService->dormTotalMeal($dormitoryId, $month);
+        $dormTotalMeal = $mealService->dormTotalMeal($dormitoryId, $month);
         $totalMeal = $mealService->userTotalMeal($userId, $dormitoryId, $month);
         $balance = (new UserService())->getUserInfo($userId, 'deposit');
         $bazar = (new BazarService())->getBazarsListOrSum($dormitoryId, true);
-        $mealCharge = $dromTotalMeal === 0 ? 0 : round($bazar / $dromTotalMeal, 2);
+        $mealCharge = $dormTotalMeal === 0 ? 0 : round($bazar / $dormTotalMeal, 2);
         $totalUser = (new UserService())->getBasicsOfUsers($dormitoryId, true);
         $fixedCost = $totalUser === 0 ? $totalFixedCost : $totalFixedCost / $totalUser;
+
         return Inertia::render('Member/Index', [
             'mealCharge' => $mealCharge,
             'meals' => $mealService->getUserAllMealForSelectedMonthToCurrentDate($userId, $dormitoryId, $month),

@@ -12,11 +12,10 @@ use Inertia\Inertia;
 
 class DormitoryController extends Controller
 {
-    public function index(DepositService $depositService)
+    public function index(DormitoryService $dormitoryService)
     {
         try {
-            $depositService->index();
-            return Inertia::render('Dormitory/Index', $depositService->index());
+            return Inertia::render('Dormitory/Index', $dormitoryService->index());
         } catch (Exception $exception) {
             return back()->with('error', $exception->getMessage());
         }

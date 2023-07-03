@@ -12,7 +12,6 @@ use App\Services\PermissionService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
 
 class Helper
 {
@@ -20,7 +19,9 @@ class Helper
     {
         $autoMealGenerationForMess = Dormitory::query()
             ->whereId(DormitoryInfoStatic::DORMITORYID)
-            ->with('users:id,dormitory_id')
+            ->with('users', function ($query) {
+                $query->where('meal_status', 1);
+            })
             ->active()
             ->get();
 
@@ -47,8 +48,8 @@ class Helper
             $dataArray[] = [
                 'user_id' => $user->id,
                 'dormitory_id' => $dormitory->id,
-                'break_fast' => $dormitory->has_breakfast ? $isZeroMeal ? 0 : $dormitory->default_meal: 0,
-                'lunch' => self::isTodyaFridayOrSaturday(date('Y-m-' . $i)) && $dormitory->has_lunch ? $isZeroMeal ? 0  : $dormitory->default_meal : 0,
+                'break_fast' => $dormitory->has_breakfast ? $isZeroMeal ? 0 : $dormitory->default_meal : 0,
+                'lunch' => self::isTodyaFridayOrSaturday(date('Y-m-' . $i)) && $dormitory->has_lunch ? $isZeroMeal ? 0 : $dormitory->default_meal : 0,
                 'dinner' => $dormitory->has_dinner ? $isZeroMeal ? 0 : $dormitory->default_meal : 0,
                 'status' => MealStatus::PENDING,
                 'created_at' => Carbon::parse(date('Y-m-' . $i . ' 09:00'))->format('Y-m-d h:i'),
@@ -96,7 +97,7 @@ class Helper
     public static function getDormitoryDeposit()
     {
         return Auth::check() ? auth()->user()->isAdmin() ?
-            (new DormitoryService())->getDormitoryInfo(DormitoryInfoStatic::DORMITORYID,'deposit')
+            (new DormitoryService())->getDormitoryInfo(DormitoryInfoStatic::DORMITORYID, 'deposit')
             : 0 : 0;
     }
 

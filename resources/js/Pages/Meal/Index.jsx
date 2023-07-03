@@ -138,7 +138,7 @@ const Index = () => {
                                 <TableData value={meals[0] || 0}/>
 
                                 <TableAction>
-                                    {!meals[0] &&
+                                    {(meals[0]  === 0 || meals[0]  === '0' ) &&
                                         isUserPermittedToPerformAction(
                                             "access::meal-add",
                                             user_permissions
