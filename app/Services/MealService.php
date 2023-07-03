@@ -234,6 +234,7 @@ class MealService
             ->whereBetween('created_at', [$startOfMonth, $lastOfMonth])
             ->pluck('id')
             ->toArray();
+        dd($mealIds);
 
         if ((new DormitoryInfoStatic())->getMonth()->gte($lunchOff) && (new DormitoryInfoStatic())->getMonth()->gte($dinnerOff)) {
             Meal::query()
