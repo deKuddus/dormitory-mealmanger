@@ -24,6 +24,7 @@ class ClosedCalculationCollection extends ResourceCollection
             'calculate_date',
             'carry',
             'user',
+            'meal_rate'
         );
     }
 }

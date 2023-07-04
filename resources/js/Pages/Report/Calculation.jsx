@@ -9,7 +9,7 @@ import TablePageLayout from "@/Shared/Layout/TablePageLayout";
 import TableData from "@/Shared/TableData";
 
 const Calcualtion = () => {
-    const tableHeading =['No', 'Closed Month', 'Member', 'Meal', 'Amount','Carry'];
+    const tableHeading =['No', 'Closed Month', 'Member', 'Meal' ,'Meal Rate', 'Cost','Balance'];
     const { calculations } = usePage().props;
     const {
         data,
@@ -35,6 +35,7 @@ const Calcualtion = () => {
                                 amount,
                                 description,
                                 calculate_date,
+                                meal_rate,
                                 carry,
                                 total_meal,
                             },
@@ -48,6 +49,7 @@ const Calcualtion = () => {
                                     <TableData value={moment(calculate_date).format("Do MMMM YYYY")}/>
                                     <TableData value={user.full_name}/>
                                     <TableData value={total_meal}/>
+                                    <TableData value={meal_rate}/>
                                     <TableData value={amount}/>
                                     <TableData value={carry}/>
                                 </tr>

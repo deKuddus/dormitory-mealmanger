@@ -33,19 +33,21 @@ const Index = () => {
                     <table className='w-full table-auto divide-y divide-gray-200'>
                         <thead>
                         <tr className=' text-left dark:bg-meta-4'>
-                            <th className='sticky left-0 z-1 dark:bg-meta-4 border border-[#eee] p-4 font-medium'>
+                            <th className='sticky left-0 z-1 bg-[#f2f3fa] dark:bg-meta-4 border border-[#eee] font-medium p-0'>
+                            <span className='w-full h-20 ring-1 ring-[#eee] p-4 flex items-center justify-center'>
                                 Member
+                            </span>
                             </th>
                             {Array(parseInt(daysInMonth, 10)).fill(0).map((v, key) => (
                                 <th key={key}
-                                    className='w-24 border border-[#eee] p-4 font-medium  text-center'>
-                                    <p className="w-full border-b border-[#eee]">{key + 1}</p>
+                                    className='w-24 border border-[#eee] font-medium  text-center'>
+                                    <p className="w-full border-b border-[#eee] py-2">{key + 1}</p>
 
-                                    <table className="w-full table-auto">
+                                    <table className="w-full table-auto py-2">
                                         <thead>
                                         <tr className='dark:bg-meta-4 text-center'>
-                                            <th className="text-sm font-normal border-r-2 p-2 border-[#eee]">Lunch</th>
-                                            <th className="text-sm font-normal p-2">Dinner</th>
+                                            <th className="text-sm font-normal border-r-2 p-2 border-[#eee]">L</th>
+                                            <th className="text-sm font-normal p-2">D</th>
                                         </tr>
                                         </thead>
                                     </table>
@@ -60,19 +62,21 @@ const Index = () => {
                                     key={index}
                                     className="text-center"
                                 >
-                                    <td className='sticky left-0 z-1 dark:bg-meta-4 border border-[#eee] p-4'>
-                                        <Link href={route('meals.show', row.id)}>
-                                            {row.display_name}
-                                        </Link>
+                                    <td className='sticky left-0 z-1 bg-[#f2f3fa] dark:bg-meta-4 border border-[#eee] p-0'>
+                                        <span className='w-full h-16 ring-1 ring-[#eee] px-2 flex items-center justify-center'>
+                                            <Link href={route('meals.show', row.id)}>
+                                                {row.display_name}
+                                            </Link>
+                                        </span>
                                     </td>
                                     {row.meals.map((meal, meal_index) => (
                                         <td key={meal_index}
-                                            className='border border-[#eee] text-center p-4 dark:border-strokedark'>
+                                            className='border border-[#eee] text-center p-2 dark:border-strokedark'>
                                             <table className="w-full table-auto">
                                                 <tbody>
                                                 <tr>
-                                                    <td className=" p-4 border-r border-[#eee] dark:border-strokedark">{meal.lunch}</td>
-                                                    <td className=" p-4 dark:border-strokedark">{meal.dinner}</td>
+                                                    <td className=" p-2 border-r border-[#eee] dark:border-strokedark">{meal.lunch}</td>
+                                                    <td className=" p-2 dark:border-strokedark">{meal.dinner}</td>
                                                 </tr>
                                                 </tbody>
                                             </table>

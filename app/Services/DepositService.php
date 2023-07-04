@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Enums\DepositStatus;
-use App\Helper\Helper;
 use App\Http\Resources\DepositCollection;
 use App\Models\Deposit;
 use App\Models\Dormitory;
@@ -101,8 +100,13 @@ class DepositService
     public function delete(Deposit $deposit)
     {
         try {
-            $deposit->user()->decrement('deposit', $deposit->amount);
-            $deposit->dormitory()->decrement('deposit', $deposit->amount);
+            if ($deposit->status === DepositStatus::WITHDRAWN) {
+                $deposit->user()->increment('deposit', $deposit->amount);
+                $deposit->dormitory()->increment('deposit', $deposit->amount);
+            } else {
+                $deposit->user()->decrement('deposit', $deposit->amount);
+                $deposit->dormitory()->decrement('deposit', $deposit->amount);
+            }
             $deposit->delete();
             return $deposit;
         } catch (Exception $exception) {
@@ -159,14 +163,14 @@ class DepositService
         }
     }
 
-    public function userDeposits(int $userId,$dormitoryId)
+    public function userDeposits(int $userId, $dormitoryId)
     {
         try {
             return Deposit::whereUserId($userId)
                 ->whereDormitoryId($dormitoryId)
                 ->orderBy('created_at', 'desc')
                 ->paginate();
-        }catch (Exception $exception) {
+        } catch (Exception $exception) {
             throw_if(true, $exception->getMessage());
         }
     }

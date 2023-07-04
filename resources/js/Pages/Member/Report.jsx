@@ -7,7 +7,7 @@ import TablePageLayout from "@/Shared/Layout/TablePageLayout";
 import TableData from "@/Shared/TableData";
 
 const Report = () => {
-    const tableHeading =['No', 'Closed Month', 'Meal','Meal Charge', 'Amount','Remaining balance / Due'];
+    const tableHeading =['No', 'Closed Month', 'Meal','Meal Charge', 'Cost','Balance'];
     const { reports } = usePage().props;
     const {
         data,
