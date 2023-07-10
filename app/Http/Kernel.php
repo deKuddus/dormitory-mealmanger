@@ -4,6 +4,7 @@ namespace App\Http;
 
 use App\Http\Middleware\CheckUserIsAdmin;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use App\Http\Middleware\Maintanance;
 
 class Kernel extends HttpKernel
 {
@@ -38,12 +39,14 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\HandleInertiaRequests::class,
+            Maintanance::class
         ],
 
         'api' => [
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            Maintanance::class
         ],
     ];
 
