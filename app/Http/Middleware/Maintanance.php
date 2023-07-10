@@ -11,8 +11,8 @@ class Maintanance
     public function handle(Request $request, Closure $next)
     {
         return response()->json([
-            'status' => 'maintenance mode on',
-            'code' => '503'
-        ]);
+            'message' => 'maintenance mode on',
+            'status' => '503'
+        ], 503);
     }
 }
