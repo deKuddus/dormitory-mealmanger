@@ -10,12 +10,18 @@ const Dashboard = () => {
     const {data, user_permissions} = usePage().props;
 
     const handleMonthCloseRequest = () => {
-        return router.post(route("month.close"))
+        if(confirm("Are you sure to close the current month?")){
+            return router.post(route("month.close"))
+        }
     }
 
     const handleMonthStart = () => {
-        router.post(route('new.month.start'));
+        if(confirm("Are you sure to start new month?")){
+            router.post(route('new.month.start'));
+        }
     }
+
+
 
     return (
         <div>
@@ -32,7 +38,9 @@ const Dashboard = () => {
                         {isUserPermittedToPerformAction('access::month-close', user_permissions) && (
                             <button
                                 className="inline-flex items-center justify-center bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
-                                onClick={handleMonthCloseRequest}>
+                                onClick={handleMonthCloseRequest}
+                                disabled={data.isDormitoryRunning === false}
+                            >
                                 Close Month
                             </button>
 
@@ -40,7 +48,9 @@ const Dashboard = () => {
                         {isUserPermittedToPerformAction('access::month-start', user_permissions) && (
                             <button
                                 className="inline-flex items-center justify-center bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
-                                onClick={handleMonthStart}>
+                                onClick={handleMonthStart}
+                                disabled={data.isDormitoryRunning === true}
+                            >
                                 Start New Month
                             </button>
                         )}

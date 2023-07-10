@@ -6,6 +6,8 @@ use App\Helper\Helper;
 use App\Services\MonthCloseService;
 use Exception;
 use Illuminate\Http\RedirectResponse;
+use App\Models\Dormitory;
+use App\Enums\DormitoryInfoStatic;
 
 class MonthCloseController extends Controller
 {
@@ -14,6 +16,9 @@ class MonthCloseController extends Controller
 
         try {
             $closeService->handleMonthClose();
+            Dormitory::whereId(DormitoryInfoStatic::DORMITORYID)->update([
+                'is_month_running' => 0
+            ]);
             return back()->with('success', 'Month Closed');
         } catch (Exception $exception) {
             return back()->with('error', $exception->getMessage());
@@ -25,6 +30,9 @@ class MonthCloseController extends Controller
     {
         try {
             Helper::createMeal();
+            Dormitory::whereId(DormitoryInfoStatic::DORMITORYID)->update([
+                'is_month_running' => 1
+            ]);
             return back()->with('success', 'New month started');
         } catch (Exception $exception) {
             return back()->with('error', $exception->getMessage());

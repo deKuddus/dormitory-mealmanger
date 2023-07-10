@@ -76,4 +76,13 @@ class DormitoryService
         }
     }
 
+    public function isRunningMonth($domitoryId):bool
+    {
+        try {
+            return Dormitory::query()->whereId($domitoryId)->value('is_month_running');
+        } catch (Exception $exception) {
+            throw_if(true, $exception->getMessage());
+        }
+    }
+
 }
