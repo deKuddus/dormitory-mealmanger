@@ -89,6 +89,7 @@ class UserService
     {
         try {
             $query = User::query()
+                ->active()
                 ->whereHas('dormitory', function ($query) use ($dormitoryId) {
                     $query->whereId($dormitoryId)->select('id', 'name');
                 });
@@ -108,6 +109,7 @@ class UserService
         try {
             $month = (new DormitoryInfoStatic())->getMonth();
             return User::query()
+                ->active()
                 ->with([
                     'meals' => function ($query) use ($month) {
                         $query->whereMonth('created_at', '=', $month->month)
@@ -193,6 +195,7 @@ class UserService
     {
         try {
             return User::query()
+                ->active()
                 ->with(['dormitory' => function ($q) {
                     $q->whereId(DormitoryInfoStatic::DORMITORYID)->select('name');
                 }])

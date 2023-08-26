@@ -20,7 +20,7 @@ class Helper
         $autoMealGenerationForMess = Dormitory::query()
             ->whereId(DormitoryInfoStatic::DORMITORYID)
             ->with('users', function ($query) {
-                $query->where('meal_status', 1);
+                $query->active()->where('meal_status', 1);
             })
             ->active()
             ->get();

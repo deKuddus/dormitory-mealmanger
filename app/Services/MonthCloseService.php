@@ -63,6 +63,7 @@ class MonthCloseService
     private function getUserAndMealCount($dormitoryId, $mealCost, $additionalCost): void
     {
         User::query()
+            ->active()
             ->with([
             'dormitory' => function ($q) use ($dormitoryId) {
                 $q->where('dormitory_id', $dormitoryId);
