@@ -1,0 +1,1 @@
+import{j as o,a as l}from"./app-eb479d5e.js";import{l as m}from"./index-1b101044.js";const n=({value:s,name:a,onChangeHandler:t,label:e=null})=>o("div",{className:"flex flex-col",children:[e&&l("label",{className:"mb-3 block text-black dark:text-white",children:e}),l(m,{className:"h-48 pr-6 mb-12 w-full",theme:"snow",value:s,onChange:r=>t(a,r)})]});export{n as T};

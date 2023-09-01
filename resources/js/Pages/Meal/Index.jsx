@@ -138,25 +138,6 @@ const Index = () => {
                                 <TableData value={meals[0] || 0}/>
 
                                 <TableAction>
-                                    {(meals[0]  === 0 || meals[0]  === '0' ) &&
-                                        isUserPermittedToPerformAction(
-                                            "access::meal-add",
-                                            user_permissions
-                                        ) && (
-                                            <button
-                                                onClick={() =>
-                                                    addMealForTheUser(
-                                                        id
-                                                    )
-                                                }
-                                                className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
-                                            >
-                                                <Icon
-                                                    name="FaEdit"
-                                                    className="w-6 h-4 text-gray-400 hover:text-buttonColor-400 fill-current"
-                                                />
-                                            </button>
-                                        )}
                                     {isUserPermittedToPerformAction(
                                         "access::meal-show",
                                         user_permissions
