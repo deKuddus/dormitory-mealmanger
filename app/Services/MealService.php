@@ -139,6 +139,22 @@
             }
         }
 
+        public function countUserTotalMeal( $userId , $dormitoryId , $month ): int
+        {
+            try {
+                $totalMeal = Meal::whereUserId( $userId )
+                    ->whereStatus( MealStatus::PENDING )
+                    ->whereDormitoryId( $dormitoryId )
+                    ->whereBetween( DB::raw( 'DATE(`created_at`)' ) , [ $month->startOfMonth()->format( 'Y-m-d' ) , $month->endOfMonth()->format( 'Y-m-d' ) ] )
+                    ->select( DB::raw( "count(break_fast + lunch + dinner) as total_meals" ) )
+                    ->first();
+
+                return $totalMeal->total_meals ?? 0;
+            } catch ( Exception $exception ) {
+                throw_if( true , $exception->getMessage() );
+            }
+        }
+
         public function dormTotalMeal( $dormId , $month ): int
         {
             try {

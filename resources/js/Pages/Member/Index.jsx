@@ -20,6 +20,7 @@ const Index = () => {
         fixedCost,
         totalMeal,
         todaysMeal,
+        userMealCount
     } = usePage().props;
     const [isCheck, setIsCheck] = useState(auth.user.meal_status === 1);
     const mealEditInitialObject = {
@@ -87,7 +88,7 @@ const Index = () => {
                                className='flex cursor-pointer select-none items-center'>
                             <div className="relative">
                                 <input
-                                    disabled={totalMeal === 0}
+                                    disabled={userMealCount === 0}
                                     type="checkbox"
                                     id='toggle1'
                                     onChange={(e) =>

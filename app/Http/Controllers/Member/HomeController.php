@@ -47,6 +47,7 @@ class HomeController extends Controller
         $mealCharge = $dormTotalMeal === 0 ? 0 : round($bazar / $dormTotalMeal, 2);
         $totalUser = (new UserService())->getBasicsOfUsers($dormitoryId, true);
         $fixedCost = $totalUser === 0 ? $totalFixedCost : $totalFixedCost / $totalUser;
+        $userMealCount = $mealService->countUserTotalMeal($userId, $dormitoryId, $month);
 
         return Inertia::render('Member/Index', [
             'mealCharge' => $mealCharge,
@@ -54,6 +55,7 @@ class HomeController extends Controller
             'fixedCost' => $fixedCost,
             'due' => round($calculationService->getDue($totalMeal, $balance, $fixedCost, $mealCharge), 2),
             'totalMeal' => $totalMeal,
+            'userMealCount' => $userMealCount,
             'totalCost' => $totalMeal === 0 ? 0 : round($totalMeal * $mealCharge, 2),
             'todaysMeal' => $mealService->getTodaysLunchAndDinner()
         ]);
