@@ -8,6 +8,7 @@ import TablePageLayout from "@/Shared/Layout/TablePageLayout";
 import TableHeader from "@/Shared/TableHeader";
 import TableData from "@/Shared/TableData";
 import TableAction from "@/Shared/TableAction";
+import moment from "moment/moment";
 
 const Index = () => {
     const {additionals, user_permissions} = usePage().props;
@@ -34,10 +35,10 @@ const Index = () => {
                 user_permissions
             )}
         >
-            <TableHeader rows={['No', 'Amount', 'Description', 'Status', 'Action']}/>
+            <TableHeader rows={['No', 'Amount', 'Description', 'Status','Date', 'Action']}/>
             <tbody>
             {data && data.length ? data.map(
-                ({id, amount, description, status}, key) => {
+                ({id, amount, description, created_at,status}, key) => {
                     return (
 
                         <tr
@@ -55,6 +56,7 @@ const Index = () => {
                             }
                                        className={`rounded-full ${status === APPROVED ? 'bg-success text-success' : 'bg-danger text-danger'} text-center bg-opacity-10 py-1 px-3 text-sm `}
                             />
+                            <TableData value={moment(created_at).format("Do MMMM YYYY")}/>
                             <TableAction>
                                 {/*<Link*/}
                                 {/*    href={route("additional.edit", id)}*/}
