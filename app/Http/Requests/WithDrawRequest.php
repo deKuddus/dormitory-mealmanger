@@ -28,7 +28,8 @@ class WithDrawRequest extends FormRequest
             'deposit_date' => 'required',
             'status' => 'required',
             'amount' => 'required|numeric|min:1',
-            'dormitory_id' => 'required|integer'
+            'dormitory_id' => 'required|integer',
+            'description' => 'nullable|string|max:255'
         ];
     }
 

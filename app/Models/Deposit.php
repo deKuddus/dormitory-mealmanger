@@ -19,7 +19,8 @@ class Deposit extends Model
         'dormitory_id',
         'amount',
         'deposit_date',
-        'status'
+        'status',
+        'description'
     ];
 
     protected function depositDate(): Attribute

@@ -30,7 +30,8 @@ class UserDepositCreateRequest extends FormRequest
             'user_id' => 'required',
             'status' => 'required',
             'dormitory_id' => 'required',
-            'deposit_date' => 'required|date'
+            'deposit_date' => 'required|date',
+            'description' => 'nullable|string|max:255'
         ];
     }
 

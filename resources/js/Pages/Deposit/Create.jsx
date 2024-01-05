@@ -13,6 +13,7 @@ const Create = () => {
         deposit_date: "",
         status: 0,
         user_id: users[0].id,
+        description: "",
     });
 
     const handleSubmit = (e) => {
@@ -57,6 +58,15 @@ const Create = () => {
                 errors={errors.amount}
                 value={data.amount}
                 onChange={(e) => setData("amount", e.target.value)}
+            />
+
+            <TextInput
+                label="Description"
+                name="description"
+                type="text"
+                errors={errors.description}
+                value={data.description}
+                onChange={(e) => setData("description", e.target.value)}
             />
 
             <Datepicker

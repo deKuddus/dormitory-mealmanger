@@ -15,6 +15,7 @@ const Edit = () => {
         deposit_date: deposit.deposit_date || "",
         status: deposit.status || "",
         user_id: deposit.user_id || "",
+        description: deposit.description || "",
         _method: "PUT",
     });
 
@@ -54,6 +55,15 @@ const Edit = () => {
                        </option>
                    ))}
            </SelectInput>
+
+           <TextInput
+               label="Description"
+               name="description"
+               type="text"
+               errors={errors.description}
+               value={data.description}
+               onChange={(e) => setData("description", e.target.value)}
+           />
 
            <TextInput
                label="Amount"

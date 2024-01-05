@@ -7,6 +7,7 @@ import TextInput from "@/Shared/TextInput";
 const Create = () => {
     const {data, setData, errors, post, processing} = useForm({
         amount: "",
+        description: ""
     });
 
     const handleSubmit = (e) => {
@@ -23,6 +24,15 @@ const Create = () => {
             button_text={'Create Deposit'}
             handlFormSubmit={handleSubmit}
         >
+            <TextInput
+                className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/2"
+                label="Description"
+                name="description"
+                type="text"
+                errors={errors.description}
+                value={data.description}
+                onChange={(e) => setData("description", e.target.value)}
+            />
             <TextInput
                 className="w-full pb-8 pr-6 md:w-1/2 lg:w-1/2"
                 label="Amount"
