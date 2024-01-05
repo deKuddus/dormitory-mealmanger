@@ -9,7 +9,7 @@ import TableAction from "@/Shared/TableAction";
 import TablePageLayout from "@/Shared/Layout/TablePageLayout";
 
 const Index = () => {
-    const [totalDeposit, setTotalDeposit] = React.useState(0);
+    let totalDeposit = 0;
     const {usersWithDeposit, user_permissions} = usePage().props;
     const {
         data,
@@ -36,7 +36,7 @@ const Index = () => {
                                                  deposits,
                                              },
                                              key) => {
-                setTotalDeposit(totalDeposit + deposit);
+                totalDeposit =  parseFloat(totalDeposit) + parseFloat(deposit);
                 return (<tr key={key}>
                     <TableData value={key + 1}/>
                     <TableData value={full_name}/>
