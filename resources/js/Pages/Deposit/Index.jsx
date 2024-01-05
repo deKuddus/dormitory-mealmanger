@@ -98,7 +98,7 @@ const Index = () => {
             </tr>)}
             <tr>
                 <TableData value={'Total'} colSpan={2} className="text-center text-black dark:text-white"/>
-                <TableData value={`${totalDeposit} BDT`} colSpan={5}
+                <TableData value={`${parseFloat(totalDeposit).toFixed(2)} BDT`} colSpan={5}
                            className="text-center text-black dark:text-white"/>
             </tr>
             </tbody>
