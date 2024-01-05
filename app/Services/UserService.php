@@ -31,7 +31,7 @@ class UserService
                     User::query()
                         ->select('id', 'full_name', 'email', 'phone', 'status', 'is_admin')
                         ->orderBy('created_at', 'desc')
-                        ->paginate()
+                        ->paginate(\request()->get('per_page') ?? 50)
                 ),
                 'totalMemberActive' => (int)$result->totalMemberActive,
                 'totalMemberInActive' => (int)$result->totalMemberInActive

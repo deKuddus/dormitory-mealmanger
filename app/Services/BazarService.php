@@ -22,7 +22,7 @@ class BazarService
                    })
                    ->orderBy('created_at', 'desc')
                    ->orderBy('id', 'desc')
-                   ->paginate()
+                   ->paginate(\request()->get('per_page') ?? 50)
            );
         } catch (Exception $exception) {
             throw_if(true,$exception->getMessage());

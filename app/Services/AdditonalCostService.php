@@ -17,7 +17,7 @@ class AdditonalCostService
             return new AdditionalCostCollection(
                 AdditionalCost::query()
                     ->orderBy('created_at', 'desc')
-                    ->paginate()
+                    ->paginate(\request()->get('per_page') ?? 50)
             );
         } catch (Exception $exception) {
             throw_if(true,$exception->getMessage());
