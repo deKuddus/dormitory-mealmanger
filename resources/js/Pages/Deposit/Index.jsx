@@ -9,6 +9,7 @@ import TableAction from "@/Shared/TableAction";
 import TablePageLayout from "@/Shared/Layout/TablePageLayout";
 
 const Index = () => {
+    const [totalDeposit, setTotalDeposit] = React.useState(0);
     const {usersWithDeposit, user_permissions} = usePage().props;
     const {
         data,
@@ -29,13 +30,14 @@ const Index = () => {
             <TableHeader rows={['No', 'Name', 'Amount(Current)', 'Amount(All time)', 'Withdraw', 'Pending', 'Action']}/>
             <tbody>
             {data && data.length ? data.map(({
-                                  id,
-                                  full_name,
-                                  deposit,
-                                  deposits,
-                              },
-                              key) => (
-                <tr key={key}>
+                                                 id,
+                                                 full_name,
+                                                 deposit,
+                                                 deposits,
+                                             },
+                                             key) => {
+                setTotalDeposit(totalDeposit + deposit);
+                return (<tr key={key}>
                     <TableData value={key + 1}/>
                     <TableData value={full_name}/>
                     <TableData value={deposit < 0 ? `Due ${deposit}` : `${deposit} BDT`}/>
@@ -90,10 +92,15 @@ const Index = () => {
                         )}
                     </TableAction>
 
-                </tr>
-            )) : (<tr>
+                </tr>)
+            }) : (<tr>
                 <TableData value={'No Data Found'} colSpan={7} className="text-center text-black dark:text-white"/>
             </tr>)}
+            <tr>
+                <TableData value={'Total'} colSpan={2} className="text-center text-black dark:text-white"/>
+                <TableData value={`${totalDeposit} BDT`} colSpan={5}
+                           className="text-center text-black dark:text-white"/>
+            </tr>
             </tbody>
         </TablePageLayout>
     );
