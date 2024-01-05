@@ -31,7 +31,7 @@ class DepositService
                         })
                         ->select('id', 'full_name', 'deposit')
                         ->orderBy('created_at', 'desc')
-                        ->paginate(\request()->get('per_page') || 50)
+                        ->paginate(\request()->get('per_page') ?? 50)
                 ),
             ];
         } catch (Exception $exception) {
