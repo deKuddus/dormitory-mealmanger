@@ -110,6 +110,24 @@ const Index = () => {
                     </div>
                 </div>
             </div>
+
+            <div
+                className='rounded-lg border border-stroke bg-white mb-5 shadow-default dark:border-strokedark dark:bg-boxdark'>
+                <div className="flex items-center justify-between p-2">
+                    <div>
+                        <h6 className="mb-4 text-xl font-bold pt-4 px-4">
+                            All Meal calendar view
+                        </h6>
+                    </div>
+                    <Link
+                        href={route("member.meal.calender.view")}
+                        className="rounded border-gray-300 bg-green-600 shadow p-4"
+                    >
+                        <Icon name={"FaEye"} className="text-white"/>
+                    </Link>
+                </div>
+            </div>
+
             <div
                 className='rounded-lg border border-stroke bg-white mb-5 shadow-default dark:border-strokedark dark:bg-boxdark'>
                 <div className="flex items-center justify-between p-2">
@@ -129,6 +147,7 @@ const Index = () => {
                     </Link>
                 </div>
             </div>
+
             <div
                 className='rounded-lg border border-stroke bg-white mb-5 shadow-default dark:border-strokedark dark:bg-boxdark p-5'>
                 <div className="col-span-full mb-5">

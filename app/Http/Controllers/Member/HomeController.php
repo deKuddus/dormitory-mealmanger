@@ -25,6 +25,7 @@ use App\Services\CalculationService;
 use App\Services\MealService;
 use App\Services\UserService;
 use Carbon\Carbon;
+use Couchbase\User;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -270,6 +271,19 @@ class HomeController extends Controller
         try {
             return Inertia::render('Member/Report', [
                 'reports' => new MemberCloseReportCollection(Calculation::whereUserId(auth()->id())->orderBy('id','desc')->paginate())
+            ]);
+        } catch (Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+    }
+
+    public function calendarView(UserService $userService){
+        try {
+            $dormitoryId = DormitoryInfoStatic::DORMITORYID;
+
+            return Inertia::render('Member/Meal/Calendar', [
+                'usersAndMeal' => $userService->getUsersWithMeal($dormitoryId),
+                'daysInMonth' => (new DormitoryInfoStatic())->getMonth()->daysInMonth
             ]);
         } catch (Exception $exception) {
             return back()->with('error', $exception->getMessage());

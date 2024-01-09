@@ -60,6 +60,8 @@ Route::group(['middleware' => 'auth'],function (){
     Route::as('user')->resource('issue',\App\Http\Controllers\Member\IssueController::class);
 
     Route::get('report',[\App\Http\Controllers\Member\HomeController::class,'reports'])->name('user.report.index');
+    Route::get('meal/calendar-view',[\App\Http\Controllers\Member\HomeController::class,'calendarView'])->name('member.meal.calender.view');
+
 });
 
 
