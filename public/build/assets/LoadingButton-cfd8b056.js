@@ -1,1 +1,0 @@
-import{j as r,a}from"./app-b394f84d.js";import{r as c}from"./index-0ee3514d.js";const l=({loading:e,className:s,children:n,...t})=>{const o=c("flex items-center","focus:outline-none",{"pointer-events-none bg-opacity-75 select-none":e},s);return r("button",{disabled:e,className:o,...t,children:[e&&a("div",{className:"mr-2 btn-spinner"}),n]})};export{l as L};
