@@ -1,10 +1,10 @@
 import React from "react";
 import {Link, usePage} from "@inertiajs/react";
 import Layout from "@/Shared/Layout/AuthenticatedLayout";
+import moment from "moment";
 
 const Index = () => {
     const {usersAndMeal, daysInMonth} = usePage().props;
-
 
     return (
         <>
@@ -24,21 +24,25 @@ const Index = () => {
                                 Member
                             </span>
                             </th>
-                            {Array(parseInt(daysInMonth, 10)).fill(0).map((v, key) => (
-                                <th key={key}
-                                    className='w-24 border border-[#eee] font-medium  text-center'>
-                                    <p className="w-full border-b border-[#eee] py-2">{key + 1}</p>
+                            {Array(parseInt(daysInMonth, 10)).fill(0).map((v, key) => {
+                                    let isToday = moment().date() === key + 1;
+                                    return (
+                                        <th key={key}
+                                            className={`w-24 border border-[#eee] font-medium  text-center ${isToday ? 'bg-green-600' : ''}`}>
+                                            <p className={`w-full border-b border-[#eee] py-2 ${isToday ? 'text-white font-bold' : ''}`}>{key + 1}</p>
 
-                                    <table className="w-full table-auto py-2">
-                                        <thead>
-                                        <tr className='dark:bg-meta-4 text-center'>
-                                            <th className="text-sm font-normal border-r-2 p-2 border-[#eee]">L</th>
-                                            <th className="text-sm font-normal p-2">D</th>
-                                        </tr>
-                                        </thead>
-                                    </table>
-                                </th>
-                            ))}
+                                            <table className="w-full table-auto py-2">
+                                                <thead>
+                                                <tr className='dark:bg-meta-4 text-center'>
+                                                    <th className={`text-sm border-r-2 p-2 border-[#eee] ${isToday ? 'text-white font-bold' : 'font-normal'}`}>L</th>
+                                                    <th className={`text-sm  p-2 ${isToday ? 'text-white font-bold' : 'font-normal'}`}>D</th>
+                                                </tr>
+                                                </thead>
+                                            </table>
+                                        </th>
+                                    )
+                                }
+                            )}
                         </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200">
@@ -49,25 +53,30 @@ const Index = () => {
                                     className="text-center"
                                 >
                                     <td className='sticky left-0 z-1 bg-[#f2f3fa] dark:bg-meta-4 border border-[#eee] p-0'>
-                                        <span className='w-full h-16 ring-1 ring-[#eee] px-2 flex items-center justify-center'>
+                                        <span
+                                            className='w-full h-16 ring-1 ring-[#eee] px-2 flex items-center justify-center'>
                                             <Link href={route('meals.show', row.id)}>
                                                 {row.display_name}
                                             </Link>
                                         </span>
                                     </td>
-                                    {row.meals.map((meal, meal_index) => (
-                                        <td key={meal_index}
-                                            className='border border-[#eee] text-center p-2 dark:border-strokedark'>
-                                            <table className="w-full table-auto">
-                                                <tbody>
-                                                <tr>
-                                                    <td className=" p-2 border-r border-[#eee] dark:border-strokedark">{meal.lunch}</td>
-                                                    <td className=" p-2 dark:border-strokedark">{meal.dinner}</td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                        </td>
-                                    ))}
+                                    {row.meals.map((meal, meal_index) => {
+                                            let isToday = moment().date() === meal_index + 1;
+                                            return (
+                                                <td key={meal_index}
+                                                    className={`border border-[#eee] text-center p-2 dark:border-strokedark ${isToday ? 'bg-green-600' : ''}`}>
+                                                    <table className="w-full table-auto">
+                                                        <tbody>
+                                                        <tr>
+                                                            <td className={`p-2 border-r border-[#eee] dark:border-strokedark ${isToday ? 'text-white font-bold' : ''}`}>{meal.lunch}</td>
+                                                            <td className={`p-2 dark:border-strokedark ${isToday ? 'text-white font-bold' : ''}`}>{meal.dinner}</td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            )
+                                        }
+                                    )}
                                 </tr>
                             );
                         })}

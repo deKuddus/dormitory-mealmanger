@@ -219,42 +219,45 @@ const Index = () => {
                                         created_at,
                                     },
                                     key
-                                ) => (
-                                    <tr
-                                        key={key}
-                                    >
-                                        <TableData value={moment(created_at).format("D MMM, dddd")}/>
-                                        <TableData value={lunch}/>
-                                        <TableData value={dinner}/>
+                                ) => {
+                                    let isToday = moment().format('YYYY-MM-DD') === created_at;
+                                    return (<tr
+                                            key={key}
+                                            className={`${isToday ? 'text-white bg-success font-bold text-xl shadow-2xl' : ''}`}
+                                        >
+                                            <TableData className={isToday ? 'text-white' : 'text-black dark:text-white'} value={moment(created_at).format("D MMM, dddd")}/>
+                                            <TableData className={isToday ? 'text-white' : 'text-black dark:text-white'} value={lunch}/>
+                                            <TableData className={isToday ? 'text-white' : 'text-black dark:text-white'} value={dinner}/>
 
-                                        <TableAction>
-                                            <button
-                                                disabled={
-                                                    !is_editable
-                                                }
-                                                onClick={() =>
-                                                    handleMealEdit(
-                                                        id,
-                                                        break_fast,
-                                                        lunch,
-                                                        dinner,
-                                                        created_at
-                                                    )
-                                                }
-                                                className={`inline-flex ${
-                                                    !is_editable
-                                                        ? " opacity-10"
-                                                        : ""
-                                                } items-center justify-center gap-0.5 focus:outline-none focus:underline`}
-                                            >
-                                                <Icon
-                                                    name="FaEdit"
-                                                    className="w-6 h-4 text-gray-400 hover:text-buttonColor-400 fill-current cursor-pointer"
-                                                />
-                                            </button>
-                                        </TableAction>
-                                    </tr>
-                                )
+                                            <TableAction>
+                                                <button
+                                                    disabled={
+                                                        !is_editable
+                                                    }
+                                                    onClick={() =>
+                                                        handleMealEdit(
+                                                            id,
+                                                            break_fast,
+                                                            lunch,
+                                                            dinner,
+                                                            created_at
+                                                        )
+                                                    }
+                                                    className={`inline-flex ${
+                                                        !is_editable
+                                                            ? " opacity-10"
+                                                            : ""
+                                                    } items-center justify-center gap-0.5 focus:outline-none focus:underline`}
+                                                >
+                                                    <Icon
+                                                        name="FaEdit"
+                                                        className="w-6 h-4 text-gray-400 hover:text-buttonColor-400 fill-current cursor-pointer"
+                                                    />
+                                                </button>
+                                            </TableAction>
+                                        </tr>
+                                    );
+                                }
                             ) : (
                                 <tr>
                                     <TableData value={'No Data Found'} colSpan={4}
