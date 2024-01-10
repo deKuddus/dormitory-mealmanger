@@ -55,7 +55,7 @@ const Show = () => {
             return toast.error(
                 "Woops! amount can not be equal or less than zero"
             );
-        } else if (withdraw > user.deposit) {
+        } else if (parseInt(withdraw,10) > parseInt(user.deposit,10)) {
             setWithdraw(0);
             return toast.error(
                 "Woops! amount can not greater than your current deposit"
