@@ -46,10 +46,10 @@
             return Inertia::render( 'Report/Calculation' , [
                 'calculations' => new ClosedCalculationCollection(
                     Calculation::query()
-                        ->with( [
+                        ->with(
                             'user' ,
                             fn ( $q ) => $q->withTrashed()
-                        ] )
+                         )
                         ->orderBy( 'calculate_date' , 'desc' )
                         ->paginate()
                 )

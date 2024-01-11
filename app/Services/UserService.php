@@ -29,6 +29,7 @@ class UserService
             return [
                 'users' => new UserCollection(
                     User::query()
+                        ->withTrashed()
                         ->select('id', 'full_name', 'email', 'phone', 'status', 'is_admin')
                         ->orderBy('created_at', 'desc')
                         ->paginate(\request()->get('per_page') ?? 50)
