@@ -19,8 +19,7 @@
                 return [
                     'usersWithDeposit' => new DepositCollection(
                         User::query()
-//                            ->active()
-                            ->withTrashed()
+                            ->active()
                             ->with(
                                 'deposits' , function ( $query ) {
                                 $query->select(
