@@ -51,7 +51,26 @@
         {
             try {
                 $dormitory = Dormitory::query()->find( DormitoryInfoStatic::DORMITORYID );
-                $user = User::query()->active()->findOrFail( $request->get( 'userId' ) );
+                $month  = (new DormitoryInfoStatic())->getMonth();
+                $user = User::query()
+                        ->active()
+                        ->with( [ 'dormitory' => function ( $q ) use ( $dormitory ) {
+                            $q->where( 'dormitory_id' , $dormitory->id );
+                        } ,
+                            'meals' => function ( $query ) use ( $dormitory , $month ) {
+                                $query->where( 'dormitory_id' , $dormitory->id )
+                                    ->whereStatus( MealStatus::PENDING )
+                                    ->whereBetween( DB::raw( 'DATE(`created_at`)' ) , [ $month->startOfMonth()->format( 'Y-m-d' ) , $month->endOfMonth()->format( 'Y-m-d' ) ] )
+                                    ->select( 'user_id' ,
+                                     DB::raw( "COUNT(break_fast + lunch + dinner) as total_meals" ) 
+                                     )
+                                    ->groupBy( 'user_id' );
+                            }
+                        ] )
+                        ->find($request->get( 'userId' ));
+
+                throw_if(count($user->meals) && $user->meals[0]->total_meals,'Meal already added');
+
                 Helper::insertMeal( $user , $dormitory );
                 return $user;
             } catch ( Exception $exception ) {

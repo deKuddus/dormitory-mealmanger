@@ -1,31 +1,34 @@
-import React, {useState} from "react";
-import {Link, router, usePage} from "@inertiajs/react";
-import Layout from "@/Shared/Layout/AuthenticatedLayout";
 import Icon from "@/Shared/Icon";
-import SelectInput from "@/Shared/SelectInput";
-import moment from "moment/moment";
-import {currentYearMontList, isUserPermittedToPerformAction} from "@/utils";
+import Layout from "@/Shared/Layout/AuthenticatedLayout";
 import TablePageLayout from "@/Shared/Layout/TablePageLayout";
-import TableHeader from "@/Shared/TableHeader";
-import TableData from "@/Shared/TableData";
+import SelectInput from "@/Shared/SelectInput";
 import TableAction from "@/Shared/TableAction";
+import TableData from "@/Shared/TableData";
+import TableHeader from "@/Shared/TableHeader";
+import { currentYearMontList, isUserPermittedToPerformAction } from "@/utils";
+import { Link, router, usePage } from "@inertiajs/react";
+import moment from "moment/moment";
+import { useState } from "react";
 
 const Index = () => {
-    const tableHeading = ['No', 'Name', 'Status', 'Meal', 'Action'];
-    const {users, user_permissions} = usePage().props;
+    const tableHeading = ["No", "Name", "Status", "Meal", "Action"];
+    const { users, user_permissions } = usePage().props;
     const [currentMonth, setCurrentMonth] = useState(
         moment().format("MMM-YYYY")
     );
     const dateOptions = currentYearMontList();
 
     const handleDateChange = (value) => {
-        console.log(value)
-        if(value){
-           return router.get(route('meals.index'), {month:value}, {
-                replace: true,
-                preserveState: true,
-            });
-
+        console.log(value);
+        if (value) {
+            return router.get(
+                route("meals.index"),
+                { month: value },
+                {
+                    replace: true,
+                    preserveState: true,
+                }
+            );
         }
     };
 
@@ -37,7 +40,7 @@ const Index = () => {
         }
     };
 
-    const Status = ({status}) => {
+    const Status = ({ status }) => {
         if (status === 0) {
             return (
                 <p className="flex items-center px-6 py-4 focus:text-indigo-700 focus:outline-none">
@@ -94,83 +97,94 @@ const Index = () => {
                 </div>
             </div>
         );
-    }
+    };
 
     return (
         <TablePageLayout
-            breadcumb_action={''}
-            breadcumb_name={'Meals'}
-            pagination_links={''}
-            breadcumb_link={''}
+            breadcumb_action={""}
+            breadcumb_name={"Meals"}
+            pagination_links={""}
+            breadcumb_link={""}
             isShowButton={false}
-            additionalComponent={<Additional/>}
+            additionalComponent={<Additional />}
         >
-            <TableHeader rows={tableHeading}/>
+            <TableHeader rows={tableHeading} />
             <tbody>
-            {users ? (
-                users.map(
-                    (
-                        {
-                            id,
-                            display_name,
-                            meals,
-                            status,
-                            email,
-                        },
-                        key
-                    ) => {
-                        return (
-                            <tr
-                                key={id}
-                            >
-                                <TableData value={key + 1}/>
-                                <TableData value={display_name}/>
+                {users ? (
+                    users.map(
+                        ({ id, display_name, meals, status, email }, key) => {
+                            return (
+                                <tr key={id}>
+                                    <TableData value={key + 1} />
+                                    <TableData value={display_name} />
 
-                                <TableData value={
-                                    status === 1
-                                        ? "Active"
-                                        : status === 0
-                                            ? "Inactive"
-                                            : "Closed"
-                                }
-                                           className={`rounded-full ${status === 1 ? 'bg-success text-success' : 'bg-danger text-danger'} text-center bg-opacity-10 py-1 px-3 text-sm `}
-                                />
-                                <TableData value={meals[0] || 0}/>
+                                    <TableData
+                                        value={
+                                            status === 1
+                                                ? "Active"
+                                                : status === 0
+                                                ? "Inactive"
+                                                : "Closed"
+                                        }
+                                        className={`rounded-full ${
+                                            status === 1
+                                                ? "bg-success text-success"
+                                                : "bg-danger text-danger"
+                                        } text-center bg-opacity-10 py-1 px-3 text-sm `}
+                                    />
+                                    <TableData value={meals[0] || 0} />
 
-                                <TableAction>
-                                    {isUserPermittedToPerformAction(
-                                        "access::meal-show",
-                                        user_permissions
-                                    ) && (
-                                        <Link
-                                            href={route(
-                                                "meals.show",
-                                                id
+                                    <TableAction>
+                                        {!meals[0] &&
+                                            isUserPermittedToPerformAction(
+                                                "access::meal-add",
+                                                user_permissions
+                                            ) && (
+                                                <button
+                                                    onClick={() =>
+                                                        addMealForTheUser(id)
+                                                    }
+                                                    className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
+                                                >
+                                                    <Icon
+                                                        name="FaEdit"
+                                                        className="w-6 h-4 text-gray-400 hover:text-buttonColor-400 fill-current"
+                                                    />
+                                                </button>
                                             )}
-                                            className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
-                                        >
-                                            <Icon
-                                                name="FaEye"
-                                                className="w-6 h-4 text-gray-400 hover:text-buttonColor-400 fill-current"
-                                            />
-                                        </Link>
-                                    )}
-                                </TableAction>
-                            </tr>
-                        );
-                    }
-                )
-            ) : (
-                <tr>
-                    <TableData value={'No Data Found'} colSpan={tableHeading.length}
-                               className="text-center text-black dark:text-white"/>
-                </tr>
-            )}
+                                        {isUserPermittedToPerformAction(
+                                            "access::meal-show",
+                                            user_permissions
+                                        ) && (
+                                            <Link
+                                                href={route("meals.show", id)}
+                                                className="inline-flex items-center justify-center gap-0.5 focus:outline-none focus:underline"
+                                            >
+                                                <Icon
+                                                    name="FaEye"
+                                                    className="w-6 h-4 text-gray-400 hover:text-buttonColor-400 fill-current"
+                                                />
+                                            </Link>
+                                        )}
+                                    </TableAction>
+                                </tr>
+                            );
+                        }
+                    )
+                ) : (
+                    <tr>
+                        <TableData
+                            value={"No Data Found"}
+                            colSpan={tableHeading.length}
+                            className="text-center text-black dark:text-white"
+                        />
+                    </tr>
+                )}
             </tbody>
         </TablePageLayout>
     );
 };
 
-Index.layout = (page) => <Layout title="Meals" children={page}/>;
+Index.layout = (page) => <Layout title="Meals" children={page} />;
 
 export default Index;

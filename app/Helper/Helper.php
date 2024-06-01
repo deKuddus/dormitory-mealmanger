@@ -41,6 +41,7 @@ class Helper
         $today = 1;
         $lastDayOfMonth = (int)date('t');
         $dataArray = [];
+
         for ($i = $today; $i <= $lastDayOfMonth; $i++) {
 
             $isZeroMeal = now()->gte(Carbon::parse(date('Y-m-' . $i)));
@@ -56,6 +57,7 @@ class Helper
                 'updated_at' => Carbon::parse(date('Y-m-' . $i . ' 09:00'))->format('Y-m-d h:i'),
             ];
         }
+        // dd($dataArray);
         Meal::insert($dataArray);
     }
 
