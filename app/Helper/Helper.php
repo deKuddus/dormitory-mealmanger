@@ -57,7 +57,6 @@ class Helper
                 'updated_at' => Carbon::parse(date('Y-m-' . $i . ' 09:00'))->format('Y-m-d h:i'),
             ];
         }
-        // dd($dataArray);
         Meal::insert($dataArray);
     }
 

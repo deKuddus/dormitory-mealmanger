@@ -72,6 +72,7 @@
                 throw_if(count($user->meals) && $user->meals[0]->total_meals,'Meal already added');
 
                 Helper::insertMeal( $user , $dormitory );
+                $user->upate(['meal_status' => 1]);
                 return $user;
             } catch ( Exception $exception ) {
                 throw_if( true , $exception->getMessage() );
