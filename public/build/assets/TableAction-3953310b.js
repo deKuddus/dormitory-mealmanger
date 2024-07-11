@@ -1,1 +1,0 @@
-import{a as e}from"./app-9b1aff9a.js";const s=({children:r})=>e("td",{className:"border border-[#eee] py-5 px-4 dark:border-strokedark",children:e("div",{className:"flex items-center gap-4 justify-end",children:r})});export{s as T};
